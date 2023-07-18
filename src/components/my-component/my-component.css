@@ -1,0 +1,9 @@
+:host {
+  --my-button-color: var(--my-button-color-public, purple);
+}
+
+::part(my-button),
+button {
+  font-weight: bold;
+  color: var(--my-button-color, tomato);
+}
