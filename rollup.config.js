@@ -31,7 +31,7 @@ export default {
     commonjs(), // converts date-fns to ES modules
     typescript(),
     html({
-      title: 'sudoku viz',
+      title: 'Sudoku Viz',
       publicPath: './',
       fileName: 'index.html',
       attributes: { html: { lang: 'en' } },

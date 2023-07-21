@@ -1,4 +1,4 @@
-import { memoize } from './utils';
+import { memoize } from './memoize';
 
 describe('memoize', () => {
   it('should memoize string argument', () => {

@@ -1,52 +1,47 @@
-import { component } from './component.js';
 import './main.css';
 
-import './components';
-import MyContainer from './components/my-container/my-container';
-import MyButton from './components/my-button.js';
-import { Action, ReactiveElement, State } from './types.js';
+import { Action, initializeSubscriptions } from './utils/subscribe.js';
+import { CellValue, State } from './types.js';
+import { BoardLens } from './components';
 
-const children: ReactiveElement[] = [];
+const NNArray = (n: number, fill: any) =>
+  Array(n)
+    .fill(null)
+    .map(() => Array(n).fill(fill));
+
+const reducer = (state: State, action: Action) => {
+  switch (action.type) {
+    case 'update':
+      const { i, j, value, color } = action.data;
+      state.board[i][j] = value;
+      state.color = color;
+      console.log(i, j, value, state);
+      return state;
+    default:
+      return state;
+  }
+};
+
+let initialState: State = {
+  board: NNArray(9, null),
+};
 
 (() => {
-  const reducer = (state: State, action: Action) => {
-    switch (action.type) {
-      case 'update':
-        const { i, j, value, color } = action.data;
-        state.board[i][j] = value;
-        state.color = color;
-        console.log(i, j, value, state);
-        return state;
-      default:
-        return state;
-    }
-  };
+  initializeSubscriptions(initialState, reducer);
 
-  const dispatch = (action: Action) => {
-    state = reducer(state, action);
-    children.forEach((child) => child.render(state));
-    return state;
-  };
+  // Move this stuff to a web component so we can utilize templates
+  document.body.innerHTML = `<div id="app">
+      <div id="board"><sudoku-board class="main-board"/></div>
+      <div id="viewer"></div>
+    </div>`;
 
-  let state: State = {
-    board: Array(9)
-      .fill(null)
-      .map(() => Array(9).fill(null)),
-  };
+  const secondary = Array(9)
+    .fill(null)
+    .map((_, i) => new BoardLens((i + 1) as CellValue));
+  secondary.forEach((board) => board.classList.add('secondary-board'));
+  document.querySelector('#viewer').append(...secondary);
 
-  // const data = Array(9).fill(Array(9).fill(null));
-
-  document.querySelector('body').appendChild(component('cora'));
-
-  // const el = document.createElement('my-container') as MyContainer;
-  const el = new MyContainer({ dispatch, state });
-  children.push(el);
-  document.querySelector('body').appendChild(el);
-
-  const le = new MyButton();
-  document.querySelector('body').appendChild(le);
-
-  // Add hot reloading in dev mo
+  // Add hot reloading in dev mode
   document.write(
     '<script src="http://' +
       (location.host || 'localhost').split(':')[0] +

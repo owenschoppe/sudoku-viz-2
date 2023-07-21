@@ -5,9 +5,9 @@
   --board-group-gap: var(--public-board-gap, 4px);
 }
 
-::part(button) {
+/* ::part(button) {
   color: darkgreen;
-}
+} */
 
 .grid {
   display: grid;
@@ -33,4 +33,5 @@
   width: var(--board-size);
   row-gap: var(--board-cell-gap);
   column-gap: var(--board-cell-gap);
+  line-height: 0;
 }

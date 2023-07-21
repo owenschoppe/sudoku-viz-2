@@ -1,4 +1,5 @@
-import { CellValue, Dispatch, State } from '../types';
+import { CellValue, State } from '../../types.js';
+import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 
 /**
  * Cell element that implements the dispatch pattern.
@@ -12,45 +13,40 @@ import { CellValue, Dispatch, State } from '../types';
  * @param j
  * @param value
  */
-export default class Cell extends HTMLElement {
+export class BoardCellLens extends ReactiveMixin(HTMLElement) {
   i: number;
   j: number;
-  value: CellValue | null;
+  lens: CellValue | null;
+  value: CellValue | null = null;
   css: string;
-  state: State;
-  dispatch: Dispatch;
   button: HTMLButtonElement;
 
   constructor({
     i,
     j,
     css,
-    dispatch,
-    state,
+    lens,
   }: {
     css?: string;
     i: number;
     j: number;
-    value?: CellValue | null;
-    dispatch: Dispatch;
-    state: State;
+    lens?: CellValue;
   }) {
     super();
     this.attachShadow({ mode: 'open' });
     this.i = i;
     this.j = j;
-    this.value = state.board[i][j];
     this.css = css;
-    this.state = state;
-    this.dispatch = dispatch;
+    this.lens = lens;
   }
 
   connectedCallback() {
     this.init();
-    this.render(this.state);
+    super.connectedCallback();
   }
 
   disconnectedCallback() {
+    super.disconnectedCallback();
     this.shadowRoot
       .querySelector('button')
       .removeEventListener('click', this.handleClick);
@@ -65,17 +61,14 @@ export default class Cell extends HTMLElement {
     this.button.addEventListener('click', this.handleClick.bind(this));
   }
 
-  // Render method
-  // Can diff current state against stored state to decide whether to render.
   render(state: State) {
-    this.state = state;
-    this.value = state.board[this.i][this.j];
-    this.button.textContent = String(this.value || '');
-    if (this.state.color)
-      this.button.setAttribute(
-        'style',
-        `background-color: ${this.state.color}`,
-      );
+    const value = state.board[this.i][this.j];
+    const displayValue = value === this.lens ? value : null;
+    if (displayValue !== this.value) {
+      this.state = state;
+      this.value = displayValue;
+      this.button.textContent = String(this.value || '');
+    }
   }
 
   handleClick(_event: MouseEvent) {
@@ -85,7 +78,7 @@ export default class Cell extends HTMLElement {
       data: {
         i: this.i,
         j: this.j,
-        value: this.value ? this.value + 1 : 1,
+        value: this.lens,
         color: this.getColor(),
       },
     }).board[this.i][this.j];
@@ -96,6 +89,7 @@ export default class Cell extends HTMLElement {
     return `rgb(${step * this.i},${step * this.j},${step * this.value})`;
   }
 
+  // Todo
   template = () => html`
     <!DOCTYPE html>
     <style>
@@ -118,4 +112,4 @@ export default class Cell extends HTMLElement {
 
 const html = String.raw;
 
-customElements.define('board-cell', Cell);
+customElements.define('board-cell-lens', BoardCellLens);
