@@ -1,0 +1,116 @@
+// Old app the board data structure was [i][j][k]
+// where k[0] is the cell value where 0 is empty
+// and k[1-9] is the binary probability of that number being in that cell
+// value of 0 means it can't be that value, value of 1 means it can be.
+
+import { Board } from '../types';
+import { slice2d } from './array';
+import { justNumbers } from './numbers';
+import { unique } from './unique';
+
+// boards: 201 one of the main challenges is undoing a board move. just because we remove a value from a cell doesn't mean it then becomes legal for all related cells
+
+/**
+ * Efficient computation of which values are taken
+ * @param board
+ * @param i
+ * @param j
+ * @returns number[] of unique values in rows, columns, groups
+ */
+export const allRelatedValues = (board: Board, i: number, j: number) =>
+  justNumbers(
+    unique(
+      rowValues(board, i).concat(
+        colValues(board, j),
+        grpValues(board, cellToGroupIndex[i][j]),
+      ),
+    ),
+  );
+// Do we need to filter null?
+// Should null be 0?
+// Do we need to remove the current cell value from the list? This way the cell can contain the only remaining value in the possibilities array.
+
+export const rowValExcluding = (board: Board, i: number, j: number) => {
+  const values = rowValues(board, i);
+  values.splice(j, 1);
+  return values;
+};
+export const colValExcluding = (board: Board, i: number, j: number) => {
+  const values = colValues(board, j);
+  values.splice(i, 1);
+  return values;
+};
+export const grpValExcluding = (board: Board, i: number, j: number) => {
+  const values = grpValues(board, cellToGroupIndex[i][j]);
+  const index = cellToGroupMemberIndex[i][j];
+  values.splice(index, 1);
+  return values;
+};
+
+/**
+ * Efficient computation of which values are taken, excluding the current cell's value
+ * @param board
+ * @param i
+ * @param j
+ * @returns
+ */
+export const allValuesExcludingCell = (board: Board, i: number, j: number) => {
+  return justNumbers(
+    unique(
+      [rowValExcluding, colValExcluding, grpValExcluding].flatMap((fn) =>
+        fn(board, i, j),
+      ),
+    ),
+  );
+};
+
+export const rowValues = (board: Board, i: number) => board[i].slice();
+export const colValues = (board: Board, j: number) =>
+  board.map((row) => row[j]);
+
+/**
+ * should this take g or i,j?
+ * @param board
+ * @param g
+ * @returns
+ */
+export const grpValues = (board: Board, g: number) => {
+  const [rowStart, colStart] = groupStartCoords[g];
+  return slice2d(board, rowStart, colStart, rowStart + 3, colStart + 3).flat();
+};
+
+const cellToGroupIndex = [
+  [0, 0, 0, 1, 1, 1, 2, 2, 2],
+  [0, 0, 0, 1, 1, 1, 2, 2, 2],
+  [0, 0, 0, 1, 1, 1, 2, 2, 2],
+  [3, 3, 3, 4, 4, 4, 5, 5, 5],
+  [3, 3, 3, 4, 4, 4, 5, 5, 5],
+  [3, 3, 3, 4, 4, 4, 5, 5, 5],
+  [6, 6, 6, 7, 7, 7, 8, 8, 8],
+  [6, 6, 6, 7, 7, 7, 8, 8, 8],
+  [6, 6, 6, 7, 7, 7, 8, 8, 8],
+];
+
+const cellToGroupMemberIndex = [
+  [0, 1, 2, 0, 1, 2, 0, 1, 2],
+  [3, 4, 5, 3, 4, 5, 3, 4, 5],
+  [6, 7, 8, 6, 7, 8, 6, 7, 8],
+  [0, 1, 2, 0, 1, 2, 0, 1, 2],
+  [3, 4, 5, 3, 4, 5, 3, 4, 5],
+  [6, 7, 8, 6, 7, 8, 6, 7, 8],
+  [0, 1, 2, 0, 1, 2, 0, 1, 2],
+  [3, 4, 5, 3, 4, 5, 3, 4, 5],
+  [6, 7, 8, 6, 7, 8, 6, 7, 8],
+];
+
+const groupStartCoords: [rowStart: number, colStart: number][] = [
+  [0, 0],
+  [0, 3],
+  [0, 6],
+  [3, 0],
+  [3, 3],
+  [3, 6],
+  [6, 0],
+  [6, 3],
+  [6, 6],
+];
