@@ -5,6 +5,7 @@ body {
 
   --main-board: 478px;
   --board-gap: 8px;
+  background: black;
 }
 
 .main-board {

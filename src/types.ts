@@ -2,8 +2,19 @@ export type CellValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export type Board = CellValue[][];
 
+export type Possibilities = Record<CellValue, 0 | 1>;
+
+export type PossibilitiesForCell = {
+  possibilities: Possibilities;
+  possibilityCount: number;
+  value: CellValue;
+};
+
+export type PossibilitiesForBoard = PossibilitiesForCell[][];
+
 export type State = {
   board: Board;
+  possibilities: PossibilitiesForBoard;
   color?: string;
 };
 

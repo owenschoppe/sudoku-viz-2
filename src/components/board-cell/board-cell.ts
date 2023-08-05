@@ -1,5 +1,6 @@
 import { CellValue, State } from '../../types.js';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
+import { isValidInput } from '../../utils/sudoku.js';
 
 /**
  * Cell element that implements the dispatch pattern.
@@ -18,7 +19,8 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
   j: number;
   value: CellValue | null;
   css: string;
-  button: HTMLButtonElement;
+  // button: HTMLButtonElement;
+  input: HTMLInputElement;
 
   constructor({ i, j, css }: { css?: string; i: number; j: number }) {
     super();
@@ -46,8 +48,11 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
 
     shadowRoot.innerHTML = this.template();
 
-    this.button = shadowRoot.querySelector('button');
-    this.button.addEventListener('click', this.handleClick.bind(this));
+    // this.button = shadowRoot.querySelector('button');
+    // this.button.addEventListener('click', this.handleClick.bind(this));
+
+    this.input = shadowRoot.querySelector('input');
+    this.input.addEventListener('keydown', this.handleChange.bind(this));
   }
 
   render(state: State) {
@@ -55,21 +60,43 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     if (value !== this.value) {
       this.state = state;
       this.value = value;
-      this.button.textContent = String(this.value || '');
+      // this.button.textContent = String(this.value || '');
+      this.input.value = String(this.value ?? '');
     }
   }
 
-  handleClick(_event: MouseEvent) {
-    // console.log('click', this.i, this.j, this.value, event);
-    this.value = this.dispatch({
-      type: 'update',
-      data: {
-        i: this.i,
-        j: this.j,
-        value: this.value ? (this.value % 9) + 1 : 1,
-        color: this.getColor(),
-      },
-    }).board[this.i][this.j];
+  // handleClick(_event: MouseEvent) {
+  //   // console.log('click', this.i, this.j, this.value, event);
+  //   this.value = this.dispatch({
+  //     type: 'update',
+  //     data: {
+  //       i: this.i,
+  //       j: this.j,
+  //       value: this.value ? (this.value % 9) + 1 : 1,
+  //       color: this.getColor(),
+  //     },
+  //   }).board[this.i][this.j];
+  // }
+
+  handleChange(event: KeyboardEvent) {
+    event.preventDefault();
+    if (
+      isValidInput(
+        event.key,
+        this.state.possibilities[this.i][this.j].possibilities,
+      ) &&
+      Number(event.key) !== this.value
+    ) {
+      this.value = this.dispatch({
+        type: 'update',
+        data: {
+          i: this.i,
+          j: this.j,
+          value: Number(event.key),
+          color: this.getColor(),
+        },
+      }).board[this.i][this.j];
+    }
   }
 
   getColor() {
@@ -81,7 +108,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
   template = () => html`
     <!DOCTYPE html>
     <style>
-      button {
+      button, input {
         font-weight: var(--cell-font-weight, bold);
         font-size: var(--cell-text-size, 10px);
         color: var(--cell-text-color, black);
@@ -91,10 +118,12 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
         height: var(--cell-height, 100%);
         padding: 0;
         margin: 0;
+        text-align: center;
       }
       ${this.css}
     </style>
-    <button part="button">${this.value ?? ``}</button>
+    <!-- <button part="button">${this.value ?? ``}</button> -->
+    <input value="${String(this.value ?? '')}" />
   `;
 }
 

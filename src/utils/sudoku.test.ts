@@ -8,6 +8,9 @@ import {
   grpValExcluding,
   colValExcluding,
   rowValExcluding,
+  possibilitiesForCell,
+  possibilities,
+  isValidInput,
 } from './sudoku';
 
 const board: Board = [
@@ -268,5 +271,122 @@ describe('allValuesExcludingCell', () => {
   it('should return taken values for cell excluding cell', () => {
     const result = allValuesExcludingCell(sudoku, 1, 0);
     expect(result).toStrictEqual([4, 1, 3, 9, 5]);
+  });
+});
+
+describe('possibilitiesForCell', () => {
+  it('should return possibilities for cell', () => {
+    const result = possibilitiesForCell(sudoku, 1, 0);
+    expect(result.possibilities).toStrictEqual({
+      1: 0,
+      2: 1,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 1,
+      7: 1,
+      8: 1,
+      9: 0,
+    });
+    expect(result.possibilityCount).toEqual(4);
+    expect(result.value).toEqual(2);
+  });
+
+  it('should return possibilities for cell with no related values', () => {
+    const result = possibilitiesForCell(sudoku, 7, 7);
+    expect(result.possibilities).toStrictEqual({
+      1: 1,
+      2: 1,
+      3: 1,
+      4: 1,
+      5: 1,
+      6: 1,
+      7: 1,
+      8: 1,
+      9: 1,
+    });
+    expect(result.possibilityCount).toEqual(9);
+    expect(result.value).toEqual(null);
+  });
+});
+
+describe('possibilities', () => {
+  it('should return possibility matrix', () => {
+    const result = possibilities(sudoku);
+    expect(result[1][0].possibilities).toEqual({
+      1: 0,
+      2: 1,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 1,
+      7: 1,
+      8: 1,
+      9: 0,
+    });
+    expect(result[1][0].possibilityCount).toEqual(4);
+    expect(result[1][0].value).toEqual(2);
+  });
+});
+
+describe('isValidInput', () => {
+  it('should return true', () => {
+    const result = isValidInput('2', {
+      1: 0,
+      2: 1,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 1,
+      7: 1,
+      8: 1,
+      9: 0,
+    });
+    expect(result).toBeTruthy();
+  });
+
+  it('should return false for taken value', () => {
+    const result = isValidInput('3', {
+      1: 0,
+      2: 1,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 1,
+      7: 1,
+      8: 1,
+      9: 0,
+    });
+    expect(result).toBeFalsy();
+  });
+
+  it('should return false for 0', () => {
+    const result = isValidInput('0', {
+      1: 0,
+      2: 1,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 1,
+      7: 1,
+      8: 1,
+      9: 0,
+    });
+    expect(result).toBeFalsy();
+  });
+
+  it('should return false for non-numeric', () => {
+    const result = isValidInput('z', {
+      1: 0,
+      2: 1,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 1,
+      7: 1,
+      8: 1,
+      9: 0,
+    });
+    expect(result).toBeFalsy();
   });
 });

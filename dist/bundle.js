@@ -80,6 +80,134 @@
         render(_state) { }
     };
 
+    const slice2d = (arr, rowStart, colStart, rowEnd, colEnd) => arr.slice(rowStart, rowEnd).map((row) => row.slice(colStart, colEnd));
+
+    const isNumber = (value) => typeof value === 'number';
+    const justNumbers = (arr) => arr.filter(isNumber);
+
+    const unique = (arr) => [...new Set(arr)];
+
+    // Old app the board data structure was [i][j][k]
+    // where k[0] is the cell value where 0 is empty
+    // and k[1-9] is the binary probability of that number being in that cell
+    // value of 0 means it can't be that value, value of 1 means it can be.
+    // boards: 201 one of the main challenges is undoing a board move. just because we remove a value from a cell doesn't mean it then becomes legal for all related cells
+    /**
+     * Compute all the possible moves on the current state of the sudoku board
+     * @param board
+     * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: number | null }[][] Where 0 means the cell can't be that value and 1 means it can be
+     */
+    const possibilities = (board) => {
+        return board.map((row, i) => row.map((_, j) => possibilitiesForCell(board, i, j)));
+    };
+    /**
+     * Get an object representing all the possibilities for a cell
+     * TODO: catch the case when the possibility of a value is 0 for all other cells in row, col, or group. Chain of length 1?
+     * @param board Sudoku board {1-9}[][]
+     * @param i Row index
+     * @param j Column index
+     * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: number | null } Where 0 means the cell can't be that value and 1 means it can be
+     */
+    const possibilitiesForCell = (board, i, j) => {
+        const basePossibilities = {
+            1: 1,
+            2: 1,
+            3: 1,
+            4: 1,
+            5: 1,
+            6: 1,
+            7: 1,
+            8: 1,
+            9: 1,
+        };
+        const taken = allValuesExcludingCell(board, i, j);
+        const possibilities = taken.reduce((current, value) => {
+            current[value] = 0;
+            return current;
+        }, basePossibilities);
+        return {
+            possibilities,
+            possibilityCount: 9 - taken.length,
+            value: board[i][j],
+        };
+    };
+    /**
+     * Efficient computation of which values are taken, excluding the current cell's value
+     * @param board
+     * @param i
+     * @param j
+     * @returns
+     */
+    const allValuesExcludingCell = (board, i, j) => {
+        return justNumbers(unique([rowValExcluding, colValExcluding, grpValExcluding].flatMap((fn) => fn(board, i, j))));
+    };
+    // Do we need to filter null?
+    // Should null be 0?
+    const rowValExcluding = (board, i, j) => {
+        const values = rowValues(board, i);
+        values.splice(j, 1);
+        return values;
+    };
+    const colValExcluding = (board, i, j) => {
+        const values = colValues(board, j);
+        values.splice(i, 1);
+        return values;
+    };
+    const grpValExcluding = (board, i, j) => {
+        const values = grpValues(board, cellToGroupIndex[i][j]);
+        const index = cellToGroupMemberIndex[i][j];
+        values.splice(index, 1);
+        return values;
+    };
+    const rowValues = (board, i) => board[i].slice();
+    const colValues = (board, j) => board.map((row) => row[j]);
+    /**
+     * should this take g or i,j?
+     * @param board
+     * @param g
+     * @returns
+     */
+    const grpValues = (board, g) => {
+        const [rowStart, colStart] = groupStartCoords[g];
+        return slice2d(board, rowStart, colStart, rowStart + 3, colStart + 3).flat();
+    };
+    const cellToGroupIndex = [
+        [0, 0, 0, 1, 1, 1, 2, 2, 2],
+        [0, 0, 0, 1, 1, 1, 2, 2, 2],
+        [0, 0, 0, 1, 1, 1, 2, 2, 2],
+        [3, 3, 3, 4, 4, 4, 5, 5, 5],
+        [3, 3, 3, 4, 4, 4, 5, 5, 5],
+        [3, 3, 3, 4, 4, 4, 5, 5, 5],
+        [6, 6, 6, 7, 7, 7, 8, 8, 8],
+        [6, 6, 6, 7, 7, 7, 8, 8, 8],
+        [6, 6, 6, 7, 7, 7, 8, 8, 8],
+    ];
+    const cellToGroupMemberIndex = [
+        [0, 1, 2, 0, 1, 2, 0, 1, 2],
+        [3, 4, 5, 3, 4, 5, 3, 4, 5],
+        [6, 7, 8, 6, 7, 8, 6, 7, 8],
+        [0, 1, 2, 0, 1, 2, 0, 1, 2],
+        [3, 4, 5, 3, 4, 5, 3, 4, 5],
+        [6, 7, 8, 6, 7, 8, 6, 7, 8],
+        [0, 1, 2, 0, 1, 2, 0, 1, 2],
+        [3, 4, 5, 3, 4, 5, 3, 4, 5],
+        [6, 7, 8, 6, 7, 8, 6, 7, 8],
+    ];
+    const groupStartCoords = [
+        [0, 0],
+        [0, 3],
+        [0, 6],
+        [3, 0],
+        [3, 3],
+        [3, 6],
+        [6, 0],
+        [6, 3],
+        [6, 6],
+    ];
+    const isValidInput = (input, possibilities) => {
+        return !!possibilities[Number(input)] ?? false;
+    };
+
     /**
      * Cell element that implements the dispatch pattern.
      * Each WC class is responsible for tracking the child elements it creates
@@ -97,7 +225,8 @@
         j;
         value;
         css;
-        button;
+        // button: HTMLButtonElement;
+        input;
         constructor({ i, j, css }) {
             super();
             this.attachShadow({ mode: 'open' });
@@ -119,28 +248,46 @@
         init() {
             const { shadowRoot } = this;
             shadowRoot.innerHTML = this.template();
-            this.button = shadowRoot.querySelector('button');
-            this.button.addEventListener('click', this.handleClick.bind(this));
+            // this.button = shadowRoot.querySelector('button');
+            // this.button.addEventListener('click', this.handleClick.bind(this));
+            this.input = shadowRoot.querySelector('input');
+            this.input.addEventListener('keydown', this.handleChange.bind(this));
         }
         render(state) {
             const value = state.board[this.i][this.j];
             if (value !== this.value) {
                 this.state = state;
                 this.value = value;
-                this.button.textContent = String(this.value || '');
+                // this.button.textContent = String(this.value || '');
+                this.input.value = String(this.value ?? '');
             }
         }
-        handleClick(_event) {
-            // console.log('click', this.i, this.j, this.value, event);
-            this.value = this.dispatch({
-                type: 'update',
-                data: {
-                    i: this.i,
-                    j: this.j,
-                    value: this.value ? (this.value % 9) + 1 : 1,
-                    color: this.getColor(),
-                },
-            }).board[this.i][this.j];
+        // handleClick(_event: MouseEvent) {
+        //   // console.log('click', this.i, this.j, this.value, event);
+        //   this.value = this.dispatch({
+        //     type: 'update',
+        //     data: {
+        //       i: this.i,
+        //       j: this.j,
+        //       value: this.value ? (this.value % 9) + 1 : 1,
+        //       color: this.getColor(),
+        //     },
+        //   }).board[this.i][this.j];
+        // }
+        handleChange(event) {
+            event.preventDefault();
+            if (isValidInput(event.key, this.state.possibilities[this.i][this.j].possibilities) &&
+                Number(event.key) !== this.value) {
+                this.value = this.dispatch({
+                    type: 'update',
+                    data: {
+                        i: this.i,
+                        j: this.j,
+                        value: Number(event.key),
+                        color: this.getColor(),
+                    },
+                }).board[this.i][this.j];
+            }
         }
         getColor() {
             const step = 255 / 9;
@@ -150,7 +297,7 @@
         template = () => html$1 `
     <!DOCTYPE html>
     <style>
-      button {
+      button, input {
         font-weight: var(--cell-font-weight, bold);
         font-size: var(--cell-text-size, 10px);
         color: var(--cell-text-color, black);
@@ -160,10 +307,12 @@
         height: var(--cell-height, 100%);
         padding: 0;
         margin: 0;
+        text-align: center;
       }
       ${this.css}
     </style>
-    <button part="button">${this.value ?? ``}</button>
+    <!-- <button part="button">${this.value ?? ``}</button> -->
+    <input value="${String(this.value ?? '')}" />
   `;
     }
     const html$1 = String.raw;
@@ -199,13 +348,10 @@
                 .flat();
             this.board = shadowRoot.querySelector('#board');
             this.board.append(...this.cells);
+            this.board.setAttribute('style', `--cell-text-size: 24px;`);
         }
-        render(state) {
-            console.log('render board', state.board);
-            // Slightly expensive since it updates style for every cell.
-            if (state.color) {
-                this.board.setAttribute('style', `--cell-text-color: ${state.color}; background-color: ${state.color};`);
-            }
+        render(_state) {
+            // console.log('render board', state.board);
         }
     }
     customElements.define('sudoku-board', Board);
@@ -254,12 +400,24 @@
             this.button.addEventListener('click', this.handleClick.bind(this));
         }
         render(state) {
-            const value = state.board[this.i][this.j];
-            const displayValue = value === this.lens ? value : null;
-            if (displayValue !== this.value) {
-                this.state = state;
-                this.value = displayValue;
-                this.button.textContent = String(this.value || '');
+            this.value = state.board[this.i][this.j];
+            const possibility = state.possibilities[this.i][this.j].possibilities[this.lens];
+            const selected = this.value === this.lens;
+            const displayValue = selected || possibility ? this.lens : null;
+            this.button.textContent = String(displayValue || '');
+            this.updateClass();
+        }
+        updateClass() {
+            const { possibilities, possibilityCount } = this.state.possibilities[this.i][this.j];
+            this.button.classList.remove('selected', 'only', 'possibility');
+            if (this.value === this.lens) {
+                this.button.classList.add('selected');
+            }
+            else if (possibilityCount === 1 && possibilities[this.lens]) {
+                this.button.classList.add('only');
+            }
+            else if (possibilities[this.lens]) {
+                this.button.classList.add('possibility');
             }
         }
         handleClick(_event) {
@@ -287,12 +445,30 @@
         font-size: var(--cell-text-size, 10px);
         color: var(--cell-text-color, black);
         border: none;
-        background: var(--cell-background-color, #f3f3f3);
+        /* background: var(--cell-background-color, #f3f3f3); */
+        background: white;
+        opacity: 0.1;
         width: var(--cell-width, 100%);
         height: var(--cell-height, 100%);
         padding: 0;
         margin: 0;
       }
+      button.selected {
+        background: var(--cell-background-color, #f3f3f3);
+        opacity: 1;
+      }
+      button.only {
+        background: white;
+        opacity: 1;
+      }
+      button.possibility {
+        background: var(--cell-background-color, #f3f3f3);
+        opacity: 0.5;
+      }
+      :host{
+        display: block;
+      }
+
       ${this.css}
     </style>
     <button part="button">${this.value ?? ``}</button>
@@ -301,15 +477,29 @@
     const html = String.raw;
     customElements.define('board-cell-lens', BoardCellLens);
 
-    class BoardLens extends Board {
+    //@ts-ignore
+    class BoardLens extends ReactiveMixin(HTMLElement) {
+        cells = [];
+        board;
         lens = null;
         constructor(lens) {
             super();
+            this.attachShadow({ mode: 'open' });
             this.lens = lens;
+        }
+        connectedCallback() {
+            this.init();
+            super.connectedCallback();
+        }
+        disconnectedCallback() {
+            super.disconnectedCallback();
         }
         init() {
             const { shadowRoot } = this;
-            super.init();
+            shadowRoot.innerHTML = html$2;
+            const style = document.createElement('style');
+            style.innerHTML = css;
+            shadowRoot.prepend(style);
             this.cells = this.state.board
                 .map((row, i) => row.map((_value, j) => new BoardCellLens({
                 i,
@@ -320,27 +510,51 @@
                 .flat();
             this.board = shadowRoot.querySelector('#board');
             this.board.append(...this.cells);
+            this.board.setAttribute('style', `--cell-text-color: black; --cell-background-color: hsl(${hue[this.lens]} ${saturation}% ${brightness}%);`);
         }
     }
+    const hue = {
+        1: 40,
+        2: 80,
+        3: 120,
+        4: 160,
+        5: 200,
+        6: 240,
+        7: 280,
+        8: 320,
+        9: 360,
+    };
+    const saturation = 90;
+    const brightness = 75;
     customElements.define('sudoku-board-lens', BoardLens);
 
     const NNArray = (n, fill) => Array(n)
         .fill(null)
         .map(() => Array(n).fill(fill));
+    /**
+     * Reducer function to manage sudoku calculations
+     * TODO: save state in local storage to avoid losing it on reload
+     * @param state
+     * @param action
+     * @returns
+     */
     const reducer = (state, action) => {
         switch (action.type) {
             case 'update':
                 const { i, j, value, color } = action.data;
                 state.board[i][j] = value;
                 state.color = color;
+                state.possibilities = possibilities(state.board);
                 console.log(i, j, value, state);
                 return state;
             default:
                 return state;
         }
     };
-    let initialState = {
-        board: NNArray(9, null),
+    const initialBoard = NNArray(9, null);
+    const initialState = {
+        board: initialBoard,
+        possibilities: possibilities(initialBoard),
     };
     (() => {
         initializeSubscriptions(initialState, reducer);

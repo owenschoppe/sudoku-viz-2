@@ -62,12 +62,25 @@ export class BoardCellLens extends ReactiveMixin(HTMLElement) {
   }
 
   render(state: State) {
-    const value = state.board[this.i][this.j];
-    const displayValue = value === this.lens ? value : null;
-    if (displayValue !== this.value) {
-      this.state = state;
-      this.value = displayValue;
-      this.button.textContent = String(this.value || '');
+    this.value = state.board[this.i][this.j];
+    const possibility =
+      state.possibilities[this.i][this.j].possibilities[this.lens];
+    const selected = this.value === this.lens;
+    const displayValue = selected || possibility ? this.lens : null;
+    this.button.textContent = String(displayValue || '');
+    this.updateClass();
+  }
+
+  updateClass() {
+    const { possibilities, possibilityCount } =
+      this.state.possibilities[this.i][this.j];
+    this.button.classList.remove('selected', 'only', 'possibility');
+    if (this.value === this.lens) {
+      this.button.classList.add('selected');
+    } else if (possibilityCount === 1 && possibilities[this.lens]) {
+      this.button.classList.add('only');
+    } else if (possibilities[this.lens]) {
+      this.button.classList.add('possibility');
     }
   }
 
@@ -98,12 +111,30 @@ export class BoardCellLens extends ReactiveMixin(HTMLElement) {
         font-size: var(--cell-text-size, 10px);
         color: var(--cell-text-color, black);
         border: none;
-        background: var(--cell-background-color, #f3f3f3);
+        /* background: var(--cell-background-color, #f3f3f3); */
+        background: white;
+        opacity: 0.1;
         width: var(--cell-width, 100%);
         height: var(--cell-height, 100%);
         padding: 0;
         margin: 0;
       }
+      button.selected {
+        background: var(--cell-background-color, #f3f3f3);
+        opacity: 1;
+      }
+      button.only {
+        background: white;
+        opacity: 1;
+      }
+      button.possibility {
+        background: var(--cell-background-color, #f3f3f3);
+        opacity: 0.5;
+      }
+      :host{
+        display: block;
+      }
+
       ${this.css}
     </style>
     <button part="button">${this.value ?? ``}</button>

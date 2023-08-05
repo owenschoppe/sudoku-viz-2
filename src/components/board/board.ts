@@ -48,17 +48,11 @@ export class Board extends ReactiveMixin(HTMLElement) {
 
     this.board = shadowRoot.querySelector('#board');
     this.board.append(...this.cells);
+    this.board.setAttribute('style', `--cell-text-size: 24px;`);
   }
 
-  render(state) {
-    console.log('render board', state.board);
-    // Slightly expensive since it updates style for every cell.
-    if (state.color) {
-      this.board.setAttribute(
-        'style',
-        `--cell-text-color: ${state.color}; background-color: ${state.color};`,
-      );
-    }
+  render(_state) {
+    // console.log('render board', state.board);
   }
 }
 

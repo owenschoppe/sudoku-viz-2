@@ -3,18 +3,27 @@ import './main.css';
 import { Action, initializeSubscriptions } from './utils/subscribe.js';
 import { CellValue, State } from './types.js';
 import { BoardLens } from './components';
+import { possibilities } from './utils/sudoku';
 
 const NNArray = (n: number, fill: any) =>
   Array(n)
     .fill(null)
     .map(() => Array(n).fill(fill));
 
+/**
+ * Reducer function to manage sudoku calculations
+ * TODO: save state in local storage to avoid losing it on reload
+ * @param state
+ * @param action
+ * @returns
+ */
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'update':
       const { i, j, value, color } = action.data;
       state.board[i][j] = value;
       state.color = color;
+      state.possibilities = possibilities(state.board);
       console.log(i, j, value, state);
       return state;
     default:
@@ -22,8 +31,11 @@ const reducer = (state: State, action: Action) => {
   }
 };
 
-let initialState: State = {
-  board: NNArray(9, null),
+const initialBoard = NNArray(9, null);
+
+const initialState: State = {
+  board: initialBoard,
+  possibilities: possibilities(initialBoard),
 };
 
 (() => {
