@@ -38,9 +38,11 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.shadowRoot
-      .querySelector('button')
-      .removeEventListener('click', this.handleClick);
+    // this.shadowRoot
+    //   .querySelector('button')
+    //   .removeEventListener('click', this.handleClick);
+
+    this.input.removeEventListener('keydown', this.handleChange);
   }
 
   init() {
@@ -79,6 +81,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
   // }
 
   handleChange(event: KeyboardEvent) {
+    console.log(event);
     event.preventDefault();
     if (
       isValidInput(
@@ -93,6 +96,16 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
           i: this.i,
           j: this.j,
           value: Number(event.key),
+          color: this.getColor(),
+        },
+      }).board[this.i][this.j];
+    } else if (event.key === 'Backspace') {
+      this.value = this.dispatch({
+        type: 'update',
+        data: {
+          i: this.i,
+          j: this.j,
+          value: null,
           color: this.getColor(),
         },
       }).board[this.i][this.j];
@@ -120,10 +133,21 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
         margin: 0;
         text-align: center;
       }
-      ${this.css}
+      /* Hide numeric input buttons */
+      /* Chrome, Safari, Edge, Opera */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      /* Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+            ${this.css}
     </style>
     <!-- <button part="button">${this.value ?? ``}</button> -->
-    <input value="${String(this.value ?? '')}" />
+    <input value="${String(this.value ?? '')}" type="number" />
   `;
 }
 

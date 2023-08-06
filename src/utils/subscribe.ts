@@ -22,6 +22,7 @@ const subscribers = new Set<Render<any>>();
 /**
  * Subscriber function for the module singleton.
  * TODO: add dependency array param and update state to use `new Proxy` and only call render when dependency changes.
+ * This will be useful when using arrow keys to navigate the board. Updates state but doesn't require rerendering.
  *
  * @param render Render function that will be called with State with every change to state.
  * @returns { dispatch, unsubscribe } Dispatch can be called with an Action to update state and call subscribed render fns. Unsubscribe has the subscriber bound to it and will unsubscribe the function.

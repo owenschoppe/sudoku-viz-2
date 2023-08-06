@@ -5,6 +5,7 @@
     /**
      * Subscriber function for the module singleton.
      * TODO: add dependency array param and update state to use `new Proxy` and only call render when dependency changes.
+     * This will be useful when using arrow keys to navigate the board. Updates state but doesn't require rerendering.
      *
      * @param render Render function that will be called with State with every change to state.
      * @returns { dispatch, unsubscribe } Dispatch can be called with an Action to update state and call subscribed render fns. Unsubscribe has the subscriber bound to it and will unsubscribe the function.
@@ -241,9 +242,10 @@
         }
         disconnectedCallback() {
             super.disconnectedCallback();
-            this.shadowRoot
-                .querySelector('button')
-                .removeEventListener('click', this.handleClick);
+            // this.shadowRoot
+            //   .querySelector('button')
+            //   .removeEventListener('click', this.handleClick);
+            this.input.removeEventListener('keydown', this.handleChange);
         }
         init() {
             const { shadowRoot } = this;
@@ -275,6 +277,7 @@
         //   }).board[this.i][this.j];
         // }
         handleChange(event) {
+            console.log(event);
             event.preventDefault();
             if (isValidInput(event.key, this.state.possibilities[this.i][this.j].possibilities) &&
                 Number(event.key) !== this.value) {
@@ -284,6 +287,17 @@
                         i: this.i,
                         j: this.j,
                         value: Number(event.key),
+                        color: this.getColor(),
+                    },
+                }).board[this.i][this.j];
+            }
+            else if (event.key === 'Backspace') {
+                this.value = this.dispatch({
+                    type: 'update',
+                    data: {
+                        i: this.i,
+                        j: this.j,
+                        value: null,
                         color: this.getColor(),
                     },
                 }).board[this.i][this.j];
@@ -309,10 +323,21 @@
         margin: 0;
         text-align: center;
       }
-      ${this.css}
+      /* Hide numeric input buttons */
+      /* Chrome, Safari, Edge, Opera */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      /* Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+            ${this.css}
     </style>
     <!-- <button part="button">${this.value ?? ``}</button> -->
-    <input value="${String(this.value ?? '')}" />
+    <input value="${String(this.value ?? '')}" type="number" />
   `;
     }
     const html$1 = String.raw;
@@ -534,11 +559,13 @@
     /**
      * Reducer function to manage sudoku calculations
      * TODO: save state in local storage to avoid losing it on reload
+     * TODO: add selected cell to state and add keyboard handler
      * @param state
      * @param action
      * @returns
      */
     const reducer = (state, action) => {
+        let updatedState;
         switch (action.type) {
             case 'update':
                 const { i, j, value, color } = action.data;
@@ -546,18 +573,25 @@
                 state.color = color;
                 state.possibilities = possibilities(state.board);
                 console.log(i, j, value, state);
-                return state;
+                updatedState = state;
+                break;
             default:
-                return state;
+                updatedState = state;
         }
+        window.localStorage.setItem('state', JSON.stringify(updatedState));
+        return updatedState;
     };
     const initialBoard = NNArray(9, null);
-    const initialState = {
-        board: initialBoard,
-        possibilities: possibilities(initialBoard),
+    const initialState = (savedBoard) => {
+        const board = savedBoard || initialBoard;
+        return {
+            board: board,
+            possibilities: possibilities(board),
+        };
     };
     (() => {
-        initializeSubscriptions(initialState, reducer);
+        const storedState = JSON.parse(window.localStorage.getItem('state'));
+        initializeSubscriptions(initialState(storedState?.board), reducer);
         // Move this stuff to a web component so we can utilize templates
         document.body.innerHTML = `<div id="app">
       <div id="board"><sudoku-board class="main-board"/></div>
