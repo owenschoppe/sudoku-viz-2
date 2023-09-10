@@ -3,12 +3,8 @@ import './main.css';
 import { Action, initializeSubscriptions } from './utils/subscribe.js';
 import { Board, CellValue, State } from './types.js';
 import { BoardLens } from './components';
-import { possibilities } from './utils/sudoku';
-
-const NNArray = (n: number, fill: any) =>
-  Array(n)
-    .fill(null)
-    .map(() => Array(n).fill(fill));
+import { possibilitiesForBoard } from './utils/sudoku';
+import { NNArray } from './utils/array';
 
 /**
  * Reducer function to manage sudoku calculations
@@ -25,7 +21,7 @@ const reducer = (state: State, action: Action) => {
       const { i, j, value, color } = action.data;
       state.board[i][j] = value;
       state.color = color;
-      state.possibilities = possibilities(state.board);
+      state.possibilities = possibilitiesForBoard(state.board);
       console.log(i, j, value, state);
       updatedState = state;
       break;
@@ -42,7 +38,7 @@ const initialState = (savedBoard?: Board): State => {
   const board = savedBoard || initialBoard;
   return {
     board: board,
-    possibilities: possibilities(board),
+    possibilities: possibilitiesForBoard(board),
   };
 };
 

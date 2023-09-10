@@ -81,10 +81,13 @@
         render(_state) { }
     };
 
-    const slice2d = (arr, rowStart, colStart, rowEnd, colEnd) => arr.slice(rowStart, rowEnd).map((row) => row.slice(colStart, colEnd));
-
     const isNumber = (value) => typeof value === 'number';
     const justNumbers = (arr) => arr.filter(isNumber);
+
+    const slice2d = (arr, rowStart, colStart, rowEnd, colEnd) => arr.slice(rowStart, rowEnd).map((row) => row.slice(colStart, colEnd));
+    const NNArray = (n, fill) => Array(n)
+        .fill(null)
+        .map(() => Array(n).fill(fill));
 
     const unique = (arr) => [...new Set(arr)];
 
@@ -98,7 +101,7 @@
      * @param board
      * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: number | null }[][] Where 0 means the cell can't be that value and 1 means it can be
      */
-    const possibilities = (board) => {
+    const possibilitiesForBoard = (board) => {
         return board.map((row, i) => row.map((_, j) => possibilitiesForCell(board, i, j)));
     };
     /**
@@ -226,7 +229,6 @@
         j;
         value;
         css;
-        // button: HTMLButtonElement;
         input;
         constructor({ i, j, css }) {
             super();
@@ -242,16 +244,11 @@
         }
         disconnectedCallback() {
             super.disconnectedCallback();
-            // this.shadowRoot
-            //   .querySelector('button')
-            //   .removeEventListener('click', this.handleClick);
             this.input.removeEventListener('keydown', this.handleChange);
         }
         init() {
             const { shadowRoot } = this;
             shadowRoot.innerHTML = this.template();
-            // this.button = shadowRoot.querySelector('button');
-            // this.button.addEventListener('click', this.handleClick.bind(this));
             this.input = shadowRoot.querySelector('input');
             this.input.addEventListener('keydown', this.handleChange.bind(this));
         }
@@ -260,22 +257,9 @@
             if (value !== this.value) {
                 this.state = state;
                 this.value = value;
-                // this.button.textContent = String(this.value || '');
                 this.input.value = String(this.value ?? '');
             }
         }
-        // handleClick(_event: MouseEvent) {
-        //   // console.log('click', this.i, this.j, this.value, event);
-        //   this.value = this.dispatch({
-        //     type: 'update',
-        //     data: {
-        //       i: this.i,
-        //       j: this.j,
-        //       value: this.value ? (this.value % 9) + 1 : 1,
-        //       color: this.getColor(),
-        //     },
-        //   }).board[this.i][this.j];
-        // }
         handleChange(event) {
             console.log(event);
             event.preventDefault();
@@ -311,7 +295,7 @@
         template = () => html$1 `
     <!DOCTYPE html>
     <style>
-      button, input {
+      input {
         font-weight: var(--cell-font-weight, bold);
         font-size: var(--cell-text-size, 10px);
         color: var(--cell-text-color, black);
@@ -336,7 +320,6 @@
       }
             ${this.css}
     </style>
-    <!-- <button part="button">${this.value ?? ``}</button> -->
     <input value="${String(this.value ?? '')}" type="number" />
   `;
     }
@@ -493,7 +476,6 @@
       :host{
         display: block;
       }
-
       ${this.css}
     </style>
     <button part="button">${this.value ?? ``}</button>
@@ -553,9 +535,6 @@
     const brightness = 75;
     customElements.define('sudoku-board-lens', BoardLens);
 
-    const NNArray = (n, fill) => Array(n)
-        .fill(null)
-        .map(() => Array(n).fill(fill));
     /**
      * Reducer function to manage sudoku calculations
      * TODO: save state in local storage to avoid losing it on reload
@@ -571,7 +550,7 @@
                 const { i, j, value, color } = action.data;
                 state.board[i][j] = value;
                 state.color = color;
-                state.possibilities = possibilities(state.board);
+                state.possibilities = possibilitiesForBoard(state.board);
                 console.log(i, j, value, state);
                 updatedState = state;
                 break;
@@ -586,7 +565,7 @@
         const board = savedBoard || initialBoard;
         return {
             board: board,
-            possibilities: possibilities(board),
+            possibilities: possibilitiesForBoard(board),
         };
     };
     (() => {

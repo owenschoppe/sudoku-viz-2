@@ -9,7 +9,7 @@ import {
   colValExcluding,
   rowValExcluding,
   possibilitiesForCell,
-  possibilities,
+  possibilitiesForBoard,
   isValidInput,
 } from './sudoku';
 
@@ -274,6 +274,18 @@ describe('allValuesExcludingCell', () => {
   });
 });
 
+const badBoard: Board = [
+  [3, 1, 6, 5, 7, 8, 4, 9, 2],
+  [2, 4, 5, 1, 3, 6, 8, 8, null],
+  [null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null],
+];
+
 describe('possibilitiesForCell', () => {
   it('should return possibilities for cell', () => {
     const result = possibilitiesForCell(sudoku, 1, 0);
@@ -308,11 +320,28 @@ describe('possibilitiesForCell', () => {
     expect(result.possibilityCount).toEqual(9);
     expect(result.value).toEqual(null);
   });
+
+  it('should return mismatched possibility and value', () => {
+    const result = possibilitiesForCell(badBoard, 1, 7);
+    expect(result.possibilities).toStrictEqual({
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0,
+      7: 1,
+      8: 0,
+      9: 0,
+    });
+    expect(result.possibilityCount).toEqual(1);
+    expect(result.value).toEqual(8);
+  });
 });
 
-describe('possibilities', () => {
+describe('possibilitiesForBoard', () => {
   it('should return possibility matrix', () => {
-    const result = possibilities(sudoku);
+    const result = possibilitiesForBoard(sudoku);
     expect(result[1][0].possibilities).toEqual({
       1: 0,
       2: 1,

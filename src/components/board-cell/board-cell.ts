@@ -19,7 +19,6 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
   j: number;
   value: CellValue | null;
   css: string;
-  // button: HTMLButtonElement;
   input: HTMLInputElement;
 
   constructor({ i, j, css }: { css?: string; i: number; j: number }) {
@@ -38,9 +37,6 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    // this.shadowRoot
-    //   .querySelector('button')
-    //   .removeEventListener('click', this.handleClick);
 
     this.input.removeEventListener('keydown', this.handleChange);
   }
@@ -49,9 +45,6 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     const { shadowRoot } = this;
 
     shadowRoot.innerHTML = this.template();
-
-    // this.button = shadowRoot.querySelector('button');
-    // this.button.addEventListener('click', this.handleClick.bind(this));
 
     this.input = shadowRoot.querySelector('input');
     this.input.addEventListener('keydown', this.handleChange.bind(this));
@@ -62,23 +55,9 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     if (value !== this.value) {
       this.state = state;
       this.value = value;
-      // this.button.textContent = String(this.value || '');
       this.input.value = String(this.value ?? '');
     }
   }
-
-  // handleClick(_event: MouseEvent) {
-  //   // console.log('click', this.i, this.j, this.value, event);
-  //   this.value = this.dispatch({
-  //     type: 'update',
-  //     data: {
-  //       i: this.i,
-  //       j: this.j,
-  //       value: this.value ? (this.value % 9) + 1 : 1,
-  //       color: this.getColor(),
-  //     },
-  //   }).board[this.i][this.j];
-  // }
 
   handleChange(event: KeyboardEvent) {
     console.log(event);
@@ -121,7 +100,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
   template = () => html`
     <!DOCTYPE html>
     <style>
-      button, input {
+      input {
         font-weight: var(--cell-font-weight, bold);
         font-size: var(--cell-text-size, 10px);
         color: var(--cell-text-color, black);
@@ -146,7 +125,6 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
       }
             ${this.css}
     </style>
-    <!-- <button part="button">${this.value ?? ``}</button> -->
     <input value="${String(this.value ?? '')}" type="number" />
   `;
 }

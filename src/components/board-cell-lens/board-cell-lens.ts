@@ -134,7 +134,6 @@ export class BoardCellLens extends ReactiveMixin(HTMLElement) {
       :host{
         display: block;
       }
-
       ${this.css}
     </style>
     <button part="button">${this.value ?? ``}</button>

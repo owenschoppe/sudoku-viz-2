@@ -3,6 +3,7 @@ body {
     Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 16px;
 
+  /* Add event listener to update this value on window resize. */
   --main-board: 478px;
   --board-gap: 8px;
   background: black;

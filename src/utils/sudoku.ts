@@ -15,7 +15,7 @@ import { unique } from './unique';
  * @param board
  * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: number | null }[][] Where 0 means the cell can't be that value and 1 means it can be
  */
-export const possibilities = (board: Board): PossibilitiesForBoard => {
+export const possibilitiesForBoard = (board: Board): PossibilitiesForBoard => {
   return board.map((row, i) =>
     row.map((_, j) => possibilitiesForCell(board, i, j)),
   );
