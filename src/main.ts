@@ -5,6 +5,7 @@ import { Board, CellValue, State } from './types.js';
 import { BoardLens } from './components';
 import { possibilitiesForBoard } from './utils/sudoku';
 import { NNArray } from './utils/array';
+import { generateBoard } from './utils/sudoku-solver';
 
 /**
  * Reducer function to manage sudoku calculations
@@ -23,6 +24,12 @@ const reducer = (state: State, action: Action) => {
       state.color = color;
       state.possibilities = possibilitiesForBoard(state.board);
       console.log(i, j, value, state);
+      updatedState = state;
+      break;
+    case 'new':
+      const newBoard = generateBoard(action.data.difficulty);
+      state.board = newBoard;
+      state.possibilities = possibilitiesForBoard(newBoard);
       updatedState = state;
       break;
     default:
@@ -48,7 +55,8 @@ const initialState = (savedBoard?: Board): State => {
   initializeSubscriptions(initialState(storedState?.board), reducer);
 
   // Move this stuff to a web component so we can utilize templates
-  document.body.innerHTML = `<div id="app">
+  document.body.innerHTML = `<sudoku-controls></sudoku-controls>
+  <div id="app">
       <div id="board"><sudoku-board class="main-board"/></div>
       <div id="viewer"></div>
     </div>`;

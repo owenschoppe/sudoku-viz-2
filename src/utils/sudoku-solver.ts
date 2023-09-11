@@ -1,4 +1,3 @@
-import { randomInt } from 'crypto';
 import {
   NNArray,
   cloneDeep,
@@ -8,6 +7,7 @@ import {
 } from './array';
 import { possibilitiesForCell } from './sudoku';
 import { Board } from '../types';
+import { randomInt } from './numbers';
 
 export enum difficultyLevel {
   HARD,

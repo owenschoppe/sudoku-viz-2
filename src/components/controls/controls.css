@@ -1,0 +1,30 @@
+.flex {
+  height: 32px;
+  padding: 8px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-content: center;
+}
+
+.primary {
+  border: 0;
+  background: white;
+  color: black;
+}
+
+.primary:hover,
+.primary:focus {
+  border: 0;
+  background: white;
+  outline: none;
+  box-shadow: 0 0 0 2px violet;
+  color: black;
+}
+
+.primary:active {
+  border: 0;
+  background: lavenderblush;
+  color: black;
+}
