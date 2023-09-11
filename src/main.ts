@@ -32,7 +32,7 @@ const reducer = (state: State, action: Action) => {
   return updatedState;
 };
 
-const initialBoard = NNArray(9, null);
+const initialBoard = NNArray(9, 0);
 
 const initialState = (savedBoard?: Board): State => {
   const board = savedBoard || initialBoard;

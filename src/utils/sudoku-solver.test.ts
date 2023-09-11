@@ -7,28 +7,28 @@ import {
 } from './sudoku-solver';
 
 const puzzleStart: Board = [
-  [3, null, 6, 5, null, 8, 4, null, null],
-  [5, 2, null, null, null, null, null, null, null],
-  [null, 8, 7, null, null, null, null, 3, 1],
-  [null, null, 3, null, 1, null, null, 8, null],
-  [9, null, null, 8, 6, 3, null, null, 5],
-  [null, 5, null, null, 9, null, 6, null, null],
-  [1, 3, null, null, null, null, 2, 5, null],
-  [null, null, null, null, null, null, null, 7, 4],
-  [null, null, 5, 2, null, 6, 3, null, null],
+  [3, 0, 6, 5, 0, 8, 4, 0, 0],
+  [5, 2, 0, 0, 0, 0, 0, 0, 0],
+  [0, 8, 7, 0, 0, 0, 0, 3, 1],
+  [0, 0, 3, 0, 1, 0, 0, 8, 0],
+  [9, 0, 0, 8, 6, 3, 0, 0, 5],
+  [0, 5, 0, 0, 9, 0, 6, 0, 0],
+  [1, 3, 0, 0, 0, 0, 2, 5, 0],
+  [0, 0, 0, 0, 0, 0, 0, 7, 4],
+  [0, 0, 5, 2, 0, 6, 3, 0, 0],
 ];
 
 // Can have many many solutions.
 const generatorStart: Board = [
   [3, 1, 6, 5, 7, 8, 4, 9, 2],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
 const solution: Board = [
@@ -64,7 +64,7 @@ const almostFinalBoard: Board = [
   [6, 9, 7, 3, 8, 2, 5, 1, 4],
   [5, 3, 1, 7, 2, 4, 9, 8, 6],
   [8, 6, 2, 9, 1, 5, 7, 4, 3],
-  [9, 7, 4, 8, 6, 3, 2, 5, null],
+  [9, 7, 4, 8, 6, 3, 2, 5, 0],
 ];
 
 describe('solver', () => {
@@ -145,11 +145,10 @@ describe('exploreOptions', () => {
 describe('generateBoard', () => {
   it('should generate easy board', () => {
     const result = generateBoard(difficultyLevel.EASY);
-    console.log(result);
     expect(result.flat()).toHaveLength(81);
     const emptyCells = result
       .flat()
-      .map((x) => x === null)
+      .map((x) => x === 0)
       .filter(Boolean).length;
     expect(emptyCells).toBeGreaterThanOrEqual(33);
     expect(emptyCells).toBeLessThanOrEqual(37);
@@ -160,7 +159,7 @@ describe('generateBoard', () => {
     expect(result.flat()).toHaveLength(81);
     const emptyCells = result
       .flat()
-      .map((x) => x === null)
+      .map((x) => x === 0)
       .filter(Boolean).length;
     expect(emptyCells).toBeGreaterThanOrEqual(28);
     expect(emptyCells).toBeLessThanOrEqual(32);
@@ -171,7 +170,7 @@ describe('generateBoard', () => {
     expect(result.flat()).toHaveLength(81);
     const emptyCells = result
       .flat()
-      .map((x) => x === null)
+      .map((x) => x === 0)
       .filter(Boolean).length;
     expect(emptyCells).toBeGreaterThanOrEqual(23);
     expect(emptyCells).toBeLessThanOrEqual(27);

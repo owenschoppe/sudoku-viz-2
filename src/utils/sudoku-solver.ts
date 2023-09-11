@@ -40,7 +40,7 @@ export const generateBoard = (
 
 export const generateSeed = (): Board => [
   shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]),
-  ...NNArray(9, null).slice(1),
+  ...NNArray(9, 0).slice(1),
 ];
 
 export const removeValues = (board: Board, values: number) => {
@@ -48,7 +48,7 @@ export const removeValues = (board: Board, values: number) => {
     const i = randomInt(9);
     const j = randomInt(9);
     if (board[i][j]) {
-      board[i][j] = null;
+      board[i][j] = 0;
       values -= 1;
     }
   }

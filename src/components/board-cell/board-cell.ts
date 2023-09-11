@@ -1,6 +1,7 @@
 import { CellValue, State } from '../../types.js';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 import { isValidInput } from '../../utils/sudoku.js';
+import { isCellValue } from '../../utils/numbers.js';
 
 /**
  * Cell element that implements the dispatch pattern.
@@ -17,7 +18,7 @@ import { isValidInput } from '../../utils/sudoku.js';
 export class BoardCell extends ReactiveMixin(HTMLElement) {
   i: number;
   j: number;
-  value: CellValue | null;
+  value: CellValue | 0;
   css: string;
   input: HTMLInputElement;
 
@@ -52,10 +53,18 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
 
   render(state: State) {
     const value = state.board[this.i][this.j];
+    if (this.i == 4 && this.j == 4) {
+      console.log(
+        this.value,
+        isCellValue(this.value),
+        isCellValue(this.value) ? String(this.value) : '',
+      );
+    }
     if (value !== this.value) {
       this.state = state;
       this.value = value;
-      this.input.value = String(this.value ?? '');
+      const displayValue = isCellValue(this.value) ? String(this.value) : '';
+      this.input.value = displayValue;
     }
   }
 
@@ -84,7 +93,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
         data: {
           i: this.i,
           j: this.j,
-          value: null,
+          value: 0,
           color: this.getColor(),
         },
       }).board[this.i][this.j];
@@ -125,7 +134,10 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
       }
             ${this.css}
     </style>
-    <input value="${String(this.value ?? '')}" type="number" />
+    <input
+      value="${isCellValue(this.value) ? String(this.value) : ''}"
+      type="number"
+    />
   `;
 }
 

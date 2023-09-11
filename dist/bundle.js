@@ -81,8 +81,19 @@
         render(_state) { }
     };
 
-    const isNumber = (value) => typeof value === 'number';
-    const justNumbers = (arr) => arr.filter(isNumber);
+    const cellValues = {
+        1: true,
+        2: true,
+        3: true,
+        4: true,
+        5: true,
+        6: true,
+        7: true,
+        8: true,
+        9: true,
+    };
+    const isCellValue = (value) => !!cellValues[value];
+    const justCellValues = (arr) => arr.filter(isCellValue);
 
     const slice2d = (arr, rowStart, colStart, rowEnd, colEnd) => arr.slice(rowStart, rowEnd).map((row) => row.slice(colStart, colEnd));
     const NNArray = (n, fill) => Array(n)
@@ -99,7 +110,7 @@
     /**
      * Compute all the possible moves on the current state of the sudoku board
      * @param board
-     * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: number | null }[][] Where 0 means the cell can't be that value and 1 means it can be
+     * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: 0 | CellValue }[][] Where 0 means the cell can't be that value and 1 means it can be
      */
     const possibilitiesForBoard = (board) => {
         return board.map((row, i) => row.map((_, j) => possibilitiesForCell(board, i, j)));
@@ -110,7 +121,7 @@
      * @param board Sudoku board {1-9}[][]
      * @param i Row index
      * @param j Column index
-     * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: number | null } Where 0 means the cell can't be that value and 1 means it can be
+     * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: 0 | CellValue } Where 0 means the cell can't be that value and 1 means it can be
      */
     const possibilitiesForCell = (board, i, j) => {
         const basePossibilities = {
@@ -143,7 +154,7 @@
      * @returns
      */
     const allValuesExcludingCell = (board, i, j) => {
-        return justNumbers(unique([rowValExcluding, colValExcluding, grpValExcluding].flatMap((fn) => fn(board, i, j))));
+        return justCellValues(unique([rowValExcluding, colValExcluding, grpValExcluding].flatMap((fn) => fn(board, i, j))));
     };
     // Do we need to filter null?
     // Should null be 0?
@@ -254,10 +265,14 @@
         }
         render(state) {
             const value = state.board[this.i][this.j];
+            if (this.i == 4 && this.j == 4) {
+                console.log(this.value, isCellValue(this.value), isCellValue(this.value) ? String(this.value) : '');
+            }
             if (value !== this.value) {
                 this.state = state;
                 this.value = value;
-                this.input.value = String(this.value ?? '');
+                const displayValue = isCellValue(this.value) ? String(this.value) : '';
+                this.input.value = displayValue;
             }
         }
         handleChange(event) {
@@ -281,7 +296,7 @@
                     data: {
                         i: this.i,
                         j: this.j,
-                        value: null,
+                        value: 0,
                         color: this.getColor(),
                     },
                 }).board[this.i][this.j];
@@ -320,7 +335,10 @@
       }
             ${this.css}
     </style>
-    <input value="${String(this.value ?? '')}" type="number" />
+    <input
+      value="${isCellValue(this.value) ? String(this.value) : ''}"
+      type="number"
+    />
   `;
     }
     const html$1 = String.raw;
@@ -380,7 +398,7 @@
         i;
         j;
         lens;
-        value = null;
+        value = 0;
         css;
         button;
         constructor({ i, j, css, lens, }) {
@@ -560,7 +578,7 @@
         window.localStorage.setItem('state', JSON.stringify(updatedState));
         return updatedState;
     };
-    const initialBoard = NNArray(9, null);
+    const initialBoard = NNArray(9, 0);
     const initialState = (savedBoard) => {
         const board = savedBoard || initialBoard;
         return {

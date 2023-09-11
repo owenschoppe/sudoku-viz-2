@@ -16,8 +16,8 @@ import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 export class BoardCellLens extends ReactiveMixin(HTMLElement) {
   i: number;
   j: number;
-  lens: CellValue | null;
-  value: CellValue | null = null;
+  lens: CellValue | 0;
+  value: CellValue | 0 = 0;
   css: string;
   button: HTMLButtonElement;
 

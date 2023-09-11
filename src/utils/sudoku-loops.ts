@@ -24,6 +24,7 @@ import {
   PossibilitiesForBoard,
   PossibilitiesForCell,
 } from '../types';
+import { indexToCoord } from './array';
 
 // Generator = Solver and then subtract more or less values.
 // Solver should use dynamic programming to find solution
@@ -68,6 +69,7 @@ export const getConnectedCellsInRow = (
       cellsPerValue,
     );
   } else {
+    // return cell steps as the loop
     return Object.values(cellSteps);
   }
 };
@@ -124,6 +126,28 @@ export const cellsPerValueInRow = (
     },
     baseCellsPerValue,
   );
+};
+
+export const cellsPerValueInBoard = (possibilities: PossibilitiesForBoard) => {
+  return possibilities
+    .flat()
+    .reduce(
+      (
+        values: CellsPerValue,
+        cellPossibilities: PossibilitiesForCell,
+        index: number,
+      ) => {
+        const { i, j } = indexToCoord(index);
+        return Object.entries(cellPossibilities.possibilities).reduce(
+          (acc, [value, possible]) => {
+            if (possible) acc[value].push({ i, j });
+            return acc;
+          },
+          values,
+        );
+      },
+      baseCellsPerValue,
+    );
 };
 
 const baseCellsPerValue = {

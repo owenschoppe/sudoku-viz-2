@@ -14,251 +14,141 @@ import {
 } from './sudoku';
 
 const board: Board = [
-  [null, 7, 1, null, null, null, null, null, 1],
-  [3, null, 1, 1, null, null, null, null, null],
-  [null, null, 1, null, 1, null, null, null, null],
-  [null, null, 1, null, null, 1, null, null, null],
-  [null, 9, 1, null, null, null, null, null, null],
-  [1, null, 1, null, 5, 9, null, null, null],
-  [null, null, 1, null, null, 1, 1, 8, 4],
-  [null, null, 1, null, null, null, 1, null, null],
-  [1, 8, 1, null, null, null, 1, null, null],
+  [0, 7, 1, 0, 0, 0, 0, 0, 1],
+  [3, 0, 1, 1, 0, 0, 0, 0, 0],
+  [0, 0, 1, 0, 1, 0, 0, 0, 0],
+  [0, 0, 1, 0, 0, 1, 0, 0, 0],
+  [0, 9, 1, 0, 0, 0, 0, 0, 0],
+  [1, 0, 1, 0, 5, 9, 0, 0, 0],
+  [0, 0, 1, 0, 0, 1, 1, 8, 4],
+  [0, 0, 1, 0, 0, 0, 1, 0, 0],
+  [1, 8, 1, 0, 0, 0, 1, 0, 0],
 ];
 
 describe('grpValues', () => {
   it('should return first group', () => {
     const result = grpValues(board, 0);
-    expect(result).toStrictEqual([null, 7, 1, 3, null, 1, null, null, 1]);
+    expect(result).toStrictEqual([0, 7, 1, 3, 0, 1, 0, 0, 1]);
   });
 
   it('should return last group', () => {
     const result = grpValues(board, 8);
-    expect(result).toStrictEqual([1, 8, 4, 1, null, null, 1, null, null]);
+    expect(result).toStrictEqual([1, 8, 4, 1, 0, 0, 1, 0, 0]);
   });
 
   it('should return middle group', () => {
     const result = grpValues(board, 4);
-    expect(result).toStrictEqual([null, null, 1, null, null, null, null, 5, 9]);
+    expect(result).toStrictEqual([0, 0, 1, 0, 0, 0, 0, 5, 9]);
   });
 });
 
 describe('colValues', () => {
   it('should return first column', () => {
     const result = colValues(board, 0);
-    expect(result).toStrictEqual([null, 3, null, null, null, 1, null, null, 1]);
+    expect(result).toStrictEqual([0, 3, 0, 0, 0, 1, 0, 0, 1]);
   });
 
   it('should return last column', () => {
     const result = colValues(board, 8);
-    expect(result).toStrictEqual([
-      1,
-      null,
-      null,
-      null,
-      null,
-      null,
-      4,
-      null,
-      null,
-    ]);
+    expect(result).toStrictEqual([1, 0, 0, 0, 0, 0, 4, 0, 0]);
   });
 
   it('should return middle column', () => {
     const result = colValues(board, 4);
-    expect(result).toStrictEqual([
-      null,
-      null,
-      1,
-      null,
-      null,
-      5,
-      null,
-      null,
-      null,
-    ]);
+    expect(result).toStrictEqual([0, 0, 1, 0, 0, 5, 0, 0, 0]);
   });
 });
 
 describe('rowValues', () => {
   it('should return first row', () => {
     const result = rowValues(board, 0);
-    expect(result).toStrictEqual([null, 7, 1, null, null, null, null, null, 1]);
+    expect(result).toStrictEqual([0, 7, 1, 0, 0, 0, 0, 0, 1]);
   });
 
   it('should return last row', () => {
     const result = rowValues(board, 8);
-    expect(result).toStrictEqual([1, 8, 1, null, null, null, 1, null, null]);
+    expect(result).toStrictEqual([1, 8, 1, 0, 0, 0, 1, 0, 0]);
   });
 
   it('should return middle row', () => {
     const result = rowValues(board, 4);
-    expect(result).toStrictEqual([
-      null,
-      9,
-      1,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-    ]);
+    expect(result).toStrictEqual([0, 9, 1, 0, 0, 0, 0, 0, 0]);
   });
 });
 
 describe('grpValuesExcluding', () => {
   it('should return first group', () => {
     const result = grpValExcluding(board, 0, 1);
-    expect(result).toStrictEqual([null, 1, 3, null, 1, null, null, 1]);
-    expect(grpValues(board, 0)).toStrictEqual([
-      null,
-      7,
-      1,
-      3,
-      null,
-      1,
-      null,
-      null,
-      1,
-    ]);
+    expect(result).toStrictEqual([0, 1, 3, 0, 1, 0, 0, 1]);
+    expect(grpValues(board, 0)).toStrictEqual([0, 7, 1, 3, 0, 1, 0, 0, 1]);
   });
 
   it('should return last group', () => {
     const result = grpValExcluding(board, 6, 7);
-    expect(result).toStrictEqual([1, 4, 1, null, null, 1, null, null]);
-    expect(grpValues(board, 8)).toStrictEqual([
-      1,
-      8,
-      4,
-      1,
-      null,
-      null,
-      1,
-      null,
-      null,
-    ]);
+    expect(result).toStrictEqual([1, 4, 1, 0, 0, 1, 0, 0]);
+    expect(grpValues(board, 8)).toStrictEqual([1, 8, 4, 1, 0, 0, 1, 0, 0]);
   });
 
   it('should return middle group', () => {
     const result = grpValExcluding(board, 5, 5);
-    expect(result).toStrictEqual([null, null, 1, null, null, null, null, 5]);
-    expect(grpValues(board, 4)).toStrictEqual([
-      null,
-      null,
-      1,
-      null,
-      null,
-      null,
-      null,
-      5,
-      9,
-    ]);
+    expect(result).toStrictEqual([0, 0, 1, 0, 0, 0, 0, 5]);
+    expect(grpValues(board, 4)).toStrictEqual([0, 0, 1, 0, 0, 0, 0, 5, 9]);
   });
 });
 
 describe('colValuesExcluding', () => {
   it('should return first column', () => {
     const result = colValExcluding(board, 1, 0);
-    expect(result).toStrictEqual([null, null, null, null, 1, null, null, 1]);
-    expect(colValues(board, 0)).toStrictEqual([
-      null,
-      3,
-      null,
-      null,
-      null,
-      1,
-      null,
-      null,
-      1,
-    ]);
+    expect(result).toStrictEqual([0, 0, 0, 0, 1, 0, 0, 1]);
+    expect(colValues(board, 0)).toStrictEqual([0, 3, 0, 0, 0, 1, 0, 0, 1]);
   });
 
   it('should return last column', () => {
     const result = colValExcluding(board, 6, 8);
-    expect(result).toStrictEqual([1, null, null, null, null, null, null, null]);
-    expect(colValues(board, 8)).toStrictEqual([
-      1,
-      null,
-      null,
-      null,
-      null,
-      null,
-      4,
-      null,
-      null,
-    ]);
+    expect(result).toStrictEqual([1, 0, 0, 0, 0, 0, 0, 0]);
+    expect(colValues(board, 8)).toStrictEqual([1, 0, 0, 0, 0, 0, 4, 0, 0]);
   });
 
   it('should return middle column', () => {
     const result = colValExcluding(board, 5, 4);
-    expect(result).toStrictEqual([null, null, 1, null, null, null, null, null]);
-    expect(colValues(board, 4)).toStrictEqual([
-      null,
-      null,
-      1,
-      null,
-      null,
-      5,
-      null,
-      null,
-      null,
-    ]);
+    expect(result).toStrictEqual([0, 0, 1, 0, 0, 0, 0, 0]);
+    expect(colValues(board, 4)).toStrictEqual([0, 0, 1, 0, 0, 5, 0, 0, 0]);
   });
 });
 
 describe('rowValuesExcluding', () => {
   it('should return first row', () => {
     const result = rowValExcluding(board, 0, 1);
-    expect(result).toStrictEqual([null, 1, null, null, null, null, null, 1]);
+    expect(result).toStrictEqual([0, 1, 0, 0, 0, 0, 0, 1]);
     expect(board[0]).toHaveLength(9);
-    expect(board[0]).toStrictEqual([
-      null,
-      7,
-      1,
-      null,
-      null,
-      null,
-      null,
-      null,
-      1,
-    ]);
+    expect(board[0]).toStrictEqual([0, 7, 1, 0, 0, 0, 0, 0, 1]);
   });
 
   it('should return last row', () => {
     const result = rowValExcluding(board, 8, 1);
-    expect(result).toStrictEqual([1, 1, null, null, null, 1, null, null]);
+    expect(result).toStrictEqual([1, 1, 0, 0, 0, 1, 0, 0]);
     expect(board[8]).toHaveLength(9);
-    expect(board[8]).toStrictEqual([1, 8, 1, null, null, null, 1, null, null]);
+    expect(board[8]).toStrictEqual([1, 8, 1, 0, 0, 0, 1, 0, 0]);
   });
 
   it('should return middle row', () => {
     const result = rowValExcluding(board, 4, 1);
-    expect(result).toStrictEqual([null, 1, null, null, null, null, null, null]);
+    expect(result).toStrictEqual([0, 1, 0, 0, 0, 0, 0, 0]);
     expect(board[4]).toHaveLength(9);
-    expect(board[4]).toStrictEqual([
-      null,
-      9,
-      1,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-    ]);
+    expect(board[4]).toStrictEqual([0, 9, 1, 0, 0, 0, 0, 0, 0]);
   });
 });
 
 const sudoku: Board = [
-  [null, null, 5, null, null, null, null, null, null],
-  [2, 4, 1, null, null, null, 3, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [9, null, null, null, null, null, null, null, null],
+  [0, 0, 5, 0, 0, 0, 0, 0, 0],
+  [2, 4, 1, 0, 0, 0, 3, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [9, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 describe('allRelatedValues', () => {
   it('should return taken values for cell', () => {
@@ -276,14 +166,14 @@ describe('allValuesExcludingCell', () => {
 
 const badBoard: Board = [
   [3, 1, 6, 5, 7, 8, 4, 9, 2],
-  [2, 4, 5, 1, 3, 6, 8, 8, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, null],
+  [2, 4, 5, 1, 3, 6, 8, 8, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
 describe('possibilitiesForCell', () => {
@@ -318,7 +208,7 @@ describe('possibilitiesForCell', () => {
       9: 1,
     });
     expect(result.possibilityCount).toEqual(9);
-    expect(result.value).toEqual(null);
+    expect(result.value).toEqual(0);
   });
 
   it('should return mismatched possibility and value', () => {

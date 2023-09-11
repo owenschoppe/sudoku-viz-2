@@ -2,14 +2,14 @@ export type CellValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export type CellAddress = { i: number; j: number };
 
-export type Board = CellValue[][];
+export type Board = (CellValue | 0)[][];
 
 export type Possibilities = { [K in CellValue]: 0 | 1 };
 
 export type PossibilitiesForCell = {
   possibilities: Possibilities;
   possibilityCount: number;
-  value: CellValue;
+  value: 0 | CellValue;
 };
 
 export type PossibilitiesForBoard = PossibilitiesForCell[][];

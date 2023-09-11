@@ -5,7 +5,7 @@
 
 import { Board, Possibilities, PossibilitiesForBoard } from '../types';
 import { slice2d } from './array';
-import { justNumbers } from './numbers';
+import { justCellValues } from './numbers';
 import { unique } from './unique';
 
 // boards: 201 one of the main challenges is undoing a board move. just because we remove a value from a cell doesn't mean it then becomes legal for all related cells
@@ -13,7 +13,7 @@ import { unique } from './unique';
 /**
  * Compute all the possible moves on the current state of the sudoku board
  * @param board
- * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: number | null }[][] Where 0 means the cell can't be that value and 1 means it can be
+ * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: 0 | CellValue }[][] Where 0 means the cell can't be that value and 1 means it can be
  */
 export const possibilitiesForBoard = (board: Board): PossibilitiesForBoard => {
   return board.map((row, i) =>
@@ -27,7 +27,7 @@ export const possibilitiesForBoard = (board: Board): PossibilitiesForBoard => {
  * @param board Sudoku board {1-9}[][]
  * @param i Row index
  * @param j Column index
- * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: number | null } Where 0 means the cell can't be that value and 1 means it can be
+ * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: 0 | CellValue } Where 0 means the cell can't be that value and 1 means it can be
  */
 export const possibilitiesForCell = (board: Board, i: number, j: number) => {
   const basePossibilities = {
@@ -61,7 +61,7 @@ export const possibilitiesForCell = (board: Board, i: number, j: number) => {
  * @returns
  */
 export const allValuesExcludingCell = (board: Board, i: number, j: number) => {
-  return justNumbers(
+  return justCellValues(
     unique(
       [rowValExcluding, colValExcluding, grpValExcluding].flatMap((fn) =>
         fn(board, i, j),
@@ -78,7 +78,7 @@ export const allValuesExcludingCell = (board: Board, i: number, j: number) => {
  * @returns number[] of unique values in rows, columns, groups
  */
 export const allRelatedValues = (board: Board, i: number, j: number) =>
-  justNumbers(
+  justCellValues(
     unique(
       rowValues(board, i).concat(
         colValues(board, j),
