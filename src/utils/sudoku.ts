@@ -160,6 +160,9 @@ const groupStartCoords: [rowStart: number, colStart: number][] = [
   [6, 6],
 ];
 
-export const isValidInput = (input: string, possibilities: Possibilities) => {
+export const isValidInput = (
+  input: string | number,
+  possibilities: Possibilities,
+) => {
   return !!possibilities[Number(input)] ?? false;
 };

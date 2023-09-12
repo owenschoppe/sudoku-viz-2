@@ -49,27 +49,34 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
 
     this.input = shadowRoot.querySelector('input');
     this.input.addEventListener('keydown', this.handleChange.bind(this));
+    this.input.addEventListener('click', this.handleClick.bind(this));
   }
 
   render(state: State) {
     const value = state.board[this.i][this.j];
-    if (this.i == 4 && this.j == 4) {
-      console.log(
-        this.value,
-        isCellValue(this.value),
-        isCellValue(this.value) ? String(this.value) : '',
-      );
-    }
     if (value !== this.value) {
       this.state = state;
       this.value = value;
       const displayValue = isCellValue(this.value) ? String(this.value) : '';
       this.input.value = displayValue;
     }
+    const { i, j } = state.location;
+    if (this.i === i && this.j === j) {
+      this.input.classList.add('current');
+      this.input.focus();
+    } else {
+      this.input.classList.remove('current');
+    }
+  }
+
+  handleClick() {
+    this.dispatch({
+      type: 'move',
+      data: { location: { i: this.i, j: this.j } },
+    });
   }
 
   handleChange(event: KeyboardEvent) {
-    console.log(event);
     event.preventDefault();
     if (
       isValidInput(
@@ -110,16 +117,17 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     <!DOCTYPE html>
     <style>
       input {
-        font-weight: var(--cell-font-weight, bold);
-        font-size: var(--cell-text-size, 10px);
+        caret-color: transparent;
         color: var(--cell-text-color, black);
         border: none;
         background: var(--cell-background-color, #f3f3f3);
-        width: var(--cell-width, 100%);
+        font-weight: var(--cell-font-weight, bold);
+        font-size: var(--cell-text-size, 10px);
         height: var(--cell-height, 100%);
-        padding: 0;
         margin: 0;
+        padding: 0;
         text-align: center;
+        width: var(--cell-width, 100%);
       }
       /* Hide numeric input buttons */
       /* Chrome, Safari, Edge, Opera */
@@ -131,6 +139,10 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
       /* Firefox */
       input[type=number] {
         -moz-appearance: textfield;
+      }
+      input.current, input:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);
       }
             ${this.css}
     </style>

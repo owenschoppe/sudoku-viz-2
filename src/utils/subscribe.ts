@@ -41,7 +41,7 @@ export const subscribe: Subscribe = <State extends any>(
 
   const dispatch = (action?: Action) => {
     setState(reducer<State>(getState<State>(), action));
-    console.log(getState(), action);
+    // console.log(getState(), action);
     subscribers.forEach((renderFn) => renderFn(getState<State>()));
     return getState<State>();
   };

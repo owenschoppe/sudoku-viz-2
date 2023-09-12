@@ -18,7 +18,7 @@
         };
         const dispatch = (action) => {
             setState(reducer$1(getState(), action));
-            console.log(getState(), action);
+            // console.log(getState(), action);
             subscribers.forEach((renderFn) => renderFn(getState()));
             return getState();
         };
@@ -285,21 +285,32 @@
             shadowRoot.innerHTML = this.template();
             this.input = shadowRoot.querySelector('input');
             this.input.addEventListener('keydown', this.handleChange.bind(this));
+            this.input.addEventListener('click', this.handleClick.bind(this));
         }
         render(state) {
             const value = state.board[this.i][this.j];
-            if (this.i == 4 && this.j == 4) {
-                console.log(this.value, isCellValue(this.value), isCellValue(this.value) ? String(this.value) : '');
-            }
             if (value !== this.value) {
                 this.state = state;
                 this.value = value;
                 const displayValue = isCellValue(this.value) ? String(this.value) : '';
                 this.input.value = displayValue;
             }
+            const { i, j } = state.location;
+            if (this.i === i && this.j === j) {
+                this.input.classList.add('current');
+                this.input.focus();
+            }
+            else {
+                this.input.classList.remove('current');
+            }
+        }
+        handleClick() {
+            this.dispatch({
+                type: 'move',
+                data: { location: { i: this.i, j: this.j } },
+            });
         }
         handleChange(event) {
-            console.log(event);
             event.preventDefault();
             if (isValidInput(event.key, this.state.possibilities[this.i][this.j].possibilities) &&
                 Number(event.key) !== this.value) {
@@ -334,16 +345,17 @@
     <!DOCTYPE html>
     <style>
       input {
-        font-weight: var(--cell-font-weight, bold);
-        font-size: var(--cell-text-size, 10px);
+        caret-color: transparent;
         color: var(--cell-text-color, black);
         border: none;
         background: var(--cell-background-color, #f3f3f3);
-        width: var(--cell-width, 100%);
+        font-weight: var(--cell-font-weight, bold);
+        font-size: var(--cell-text-size, 10px);
         height: var(--cell-height, 100%);
-        padding: 0;
         margin: 0;
+        padding: 0;
         text-align: center;
+        width: var(--cell-width, 100%);
       }
       /* Hide numeric input buttons */
       /* Chrome, Safari, Edge, Opera */
@@ -355,6 +367,10 @@
       /* Firefox */
       input[type=number] {
         -moz-appearance: textfield;
+      }
+      input.current, input:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);
       }
             ${this.css}
     </style>
@@ -398,6 +414,13 @@
             this.board = shadowRoot.querySelector('#board');
             this.board.append(...this.cells);
             this.board.setAttribute('style', `--cell-text-size: 24px;`);
+            this.board.addEventListener('keydown', this.handleKey.bind(this));
+        }
+        handleKey(event) {
+            this.dispatch({
+                type: 'arrow',
+                data: event,
+            });
         }
         render(_state) {
             // console.log('render board', state.board);
@@ -455,6 +478,13 @@
             const displayValue = selected || possibility ? this.lens : null;
             this.button.textContent = String(displayValue || '');
             this.updateClass();
+            const { i, j } = state.location;
+            if (this.i === i && this.j === j) {
+                this.button.classList.add('current');
+            }
+            else {
+                this.button.classList.remove('current');
+            }
         }
         updateClass() {
             const { possibilities, possibilityCount } = this.state.possibilities[this.i][this.j];
@@ -470,16 +500,22 @@
             }
         }
         handleClick(_event) {
-            // console.log('click', this.i, this.j, this.value, event);
-            this.value = this.dispatch({
-                type: 'update',
-                data: {
-                    i: this.i,
-                    j: this.j,
-                    value: this.lens,
-                    color: this.getColor(),
-                },
-            }).board[this.i][this.j];
+            const { possibilities, possibilityCount } = this.state.possibilities[this.i][this.j];
+            if (possibilityCount === 1 && isValidInput(this.lens, possibilities)) {
+                this.value = this.dispatch({
+                    type: 'update',
+                    data: {
+                        i: this.i,
+                        j: this.j,
+                        value: this.lens,
+                        color: this.getColor(),
+                    },
+                }).board[this.i][this.j];
+            }
+            this.dispatch({
+                type: 'move',
+                data: { location: { i: this.i, j: this.j } },
+            });
         }
         getColor() {
             const step = 255 / 9;
@@ -495,8 +531,8 @@
         color: var(--cell-text-color, black);
         border: none;
         /* background: var(--cell-background-color, #f3f3f3); */
-        background: white;
-        opacity: 0.1;
+        background: rgba(255, 255, 255, 0.1);
+        /* opacity: 0.1; */
         width: var(--cell-width, 100%);
         height: var(--cell-height, 100%);
         padding: 0;
@@ -504,15 +540,18 @@
       }
       button.selected {
         background: var(--cell-background-color, #f3f3f3);
-        opacity: 1;
+        /* opacity: 1; */
       }
       button.only {
         background: white;
-        opacity: 1;
+        /* opacity: 1; */
       }
       button.possibility {
-        background: var(--cell-background-color, #f3f3f3);
-        opacity: 0.5;
+        background: var(--cell-background-possibility-color, #f3f3f3);
+        /* opacity: 0.5; */
+      }
+      button.current {
+        box-shadow: 0 0 0 1px white;
       }
       :host{
         display: block;
@@ -558,7 +597,10 @@
                 .flat();
             this.board = shadowRoot.querySelector('#board');
             this.board.append(...this.cells);
-            this.board.setAttribute('style', `--cell-text-color: black; --cell-background-color: hsl(${hue[this.lens]} ${saturation}% ${brightness}%);`);
+            const color = `${hue[this.lens]} ${saturation}% ${brightness}%`;
+            const background = `hsl(${color})`;
+            const possibility = `hsl(${color} / 50%)`;
+            this.board.setAttribute('style', `--cell-text-color: black; --cell-background-color: ${background}; --cell-background-possibility-color: ${possibility};`);
         }
     }
     const hue = {
@@ -576,7 +618,7 @@
     const brightness = 75;
     customElements.define('sudoku-board-lens', BoardLens);
 
-    var css = ".flex {\n  height: 32px;\n  padding: 8px 0;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  gap: 8px;\n  align-content: center;\n}\n\n.primary {\n  border: 0;\n  background: white;\n  color: black;\n}\n\n.primary:hover,\n.primary:focus {\n  border: 0;\n  background: white;\n  outline: none;\n  box-shadow: 0 0 0 2px violet;\n  color: black;\n}\n\n.primary:active {\n  border: 0;\n  background: lavenderblush;\n  color: black;\n}\n";
+    var css = ".flex {\n  height: 32px;\n  padding: 8px 0;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  gap: 8px;\n  align-content: center;\n}\n\n.primary {\n  border: 0;\n  background: white;\n  color: black;\n}\n\n.primary:hover,\n.primary:focus {\n  border: 0;\n  background: white;\n  outline: none;\n  box-shadow: 0 0 0 3px inset chartreuse;\n  color: black;\n}\n\n.primary:active {\n  border: 0;\n  background: lavenderblush;\n  color: black;\n}\n";
 
     var html = "<div class=\"flex\">\n  <button id=\"new\" class=\"primary\">New</button>\n</div>\n";
 
@@ -706,6 +748,20 @@
     }
     customElements.define('sudoku-controls', Controls);
 
+    const up = (location) => {
+        return Object.assign({ ...location, i: move(location.i, -1, 9) });
+    };
+    const down = (location) => {
+        return Object.assign({ ...location, i: move(location.i, +1, 9) });
+    };
+    const left = (location) => {
+        return Object.assign({ ...location, j: move(location.j, -1, 9) });
+    };
+    const right = (location) => {
+        return Object.assign({ ...location, j: move(location.j, +1, 9) });
+    };
+    const move = (start, delta, modulo = 9) => (start + delta + modulo) % modulo;
+
     /**
      * Reducer function to manage sudoku calculations
      * TODO: save state in local storage to avoid losing it on reload
@@ -726,9 +782,21 @@
                 updatedState = state;
                 break;
             case 'new':
-                const newBoard = generateBoard(action.data.difficulty);
-                state.board = newBoard;
-                state.possibilities = possibilitiesForBoard(newBoard);
+                updatedState = initialState(generateBoard(action.data.difficulty));
+                break;
+            case 'move':
+                state.location = action.data.location;
+                updatedState = state;
+                break;
+            case 'arrow':
+                const direction = {
+                    ArrowLeft: left,
+                    ArrowRight: right,
+                    ArrowUp: up,
+                    ArrowDown: down,
+                };
+                state.location =
+                    direction[action.data.key]?.(state.location) || state.location;
                 updatedState = state;
                 break;
             default:
@@ -743,6 +811,7 @@
         return {
             board: board,
             possibilities: possibilitiesForBoard(board),
+            location: { i: 0, j: 0 },
         };
     };
     (() => {

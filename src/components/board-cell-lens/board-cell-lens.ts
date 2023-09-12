@@ -1,5 +1,6 @@
 import { CellValue, State } from '../../types.js';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
+import { isValidInput } from '../../utils/sudoku.js';
 
 /**
  * Cell element that implements the dispatch pattern.
@@ -69,6 +70,12 @@ export class BoardCellLens extends ReactiveMixin(HTMLElement) {
     const displayValue = selected || possibility ? this.lens : null;
     this.button.textContent = String(displayValue || '');
     this.updateClass();
+    const { i, j } = state.location;
+    if (this.i === i && this.j === j) {
+      this.button.classList.add('current');
+    } else {
+      this.button.classList.remove('current');
+    }
   }
 
   updateClass() {
@@ -85,16 +92,25 @@ export class BoardCellLens extends ReactiveMixin(HTMLElement) {
   }
 
   handleClick(_event: MouseEvent) {
-    // console.log('click', this.i, this.j, this.value, event);
-    this.value = this.dispatch({
-      type: 'update',
-      data: {
-        i: this.i,
-        j: this.j,
-        value: this.lens,
-        color: this.getColor(),
-      },
-    }).board[this.i][this.j];
+    const { possibilities, possibilityCount } =
+      this.state.possibilities[this.i][this.j];
+
+    if (possibilityCount === 1 && isValidInput(this.lens, possibilities)) {
+      this.value = this.dispatch({
+        type: 'update',
+        data: {
+          i: this.i,
+          j: this.j,
+          value: this.lens,
+          color: this.getColor(),
+        },
+      }).board[this.i][this.j];
+    }
+
+    this.dispatch({
+      type: 'move',
+      data: { location: { i: this.i, j: this.j } },
+    });
   }
 
   getColor() {
@@ -112,8 +128,8 @@ export class BoardCellLens extends ReactiveMixin(HTMLElement) {
         color: var(--cell-text-color, black);
         border: none;
         /* background: var(--cell-background-color, #f3f3f3); */
-        background: white;
-        opacity: 0.1;
+        background: rgba(255, 255, 255, 0.1);
+        /* opacity: 0.1; */
         width: var(--cell-width, 100%);
         height: var(--cell-height, 100%);
         padding: 0;
@@ -121,15 +137,18 @@ export class BoardCellLens extends ReactiveMixin(HTMLElement) {
       }
       button.selected {
         background: var(--cell-background-color, #f3f3f3);
-        opacity: 1;
+        /* opacity: 1; */
       }
       button.only {
         background: white;
-        opacity: 1;
+        /* opacity: 1; */
       }
       button.possibility {
-        background: var(--cell-background-color, #f3f3f3);
-        opacity: 0.5;
+        background: var(--cell-background-possibility-color, #f3f3f3);
+        /* opacity: 0.5; */
+      }
+      button.current {
+        box-shadow: 0 0 0 1px white;
       }
       :host{
         display: block;

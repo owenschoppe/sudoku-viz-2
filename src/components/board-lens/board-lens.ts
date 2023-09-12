@@ -53,11 +53,13 @@ export class BoardLens extends ReactiveMixin(HTMLElement) {
     this.board = shadowRoot.querySelector('#board');
     this.board.append(...this.cells);
 
+    const color = `${hue[this.lens]} ${saturation}% ${brightness}%`;
+    const background = `hsl(${color})`;
+    const possibility = `hsl(${color} / 50%)`;
+
     this.board.setAttribute(
       'style',
-      `--cell-text-color: black; --cell-background-color: hsl(${
-        hue[this.lens]
-      } ${saturation}% ${brightness}%);`,
+      `--cell-text-color: black; --cell-background-color: ${background}; --cell-background-possibility-color: ${possibility};`,
     );
   }
 }

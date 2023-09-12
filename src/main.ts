@@ -6,6 +6,7 @@ import { BoardLens } from './components';
 import { possibilitiesForBoard } from './utils/sudoku';
 import { NNArray } from './utils/array';
 import { generateBoard } from './utils/sudoku-solver';
+import { down, left, right, up } from './utils/move';
 
 /**
  * Reducer function to manage sudoku calculations
@@ -27,9 +28,21 @@ const reducer = (state: State, action: Action) => {
       updatedState = state;
       break;
     case 'new':
-      const newBoard = generateBoard(action.data.difficulty);
-      state.board = newBoard;
-      state.possibilities = possibilitiesForBoard(newBoard);
+      updatedState = initialState(generateBoard(action.data.difficulty));
+      break;
+    case 'move':
+      state.location = action.data.location;
+      updatedState = state;
+      break;
+    case 'arrow':
+      const direction = {
+        ArrowLeft: left,
+        ArrowRight: right,
+        ArrowUp: up,
+        ArrowDown: down,
+      };
+      state.location =
+        direction[action.data.key]?.(state.location) || state.location;
       updatedState = state;
       break;
     default:
@@ -46,6 +59,7 @@ const initialState = (savedBoard?: Board): State => {
   return {
     board: board,
     possibilities: possibilitiesForBoard(board),
+    location: { i: 0, j: 0 },
   };
 };
 

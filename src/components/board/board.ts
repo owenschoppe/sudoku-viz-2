@@ -49,6 +49,14 @@ export class Board extends ReactiveMixin(HTMLElement) {
     this.board = shadowRoot.querySelector('#board');
     this.board.append(...this.cells);
     this.board.setAttribute('style', `--cell-text-size: 24px;`);
+    this.board.addEventListener('keydown', this.handleKey.bind(this));
+  }
+
+  handleKey(event: KeyboardEvent) {
+    this.dispatch({
+      type: 'arrow',
+      data: event,
+    });
   }
 
   render(_state) {

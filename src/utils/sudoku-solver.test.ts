@@ -87,6 +87,9 @@ describe('solver', () => {
 });
 
 describe('exploreOptions', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
   it('should return first option', () => {
     const mockExplore = jest.fn().mockImplementation((option) => option);
     const mockParams = jest.fn().mockImplementation((option) => [option]);

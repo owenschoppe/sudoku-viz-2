@@ -20,6 +20,7 @@ export type State = {
   board: Board;
   possibilities: PossibilitiesForBoard;
   color?: string;
+  location: CellAddress;
 };
 
 export type Action = {
