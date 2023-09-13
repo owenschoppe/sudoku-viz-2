@@ -35,7 +35,25 @@ export const possibilitiesObjectToArray = (
     return acc;
   }, []);
 
-export const cloneDeep = (arr: any[][]) => arr.map((row) => [...row]);
+/**
+ * Clone arbitarily nested objects and arrays and primitive values.
+ * Does not support more complex classes like Map and Set
+ * Consider using Object.getPrototypeOf(map) === Map.prototype to expand support
+ * @param obj any[] | {}
+ * @returns any[] | {}
+ */
+export const cloneDeep = (obj: any[] | {}) => {
+  if (Array.isArray(obj)) {
+    return obj.map(cloneDeep);
+  } else if (typeof obj === 'object' && obj !== null) {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+      acc[key] = cloneDeep(value);
+      return acc;
+    }, {});
+  } else {
+    return obj;
+  }
+};
 
 export const shuffle = (arr: any[]) =>
   arr.reduce((acc, cur) => {

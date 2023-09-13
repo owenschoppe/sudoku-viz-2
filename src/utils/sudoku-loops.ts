@@ -24,7 +24,7 @@ import {
   PossibilitiesForBoard,
   PossibilitiesForCell,
 } from '../types';
-import { indexToCoord } from './array';
+import { cloneDeep, indexToCoord } from './array';
 
 // Generator = Solver and then subtract more or less values.
 // Solver should use dynamic programming to find solution
@@ -124,7 +124,7 @@ export const cellsPerValueInRow = (
         values,
       );
     },
-    baseCellsPerValue,
+    cloneDeep(baseCellsPerValue),
   );
 };
 
@@ -146,7 +146,7 @@ export const cellsPerValueInBoard = (possibilities: PossibilitiesForBoard) => {
           values,
         );
       },
-      baseCellsPerValue,
+      cloneDeep(baseCellsPerValue),
     );
 };
 

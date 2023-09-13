@@ -149,6 +149,24 @@ describe('cloneDeep', () => {
     result[0][0] = 2;
     expect(result).toStrictEqual(arr);
   });
+
+  it('should clone top level objects', () => {
+    const arr = { a: [1] };
+    const result = cloneDeep(arr);
+    expect(result).toStrictEqual(arr);
+    expect(result).not.toBe(arr);
+    result['a'][0] = 2;
+    expect(result).not.toStrictEqual(arr);
+  });
+
+  it('should clone child objects', () => {
+    const arr = { a: [{ b: [1, null] }], c: null };
+    const result = cloneDeep(arr);
+    expect(result).toStrictEqual(arr);
+    expect(result).not.toBe(arr);
+    result['a'][0]['b'][0] = 2;
+    expect(result).not.toStrictEqual(arr);
+  });
 });
 
 describe('indexToCoord', () => {
