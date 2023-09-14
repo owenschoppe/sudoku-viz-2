@@ -1,4 +1,4 @@
-import { CellValue, Possibilities } from '../types';
+import { CellValue, Possibilities } from '../../types';
 import { randomInt } from './numbers';
 
 export const slice2d = <T>(

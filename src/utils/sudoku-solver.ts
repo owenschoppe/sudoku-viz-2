@@ -3,11 +3,11 @@ import {
   cloneDeep,
   indexToCoord,
   possibilitiesObjectToArray,
+  randomInt,
   shuffle,
-} from './array';
+} from './core';
 import { possibilitiesForCell } from './sudoku';
 import { Board } from '../types';
-import { randomInt } from './numbers';
 
 export enum difficultyLevel {
   HARD,

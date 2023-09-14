@@ -4,9 +4,7 @@
 // value of 0 means it can't be that value, value of 1 means it can be.
 
 import { Board, Possibilities, PossibilitiesForBoard } from '../types';
-import { slice2d } from './array';
-import { justCellValues } from './numbers';
-import { unique } from './unique';
+import { justCellValues, slice2d, unique } from './core';
 
 // boards: 201 one of the main challenges is undoing a board move. just because we remove a value from a cell doesn't mean it then becomes legal for all related cells
 

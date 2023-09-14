@@ -81,7 +81,7 @@
         render(_state) { }
     };
 
-    const cellValues = {
+    const cellValues$1 = {
         1: true,
         2: true,
         3: true,
@@ -92,8 +92,8 @@
         8: true,
         9: true,
     };
-    const isCellValue = (value) => !!cellValues[value];
-    const justCellValues = (arr) => arr.filter(isCellValue);
+    const isCellValue$1 = (value) => !!cellValues$1[value];
+    const justCellValues = (arr) => arr.filter(isCellValue$1);
     const randomInt = (max) => Math.floor(Math.random() * max);
 
     const slice2d = (arr, rowStart, colStart, rowEnd, colEnd) => arr.slice(rowStart, rowEnd).map((row) => row.slice(colStart, colEnd));
@@ -116,7 +116,27 @@
         }
         return acc;
     }, []);
-    const cloneDeep = (arr) => arr.map((row) => [...row]);
+    /**
+     * Clone arbitarily nested objects and arrays and primitive values.
+     * Does not support more complex classes like Map and Set
+     * Consider using Object.getPrototypeOf(map) === Map.prototype to expand support
+     * @param obj any[] | {}
+     * @returns any[] | {}
+     */
+    const cloneDeep = (obj) => {
+        if (Array.isArray(obj)) {
+            return obj.map(cloneDeep);
+        }
+        else if (typeof obj === 'object' && obj !== null) {
+            return Object.entries(obj).reduce((acc, [key, value]) => {
+                acc[key] = cloneDeep(value);
+                return acc;
+            }, {});
+        }
+        else {
+            return obj;
+        }
+    };
     const shuffle = (arr) => arr.reduce((acc, cur) => {
         const index = randomInt(acc.length);
         acc.splice(index, 0, cur);
@@ -245,6 +265,19 @@
     const isValidInput = (input, possibilities) => {
         return !!possibilities[Number(input)] ?? false;
     };
+
+    const cellValues = {
+        1: true,
+        2: true,
+        3: true,
+        4: true,
+        5: true,
+        6: true,
+        7: true,
+        8: true,
+        9: true,
+    };
+    const isCellValue = (value) => !!cellValues[value];
 
     /**
      * Cell element that implements the dispatch pattern.
@@ -748,19 +781,25 @@
     }
     customElements.define('sudoku-controls', Controls);
 
-    const up = (location) => {
-        return Object.assign({ ...location, i: move(location.i, -1, 9) });
-    };
-    const down = (location) => {
-        return Object.assign({ ...location, i: move(location.i, +1, 9) });
-    };
-    const left = (location) => {
-        return Object.assign({ ...location, j: move(location.j, -1, 9) });
-    };
-    const right = (location) => {
-        return Object.assign({ ...location, j: move(location.j, +1, 9) });
-    };
-    const move = (start, delta, modulo = 9) => (start + delta + modulo) % modulo;
+    const up = (addr) => ({
+        ...addr,
+        i: decrement(addr.i),
+    });
+    const down = (addr) => ({
+        ...addr,
+        i: increment(addr.i),
+    });
+    const left = (addr) => ({
+        ...addr,
+        j: decrement(addr.j),
+    });
+    const right = (addr) => ({
+        ...addr,
+        j: increment(addr.j),
+    });
+    const increment = (start) => move(start, +1, 9);
+    const decrement = (start) => move(start, -1, 9);
+    const move = (start, delta, modulo) => (start + delta + modulo) % modulo;
 
     /**
      * Reducer function to manage sudoku calculations

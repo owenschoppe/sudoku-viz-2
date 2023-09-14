@@ -3,8 +3,8 @@ import './main.css';
 import { Action, initializeSubscriptions } from './utils/subscribe.js';
 import { Board, CellValue, State } from './types.js';
 import { BoardLens } from './components';
+import { NNArray } from './utils';
 import { possibilitiesForBoard } from './utils/sudoku';
-import { NNArray } from './utils/array';
 import { generateBoard } from './utils/sudoku-solver';
 import { down, left, right, up } from './utils/move';
 

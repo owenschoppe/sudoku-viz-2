@@ -24,10 +24,9 @@ import {
   PossibilitiesForBoard,
   PossibilitiesForCell,
 } from '../types';
-import { cloneDeep, indexToCoord } from './array';
+import { cloneDeep, indexToCoord, keyBy, memoize } from './core';
 
-// Generator = Solver and then subtract more or less values.
-// Solver should use dynamic programming to find solution
+const cellString = (cell: CellAddress) => `${cell.i}-${cell.j}`;
 
 export const loops = (
   board: Board,
@@ -39,6 +38,45 @@ export const loops = (
   return;
 };
 
+export const searchAllCells = (boardPossibilities: PossibilitiesForBoard) => {
+  let foundCells = {}; // memo for cell addresses
+  let results = [];
+  for (let index = 0; index < 81; index++) {
+    const { i, j } = indexToCoord(index);
+    const address = { i, j };
+    const key = cellString(address);
+    if (!foundCells[key]) {
+      const cellsPerValue = memoize(cellsPerValueInRow)(
+        i,
+        boardPossibilities[i],
+      );
+      // Also search columns and groups?
+      const rowLoops = getConnectedCellsInRow(
+        address,
+        {},
+        {},
+        boardPossibilities,
+        cellsPerValue,
+      );
+      if (rowLoops.length > 1) {
+        results.push(rowLoops);
+      }
+      foundCells = { ...foundCells, ...keyBy(rowLoops, cellString) };
+    }
+  }
+  return results;
+};
+
+/**
+ * Get connected cells for the current cell.
+ * Must be repeated for every unsearched cell in the row.
+ * @param cell Current cell
+ * @param cellSteps Cells processed so far
+ * @param valueSteps Values processed so far
+ * @param possibilities
+ * @param cellsPerValue
+ * @returns
+ */
 export const getConnectedCellsInRow = (
   cell: CellAddress,
   cellSteps: Record<string, CellAddress>, // order doesn't matter
@@ -74,7 +112,15 @@ export const getConnectedCellsInRow = (
   }
 };
 
-//
+/**
+ *
+ * @param value Current value
+ * @param cellSteps
+ * @param valueSteps
+ * @param possibilities
+ * @param cellsPerValue
+ * @returns
+ */
 const getConnectedValuesInRow = (
   value: CellValue,
   cellSteps: Record<string, CellAddress>, // order doesn't matter
@@ -103,8 +149,6 @@ const getConnectedValuesInRow = (
     return Object.values(cellSteps);
   }
 };
-
-const cellString = (cell: CellAddress) => `${cell.i}-${cell.j}`;
 
 export const cellsPerValueInRow = (
   i: number,
