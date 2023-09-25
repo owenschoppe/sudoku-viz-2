@@ -7,6 +7,8 @@ import { NNArray } from './utils';
 import { possibilitiesForBoard } from './utils/sudoku';
 import { generateBoard } from './utils/sudoku-solver';
 import { down, left, right, up } from './utils/move';
+import { LoopType, getLoopsForBoardByType } from './utils/sudoku-loops';
+import { BoardLoops } from './components/board-loops';
 
 /**
  * Reducer function to manage sudoku calculations
@@ -24,7 +26,12 @@ const reducer = (state: State, action: Action) => {
       state.board[i][j] = value;
       state.color = color;
       state.possibilities = possibilitiesForBoard(state.board);
-      console.log(i, j, value, state);
+      state.loops = {
+        row: getLoopsForBoardByType(state.possibilities, 'row'),
+        column: getLoopsForBoardByType(state.possibilities, 'column'),
+        group: getLoopsForBoardByType(state.possibilities, 'group'),
+      };
+      // console.log(i, j, value, state);
       updatedState = state;
       break;
     case 'new':
@@ -56,9 +63,15 @@ const initialBoard = NNArray(9, 0);
 
 const initialState = (savedBoard?: Board): State => {
   const board = savedBoard || initialBoard;
+  const possibilities = possibilitiesForBoard(board);
   return {
     board: board,
-    possibilities: possibilitiesForBoard(board),
+    possibilities,
+    loops: {
+      row: getLoopsForBoardByType(possibilities, 'row'),
+      column: getLoopsForBoardByType(possibilities, 'column'),
+      group: getLoopsForBoardByType(possibilities, 'group'),
+    },
     location: { i: 0, j: 0 },
   };
 };
@@ -71,8 +84,9 @@ const initialState = (savedBoard?: Board): State => {
   // Move this stuff to a web component so we can utilize templates
   document.body.innerHTML = `<sudoku-controls></sudoku-controls>
   <div id="app">
-      <div id="board"><sudoku-board class="main-board"/></div>
-      <div id="viewer"></div>
+      <div id="board"><h2>Board</h2><sudoku-board class="main-board"/></div>
+      <div><h2>Possibilities</h2><div id="viewer"></div></div>
+      <div><h2>Connections</h2><div id="loops"></div></div>
     </div>`;
 
   const secondary = Array(9)
@@ -80,6 +94,12 @@ const initialState = (savedBoard?: Board): State => {
     .map((_, i) => new BoardLens((i + 1) as CellValue));
   secondary.forEach((board) => board.classList.add('secondary-board'));
   document.querySelector('#viewer').append(...secondary);
+
+  const tertiary = ['row', 'column', 'group'].map(
+    (type: LoopType) => new BoardLoops(type),
+  );
+  tertiary.forEach((board) => board.classList.add('secondary-board'));
+  document.querySelector('#loops').append(...tertiary);
 
   // Add hot reloading in dev mode
   document.write(

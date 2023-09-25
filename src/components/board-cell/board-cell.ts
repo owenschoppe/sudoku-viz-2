@@ -1,7 +1,7 @@
 import { CellValue, State } from '../../types.js';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 import { isValidInput } from '../../utils/sudoku.js';
-import { isCellValue } from '../../utils/numbers.js';
+import { isCellValue } from '../../utils/index.js';
 
 /**
  * Cell element that implements the dispatch pattern.
@@ -91,7 +91,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
           i: this.i,
           j: this.j,
           value: Number(event.key),
-          color: this.getColor(),
+          // color: this.getColor(),
         },
       }).board[this.i][this.j];
     } else if (event.key === 'Backspace') {
@@ -101,16 +101,16 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
           i: this.i,
           j: this.j,
           value: 0,
-          color: this.getColor(),
+          // color: this.getColor(),
         },
       }).board[this.i][this.j];
     }
   }
 
-  getColor() {
-    const step = 255 / 9;
-    return `rgb(${step * this.i},${step * this.j},${step * this.value})`;
-  }
+  // getColor() {
+  //   const step = 255 / 9;
+  //   return `rgb(${step * this.i},${step * this.j},${step * this.value})`;
+  // }
 
   // Todo
   template = () => html`

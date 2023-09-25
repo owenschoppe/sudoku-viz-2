@@ -5,10 +5,10 @@ import html from '../board/board.html';
 
 import { CellValue } from '../../types';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin';
-import { BoardCellLens } from '../board-cell-lens';
+import { BoardLensCell } from '../board-lens-cell';
 
 export class BoardLens extends ReactiveMixin(HTMLElement) {
-  cells: BoardCellLens[] = [];
+  cells: BoardLensCell[] = [];
   board: HTMLDivElement;
   lens: CellValue = null;
 
@@ -40,7 +40,7 @@ export class BoardLens extends ReactiveMixin(HTMLElement) {
       .map((row, i) =>
         row.map(
           (_value, j) =>
-            new BoardCellLens({
+            new BoardLensCell({
               i,
               j,
               css: `:host { grid-area: c${i}${j}; }`,

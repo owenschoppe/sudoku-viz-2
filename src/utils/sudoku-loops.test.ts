@@ -2,10 +2,15 @@ import { Board } from '../types';
 import { cloneDeep, possibilitiesObjectToArray } from './core';
 import { possibilitiesForBoard, possibilitiesForCell } from './sudoku';
 import {
-  searchAllCells,
+  searchAllRows,
   cellsPerValueInBoard,
-  cellsPerValueInRow,
-  getConnectedCellsInRow,
+  getConnectedCells,
+  cellsPerValueInRows,
+  cellsPerValueInCols,
+  cellsPerValueInGroups,
+  getLoopsForBoardByType,
+  nextId,
+  intToLetters,
 } from './sudoku-loops';
 
 const simpleLoop: Board = [
@@ -108,7 +113,7 @@ describe('cellsPerValueInRow', () => {
       8: [{ i: 0, j: 7 }],
       9: [{ i: 0, j: 8 }],
     };
-    const result = cellsPerValueInRow(0, boardPossibilities[0]);
+    const result = cellsPerValueInRows(boardPossibilities)[0];
     expect(result).toStrictEqual(cellsPerValue);
   });
 });
@@ -144,18 +149,12 @@ describe('cellsPerValueInBoard', () => {
   });
 });
 
-describe('getConnectedCellsInRow', () => {
+describe('getConnectedCells', () => {
   it('should return loop in row', () => {
     const boardPossibilities = possibilitiesForBoard(cloneDeep(simpleLoop));
-    const cellsPerValue = cellsPerValueInRow(0, boardPossibilities[0]);
+    const cellsPerValue = cellsPerValueInRows(boardPossibilities)[0];
     expect(
-      getConnectedCellsInRow(
-        { i: 0, j: 1 },
-        {},
-        {},
-        boardPossibilities,
-        cellsPerValue,
-      ),
+      getConnectedCells({ i: 0, j: 1 }, boardPossibilities, cellsPerValue),
     ).toStrictEqual([
       { i: 0, j: 6 },
       { i: 0, j: 1 },
@@ -164,15 +163,9 @@ describe('getConnectedCellsInRow', () => {
 
   it('should return loop in fourCell row 3', () => {
     const boardPossibilities = possibilitiesForBoard(cloneDeep(fourCellLoop));
-    const cellsPerValue = cellsPerValueInRow(3, boardPossibilities[3]);
+    const cellsPerValue = cellsPerValueInRows(boardPossibilities)[3];
     expect(
-      getConnectedCellsInRow(
-        { i: 3, j: 4 },
-        {},
-        {},
-        boardPossibilities,
-        cellsPerValue,
-      ),
+      getConnectedCells({ i: 3, j: 4 }, boardPossibilities, cellsPerValue),
     ).toStrictEqual([
       {
         i: 3,
@@ -187,15 +180,9 @@ describe('getConnectedCellsInRow', () => {
 
   it('should return loop in fourCell row 4', () => {
     const boardPossibilities = possibilitiesForBoard(cloneDeep(fourCellLoop));
-    const cellsPerValue = cellsPerValueInRow(4, boardPossibilities[4]);
+    const cellsPerValue = cellsPerValueInRows(boardPossibilities)[4];
     expect(
-      getConnectedCellsInRow(
-        { i: 4, j: 4 },
-        {},
-        {},
-        boardPossibilities,
-        cellsPerValue,
-      ),
+      getConnectedCells({ i: 4, j: 4 }, boardPossibilities, cellsPerValue),
     ).toStrictEqual([
       {
         i: 4,
@@ -208,38 +195,179 @@ describe('getConnectedCellsInRow', () => {
     ]);
   });
 
-  it('should return loop in fourCell row 4', () => {
+  it('should return loop in fourCell col 4', () => {
     const boardPossibilities = possibilitiesForBoard(cloneDeep(fourCellLoop));
-    const cellsPerValue = cellsPerValueInRow(4, boardPossibilities[4]);
+    const cellsPerValue = cellsPerValueInCols(boardPossibilities)[4];
     expect(
-      getConnectedCellsInRow(
-        { i: 4, j: 4 },
-        {},
-        {},
-        boardPossibilities,
-        cellsPerValue,
-      ),
+      getConnectedCells({ i: 3, j: 4 }, boardPossibilities, cellsPerValue),
+    ).toStrictEqual([
+      {
+        i: 4,
+        j: 4,
+      },
+      {
+        i: 3,
+        j: 4,
+      },
+    ]);
+  });
+
+  it('should return loop in fourCell grp 4', () => {
+    const boardPossibilities = possibilitiesForBoard(cloneDeep(fourCellLoop));
+    const cellsPerValue = cellsPerValueInGroups(boardPossibilities)[4];
+    expect(
+      getConnectedCells({ i: 3, j: 4 }, boardPossibilities, cellsPerValue),
+    ).toStrictEqual([
+      {
+        i: 4,
+        j: 4,
+      },
+      {
+        i: 3,
+        j: 4,
+      },
+    ]);
+  });
+
+  it('should return loop in fourCell grp 5', () => {
+    const boardPossibilities = possibilitiesForBoard(cloneDeep(fourCellLoop));
+    const cellsPerValue = cellsPerValueInGroups(boardPossibilities)[5];
+    expect(
+      getConnectedCells({ i: 4, j: 7 }, boardPossibilities, cellsPerValue),
     ).toStrictEqual([
       {
         i: 4,
         j: 7,
       },
       {
-        i: 4,
-        j: 4,
+        i: 3,
+        j: 7,
       },
     ]);
   });
 
-  // add more complex test cases
+  // add more complex test cases:
   // three pairwise cells
   // three cells, mutually three values
 });
 
-describe('searchAllCells', () => {
+describe('getLoopsForBoard', () => {
+  it('should return all loops in rows', () => {
+    const boardPossibilities = possibilitiesForBoard(cloneDeep(fourCellLoop));
+    const result = getLoopsForBoardByType(boardPossibilities, 'row');
+
+    expect(result[3][4]).toStrictEqual({
+      id: 'A',
+      loop: [
+        { i: 3, j: 7 },
+        { i: 3, j: 4 },
+      ],
+    });
+
+    expect(result[3][7]).toStrictEqual({
+      id: 'A',
+      loop: [
+        { i: 3, j: 7 },
+        { i: 3, j: 4 },
+      ],
+    });
+
+    expect(result[4][4]).toStrictEqual({
+      id: 'B',
+      loop: [
+        { i: 4, j: 7 },
+        { i: 4, j: 4 },
+      ],
+    });
+
+    expect(result[4][7]).toStrictEqual({
+      id: 'B',
+      loop: [
+        { i: 4, j: 7 },
+        { i: 4, j: 4 },
+      ],
+    });
+  });
+
+  it('should return all loops in cols', () => {
+    const boardPossibilities = possibilitiesForBoard(cloneDeep(fourCellLoop));
+    const result = getLoopsForBoardByType(boardPossibilities, 'column');
+
+    expect(result[3][4]).toStrictEqual({
+      id: 'A',
+      loop: [
+        { i: 4, j: 4 },
+        { i: 3, j: 4 },
+      ],
+    });
+
+    expect(result[3][7]).toStrictEqual({
+      id: 'B',
+      loop: [
+        { i: 4, j: 7 },
+        { i: 3, j: 7 },
+      ],
+    });
+
+    expect(result[4][4]).toStrictEqual({
+      id: 'A',
+      loop: [
+        { i: 4, j: 4 },
+        { i: 3, j: 4 },
+      ],
+    });
+
+    expect(result[4][7]).toStrictEqual({
+      id: 'B',
+      loop: [
+        { i: 4, j: 7 },
+        { i: 3, j: 7 },
+      ],
+    });
+  });
+
+  it('should return all loops in groups', () => {
+    const boardPossibilities = possibilitiesForBoard(cloneDeep(fourCellLoop));
+    const result = getLoopsForBoardByType(boardPossibilities, 'group');
+
+    expect(result[3][4]).toStrictEqual({
+      id: 'A',
+      loop: [
+        { i: 4, j: 4 },
+        { i: 3, j: 4 },
+      ],
+    });
+
+    expect(result[3][7]).toStrictEqual({
+      id: 'B',
+      loop: [
+        { i: 4, j: 7 },
+        { i: 3, j: 7 },
+      ],
+    });
+
+    expect(result[4][4]).toStrictEqual({
+      id: 'A',
+      loop: [
+        { i: 4, j: 4 },
+        { i: 3, j: 4 },
+      ],
+    });
+
+    expect(result[4][7]).toStrictEqual({
+      id: 'B',
+      loop: [
+        { i: 4, j: 7 },
+        { i: 3, j: 7 },
+      ],
+    });
+  });
+});
+
+describe('searchAllRows', () => {
   it('should return all loops in both rows', () => {
     const boardPossibilities = possibilitiesForBoard(cloneDeep(fourCellLoop));
-    expect(searchAllCells(boardPossibilities)).toStrictEqual([
+    expect(searchAllRows(boardPossibilities)).toStrictEqual([
       [
         {
           i: 3,
@@ -270,14 +398,45 @@ describe('getConnectedCellsInBoard', () => {
     const boardPossibilities = possibilitiesForBoard(cloneDeep(fourCellLoop));
     const cellsPerValue = cellsPerValueInBoard(boardPossibilities);
     expect(
-      getConnectedCellsInRow(
-        { i: 3, j: 4 },
-        {},
-        {},
-        boardPossibilities,
-        cellsPerValue,
-      ),
+      getConnectedCells({ i: 3, j: 4 }, boardPossibilities, cellsPerValue),
     ).toStrictEqual([]);
+  });
+});
+
+describe('nextId', () => {
+  it('should return A', () => {
+    const next = nextId();
+    const result = next();
+    expect(result).toBe('A');
+  });
+
+  it('should return A', () => {
+    const next = nextId();
+    next();
+    const result = next();
+    expect(result).toBe('B');
+  });
+});
+
+describe('intToLetters', () => {
+  it('should return A', () => {
+    const result = intToLetters(0);
+    expect(result).toBe('A');
+  });
+
+  it('should return Z', () => {
+    const result = intToLetters(25);
+    expect(result).toBe('Z');
+  });
+
+  it('should return AA', () => {
+    const result = intToLetters(26);
+    expect(result).toBe('AA');
+  });
+
+  xit('should return AA', () => {
+    const result = intToLetters(27);
+    expect(result).toBe('AB');
   });
 });
 

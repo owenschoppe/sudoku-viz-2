@@ -38,3 +38,23 @@ body {
   column-gap: var(--board-gap);
   line-height: 0;
 }
+
+#loops {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'c0'
+    'c1'
+    'c2';
+  height: var(--main-board);
+  width: 154px;
+  row-gap: var(--board-gap);
+  /* column-gap: var(--board-gap); */
+  line-height: 0;
+}
+
+h2 {
+  color: white;
+  font-size: 1rem;
+}

@@ -1,3 +1,5 @@
+import { LoopObj } from './utils/sudoku-loops';
+
 export type CellValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export type CellAddress = { i: number; j: number };
@@ -19,6 +21,11 @@ export type CellsPerValue = Record<CellValue, CellAddress[]>;
 export type State = {
   board: Board;
   possibilities: PossibilitiesForBoard;
+  loops: {
+    row: LoopObj[][];
+    column: LoopObj[][];
+    group: LoopObj[][];
+  };
   color?: string;
   location: CellAddress;
 };

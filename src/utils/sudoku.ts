@@ -3,8 +3,13 @@
 // and k[1-9] is the binary probability of that number being in that cell
 // value of 0 means it can't be that value, value of 1 means it can be.
 
-import { Board, Possibilities, PossibilitiesForBoard } from '../types';
-import { justCellValues, slice2d, unique } from './core';
+import {
+  Board,
+  CellAddress,
+  Possibilities,
+  PossibilitiesForBoard,
+} from '../types';
+import { NNArray, justCellValues, slice2d, unique } from './core';
 
 // boards: 201 one of the main challenges is undoing a board move. just because we remove a value from a cell doesn't mean it then becomes legal for all related cells
 
@@ -106,9 +111,10 @@ export const grpValExcluding = (board: Board, i: number, j: number) => {
   return values;
 };
 
-export const rowValues = (board: Board, i: number) => board[i].slice();
+export const rowValues = (board: Board | any[][], i: number) =>
+  board[i].slice();
 
-export const colValues = (board: Board, j: number) =>
+export const colValues = (board: Board | any[][], j: number) =>
   board.map((row) => row[j]);
 
 /**
@@ -117,7 +123,7 @@ export const colValues = (board: Board, j: number) =>
  * @param g
  * @returns
  */
-export const grpValues = (board: Board, g: number) => {
+export const grpValues = (board: Board | any[][], g: number) => {
   const [rowStart, colStart] = groupStartCoords[g];
   return slice2d(board, rowStart, colStart, rowStart + 3, colStart + 3).flat();
 };
@@ -145,6 +151,54 @@ const cellToGroupMemberIndex = [
   [3, 4, 5, 3, 4, 5, 3, 4, 5],
   [6, 7, 8, 6, 7, 8, 6, 7, 8],
 ];
+
+export type MemberToAddressFn = (slice: number, member: number) => CellAddress;
+export type AddressToMemberFn = ({ i, j }: CellAddress) => {
+  slice: number;
+  member: number;
+};
+
+export const groupMemberIndexToCell = (): MemberToAddressFn => {
+  const result: CellAddress[][] = NNArray(9, null);
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      const groupIndex = cellToGroupIndex[i][j];
+      const memberIndex = cellToGroupMemberIndex[i][j];
+      result[groupIndex][memberIndex] = { i, j };
+    }
+  }
+  return (groupIndex: number, memberIndex: number) =>
+    result[groupIndex][memberIndex];
+};
+
+export const colMemberIndexToCell: MemberToAddressFn = (
+  j: number,
+  i: number,
+): CellAddress => ({
+  i,
+  j,
+});
+
+export const rowMemberIndexToCell: MemberToAddressFn = (
+  i: number,
+  j: number,
+): CellAddress => ({
+  i,
+  j,
+});
+
+export const addressToGroupMember = ({ i, j }: CellAddress) => ({
+  slice: cellToGroupIndex[i][j],
+  member: cellToGroupMemberIndex[i][j],
+});
+export const addressToColumnMember = ({ i, j }: CellAddress) => ({
+  slice: j,
+  member: i,
+});
+export const addressToRowMember = ({ i, j }: CellAddress) => ({
+  slice: i,
+  member: j,
+});
 
 const groupStartCoords: [rowStart: number, colStart: number][] = [
   [0, 0],

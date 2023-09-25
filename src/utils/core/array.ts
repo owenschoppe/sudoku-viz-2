@@ -12,7 +12,11 @@ export const slice2d = <T>(
 export const NNArray = (n: number, fill: any) =>
   Array(n)
     .fill(null)
-    .map(() => Array(n).fill(fill));
+    .map(() =>
+      Array(n)
+        .fill(null)
+        .map(() => cloneDeep(fill)),
+    );
 
 /**
  * Convert index to coordinates
@@ -20,7 +24,7 @@ export const NNArray = (n: number, fill: any) =>
  * @returns 0 indexed row, col coordinates
  */
 export const indexToCoord = (index: number) => {
-  const i = Math.floor(index / 9);
+  const i = ~~(index / 9);
   const j = index % 9;
   return { i, j };
 };
