@@ -63,6 +63,7 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
   }
 
   render(state: State) {
+    this.state = state;
     this.value = state.board[this.i][this.j];
     const possibility =
       state.possibilities[this.i][this.j].possibilities[this.lens];
@@ -123,17 +124,18 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
     <!DOCTYPE html>
     <style>
       button {
-        font-weight: var(--cell-font-weight, bold);
-        font-size: var(--cell-text-size, 10px);
         color: var(--cell-text-color, black);
+        cursor: pointer;
         border: none;
         /* background: var(--cell-background-color, #f3f3f3); */
         background: rgba(255, 255, 255, 0.1);
-        /* opacity: 0.1; */
-        width: var(--cell-width, 100%);
+        font-weight: var(--cell-font-weight, bold);
+        font-size: var(--cell-text-size, 10px);
         height: var(--cell-height, 100%);
-        padding: 0;
         margin: 0;
+        /* opacity: 0.1; */
+        padding: 0;
+        width: var(--cell-width, 100%);
       }
       button.selected {
         background: var(--cell-background-color, #f3f3f3);
@@ -155,7 +157,7 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
       }
       ${this.css}
     </style>
-    <button part="button">${this.value ?? ``}</button>
+    <button part="button" tabindex="-1">${this.value ?? ``}</button>
   `;
 }
 

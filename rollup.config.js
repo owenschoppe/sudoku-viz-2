@@ -6,6 +6,8 @@ import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 import { string } from 'rollup-plugin-string';
 import css from 'rollup-plugin-import-css';
+import livereload from 'rollup-plugin-livereload';
+import serve from 'rollup-plugin-serve';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -26,7 +28,7 @@ export default {
       include: '**/*.html',
     }),
     css({
-      include: '**/components/**/*.css',
+      include: '**/*components/**/*.css',
     }),
     commonjs(), // converts date-fns to ES modules
     typescript(),
@@ -44,5 +46,11 @@ export default {
       // ]),
     }),
     production && terser(), // minify, but only in production
+    !production &&
+      serve({
+        contentBase: 'dist',
+        open: true,
+      }),
+    !production && livereload({ watch: 'dist' }),
   ],
 };

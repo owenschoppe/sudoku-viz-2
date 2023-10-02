@@ -1,3 +1,5 @@
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 (function () {
     'use strict';
 
@@ -52,9 +54,9 @@
         }
     };
 
-    var css$1 = ":host {\n  /* --my-button-color-public: var(--my-button-color-public, blue); */\n  --board-size: var(--public-board-size, 240px);\n  --board-cell-gap: var(--public-board-gap, 2px);\n  --board-group-gap: var(--public-board-gap, 4px);\n}\n\n/* ::part(button) {\n  color: darkgreen;\n} */\n\n.grid {\n  display: grid;\n  grid-template-rows:\n    1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap)\n    1fr 1fr 1fr;\n  grid-template-columns:\n    1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap)\n    1fr 1fr 1fr;\n  grid-template-areas:\n    'c00 c01 c02 . c03 c04 c05 . c06 c07 c08'\n    'c10 c11 c12 . c13 c14 c15 . c16 c17 c18'\n    'c20 c21 c22 . c23 c24 c25 . c26 c27 c28'\n    '... ... ... . ... ... ... . ... ... ...'\n    'c30 c31 c32 . c33 c34 c35 . c36 c37 c38'\n    'c40 c41 c42 . c43 c44 c45 . c46 c47 c48'\n    'c50 c51 c52 . c53 c54 c55 . c56 c57 c58'\n    '... ... ... . ... ... ... . ... ... ...'\n    'c60 c61 c62 . c63 c64 c65 . c66 c67 c68'\n    'c70 c71 c72 . c73 c74 c75 . c76 c77 c78'\n    'c80 c81 c82 . c83 c84 c85 . c86 c87 c88';\n  height: var(--board-size);\n  width: var(--board-size);\n  row-gap: var(--board-cell-gap);\n  column-gap: var(--board-cell-gap);\n  line-height: 0;\n}\n";
+    var css$2 = ":host {\n  /* --my-button-color-public: var(--my-button-color-public, blue); */\n  --board-size: var(--public-board-size, 240px);\n  --board-cell-gap: var(--public-board-gap, 2px);\n  --board-group-gap: var(--public-board-gap, 4px);\n}\n\n/* ::part(button) {\n  color: darkgreen;\n} */\n\n.grid {\n  display: grid;\n  grid-template-rows:\n    1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap)\n    1fr 1fr 1fr;\n  grid-template-columns:\n    1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap)\n    1fr 1fr 1fr;\n  grid-template-areas:\n    'c00 c01 c02 . c03 c04 c05 . c06 c07 c08'\n    'c10 c11 c12 . c13 c14 c15 . c16 c17 c18'\n    'c20 c21 c22 . c23 c24 c25 . c26 c27 c28'\n    '... ... ... . ... ... ... . ... ... ...'\n    'c30 c31 c32 . c33 c34 c35 . c36 c37 c38'\n    'c40 c41 c42 . c43 c44 c45 . c46 c47 c48'\n    'c50 c51 c52 . c53 c54 c55 . c56 c57 c58'\n    '... ... ... . ... ... ... . ... ... ...'\n    'c60 c61 c62 . c63 c64 c65 . c66 c67 c68'\n    'c70 c71 c72 . c73 c74 c75 . c76 c77 c78'\n    'c80 c81 c82 . c83 c84 c85 . c86 c87 c88';\n  height: var(--board-size);\n  width: var(--board-size);\n  row-gap: var(--board-cell-gap);\n  column-gap: var(--board-cell-gap);\n  line-height: 0;\n}\n";
 
-    var html$4 = "<div id=\"board\" class=\"grid\"></div>\n";
+    var html$6 = "<div id=\"board\" class=\"grid\"></div>\n";
 
     // // Generic Contructor with constraints
     // type GConstructor<T = {}> = new (...args: any[]) => T;
@@ -381,10 +383,12 @@
             const { i, j } = state.location;
             if (this.i === i && this.j === j) {
                 this.input.classList.add('current');
+                this.input.setAttribute('tabindex', '0');
                 this.input.focus();
             }
             else {
                 this.input.classList.remove('current');
+                this.input.setAttribute('tabindex', '-1');
             }
         }
         handleClick() {
@@ -394,6 +398,9 @@
             });
         }
         handleChange(event) {
+            if (event.key === 'Tab') {
+                return;
+            }
             event.preventDefault();
             if (isValidInput(event.key, this.state.possibilities[this.i][this.j].possibilities) &&
                 Number(event.key) !== this.value) {
@@ -424,12 +431,13 @@
         //   return `rgb(${step * this.i},${step * this.j},${step * this.value})`;
         // }
         // Todo
-        template = () => html$3 `
+        template = () => html$5 `
     <!DOCTYPE html>
     <style>
       input {
         caret-color: transparent;
         color: var(--cell-text-color, black);
+        cursor: pointer;
         border: none;
         background: var(--cell-background-color, #f3f3f3);
         font-weight: var(--cell-font-weight, bold);
@@ -452,7 +460,7 @@
         -moz-appearance: textfield;
       }
       input.current, input:focus {
-        outline: none;
+        /* outline: none; */
         box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);
       }
             ${this.css}
@@ -463,7 +471,7 @@
     />
   `;
     }
-    const html$3 = String.raw;
+    const html$5 = String.raw;
     customElements.define('board-cell', BoardCell);
 
     //@ts-ignore
@@ -483,9 +491,9 @@
         }
         init() {
             const { shadowRoot } = this;
-            shadowRoot.innerHTML = html$4;
+            shadowRoot.innerHTML = html$6;
             const style = document.createElement('style');
-            style.innerHTML = css$1;
+            style.innerHTML = css$2;
             shadowRoot.prepend(style);
             this.cells = this.state.board
                 .map((row, i) => row.map((_value, j) => new BoardCell({
@@ -500,10 +508,20 @@
             this.board.addEventListener('keydown', this.handleKey.bind(this));
         }
         handleKey(event) {
-            this.dispatch({
-                type: 'arrow',
-                data: event,
-            });
+            switch (event.key) {
+                case 'ArrowUp':
+                case 'ArrowDown':
+                case 'ArrowLeft':
+                case 'ArrowRight':
+                    this.dispatch({
+                        type: 'arrow',
+                        data: event,
+                    });
+                    break;
+                default:
+                    console.log(event);
+                    break;
+            }
         }
         render(_state) {
             // console.log('render board', state.board);
@@ -555,6 +573,7 @@
             this.button.addEventListener('click', this.handleClick.bind(this));
         }
         render(state) {
+            this.state = state;
             this.value = state.board[this.i][this.j];
             const possibility = state.possibilities[this.i][this.j].possibilities[this.lens];
             const selected = this.value === this.lens;
@@ -605,21 +624,22 @@
         //   return `rgb(${step * this.i},${step * this.j},${step * this.value})`;
         // }
         // Todo
-        template = () => html$2 `
+        template = () => html$4 `
     <!DOCTYPE html>
     <style>
       button {
-        font-weight: var(--cell-font-weight, bold);
-        font-size: var(--cell-text-size, 10px);
         color: var(--cell-text-color, black);
+        cursor: pointer;
         border: none;
         /* background: var(--cell-background-color, #f3f3f3); */
         background: rgba(255, 255, 255, 0.1);
-        /* opacity: 0.1; */
-        width: var(--cell-width, 100%);
+        font-weight: var(--cell-font-weight, bold);
+        font-size: var(--cell-text-size, 10px);
         height: var(--cell-height, 100%);
-        padding: 0;
         margin: 0;
+        /* opacity: 0.1; */
+        padding: 0;
+        width: var(--cell-width, 100%);
       }
       button.selected {
         background: var(--cell-background-color, #f3f3f3);
@@ -641,10 +661,10 @@
       }
       ${this.css}
     </style>
-    <button part="button">${this.value ?? ``}</button>
+    <button part="button" tabindex="-1">${this.value ?? ``}</button>
   `;
     }
-    const html$2 = String.raw;
+    const html$4 = String.raw;
     customElements.define('board-lens-cell', BoardLensCell);
 
     //@ts-ignore
@@ -666,9 +686,9 @@
         }
         init() {
             const { shadowRoot } = this;
-            shadowRoot.innerHTML = html$4;
+            shadowRoot.innerHTML = html$6;
             const style = document.createElement('style');
-            style.innerHTML = css$1;
+            style.innerHTML = css$2;
             shadowRoot.prepend(style);
             this.cells = this.state.board
                 .map((row, i) => row.map((_value, j) => new BoardLensCell({
@@ -701,9 +721,9 @@
     const brightness$1 = 75;
     customElements.define('sudoku-board-lens', BoardLens);
 
-    var css = ".flex {\n  height: 32px;\n  padding: 8px 0;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  gap: 8px;\n  align-content: center;\n  justify-content: flex-start;\n}\n\n.primary {\n  border: 0;\n  background: white;\n  color: black;\n}\n\n.primary:hover,\n.primary:focus {\n  border: 0;\n  background: white;\n  outline: none;\n  box-shadow: 0 0 0 3px inset chartreuse;\n  color: black;\n}\n\n.primary:active {\n  border: 0;\n  background: lavenderblush;\n  color: black;\n}\n";
+    var css$1 = ".flex {\n  height: 32px;\n  padding: 8px 0;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  gap: 8px;\n  align-content: center;\n  justify-content: flex-start;\n}\n\n.primary {\n  border: 0;\n  background: white;\n  color: black;\n}\n\n.primary:hover,\n.primary:focus {\n  border: 0;\n  background: white;\n  outline: none;\n  box-shadow: 0 0 0 3px inset chartreuse;\n  color: black;\n}\n\n.primary:active {\n  border: 0;\n  background: lavenderblush;\n  color: black;\n}\n";
 
-    var html$1 = "<div class=\"flex\">\n  <button id=\"new\" class=\"primary\">New</button>\n</div>\n";
+    var html$3 = "<div class=\"flex\" id=\"controls\"></div>\n";
 
     var difficultyLevel;
     (function (difficultyLevel) {
@@ -792,9 +812,343 @@
         return false;
     };
 
+    var css = "/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n.input {\n  background: white;\n  font-size: 14px;\n}\n\n.readonly {\n  cursor: pointer;\n  height: 32px;\n  line-height: 32px;\n  padding: 0 8px;\n}\n\n/* Input */\n\n.combobox input {\n  width: 100%;\n  line-height: 19px;\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  border: 1px solid var(--color-border, #ddd);\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  margin: var(--space-xxxsmall, 2px);\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
+
+    const ListMixin = (Base) => class List extends Base {
+        items = [];
+        constructor(...args) {
+            super(...args);
+        }
+        nextIndex(index, dir, loop) {
+            if (loop) {
+                return (index + dir + this.items.length) % this.items.length;
+            }
+            else {
+                return Math.max(Math.min(index + dir, this.items.length - 1), 0);
+            }
+        }
+    };
+
+    class ListItem {
+        option;
+        element;
+        onSelect;
+        onHover;
+        _id;
+        constructor(option, onSelect, onHover) {
+            this.onSelect = onSelect;
+            this.onHover = onHover;
+            this.option = option;
+            this.element = document.createElement('li');
+            this.element.classList.add('listbox-item', 'listbox__option');
+            this.element.setAttribute('role', 'option');
+            this.element.innerHTML = this.template();
+            this.element.querySelector('.listbox__option-text').textContent =
+                this.option.label;
+            this.element.addEventListener('mousedown', this.handleClick.bind(this), true);
+            this.element.addEventListener('mouseover', this.handleHover.bind(this), true);
+        }
+        handleClick(e) {
+            this.onSelect(e, this);
+        }
+        handleHover(e) {
+            this.onHover(e, this);
+        }
+        get id() {
+            return this._id;
+        }
+        set id(_id) {
+            this._id = _id;
+            this.element.setAttribute('id', _id);
+        }
+        template = () => html$2 ` <span
+    class="listbox__option-text listbox__option-text_entity"
+  ></span>`;
+    }
+    const html$2 = String.raw;
+
+    class DropdownListbox extends ListMixin(Array) {
+        dropdown;
+        currentItem;
+        _options;
+        onChange;
+        onNavigate;
+        constructor(options, onChange, onNavigate) {
+            super();
+            this.onChange = onChange;
+            this.onNavigate = onNavigate;
+            this.dropdown = document.createElement('ul');
+            this.dropdown.setAttribute('role', 'presentation');
+            this.dropdown.classList.add('listbox', 'listbox_vertical');
+            this.updateOptions(options);
+            this.updateCurrent();
+        }
+        get options() {
+            return this._options;
+        }
+        set options(options) {
+            this.updateOptions(options);
+        }
+        selectItem(e, listItem) {
+            e.preventDefault();
+            if (listItem && this.onChange) {
+                debugger;
+                this.onChange(listItem.option);
+            }
+        }
+        nextItem(e, dir) {
+            e.preventDefault();
+            var index = this.items.indexOf(this.currentItem);
+            var next = this.nextIndex(index, dir, true);
+            this.updateCurrent(next);
+        }
+        hoverItem(e, listItem) {
+            e.preventDefault();
+            this.currentItem = listItem;
+            var index = this.items.indexOf(this.currentItem);
+            this.updateCurrent(index);
+        }
+        render() {
+            return this.dropdown;
+        }
+        private;
+        updateOptions(options) {
+            this._options = options;
+            this.items = [];
+            this.options.forEach(this.addItem.bind(this));
+        }
+        updateCurrent(index) {
+            index = index || 0;
+            this.items.forEach((item, i) => {
+                if (i == index) {
+                    // Todo: abstract this into a setter on the item class.
+                    item.element.setAttribute('aria-selected', 'true');
+                    item.element.scrollIntoView({
+                        block: 'nearest',
+                        inline: 'nearest',
+                    });
+                    this.currentItem = item;
+                    this.onNavigate?.(item.id, item.option);
+                }
+                else {
+                    item.element.setAttribute('aria-selected', 'false');
+                }
+            });
+        }
+        addItem(option, i) {
+            var item = new ListItem(option, this.selectItem.bind(this), this.hoverItem.bind(this));
+            item.id = `option-${i}`;
+            this.items.push(item);
+            this.dropdown.appendChild(item.element);
+        }
+    }
+
+    var ComboboxTypes;
+    (function (ComboboxTypes) {
+        ComboboxTypes[ComboboxTypes["readonly"] = 0] = "readonly";
+        ComboboxTypes[ComboboxTypes["autocomplete"] = 1] = "autocomplete";
+    })(ComboboxTypes || (ComboboxTypes = {}));
+
+    //@ts-ignore
+    class Combobox extends HTMLElement {
+        combobox;
+        trigger;
+        dropdown;
+        label;
+        placeholder;
+        _options;
+        onChange;
+        type;
+        showLabel;
+        constructor({ label, placeholder, options, onChange, type = ComboboxTypes.readonly, showLabel = true, }) {
+            super();
+            this.attachShadow({ mode: 'open' });
+            this.label = label;
+            this.showLabel = showLabel;
+            this.placeholder = placeholder;
+            this._options = options;
+            this.onChange = onChange;
+            this.type = type;
+        }
+        connectedCallback() {
+            const { shadowRoot } = this;
+            shadowRoot.innerHTML = this.template(this.type, this.label, this.placeholder, this.showLabel);
+            const style = document.createElement('style');
+            style.innerHTML = css;
+            shadowRoot.prepend(style);
+            this.combobox = shadowRoot.querySelector('[role=combobox]');
+            this.trigger = shadowRoot.querySelector('.dropdown-trigger');
+            this.dropdown = new DropdownListbox(this.options, this.handleChange.bind(this), this.handleNavigate);
+            shadowRoot.querySelector('[role=listbox]').append(this.dropdown.render());
+            this.combobox.addEventListener('keydown', this.handlePress.bind(this), true);
+            this.combobox.addEventListener('input', this.searchOptions.bind(this, true));
+            this.combobox.addEventListener('click', this.searchOptions.bind(this, true));
+            this.combobox.addEventListener('blur', this.handleBlur.bind(this), false);
+        }
+        disconnectedCallback() {
+            this.combobox.removeEventListener('keydown', this.handlePress.bind(this), true);
+            this.combobox.removeEventListener('input', this.searchOptions.bind(this));
+            this.combobox.removeEventListener('click', this.searchOptions.bind(this));
+            this.combobox.removeEventListener('blur', this.handleBlur.bind(this), false);
+        }
+        get options() {
+            return this._options;
+        }
+        set options(options) {
+            this._options = options;
+            this.dropdown.updateOptions(options);
+        }
+        showDropdown() {
+            this.trigger.classList.add('is-open');
+            this.combobox.setAttribute('aria-expanded', 'true');
+            this.combobox.setAttribute('aria-activedescendant', this.dropdown.currentItem.id);
+        }
+        hideDropdown() {
+            this.trigger.classList.remove('is-open');
+            this.combobox.setAttribute('aria-expanded', 'false');
+            this.combobox.removeAttribute('aria-activedescendant');
+        }
+        handleChange(option) {
+            this.onChange(option);
+        }
+        handleNavigate(_id, _option) { }
+        handleBlur(_e) {
+            // if (e.target.value.trim().length > 0) {
+            //   //To increase discoverability of the feature, if someone leaves the field with data in it, treat it like a tag.
+            //   // this.pillList.addPill(e.target.value, e.target);
+            // }
+            this.hideDropdown();
+        }
+        handleFocus(_e) {
+            this.showDropdown();
+        }
+        handlePress(e) {
+            const { key } = e;
+            switch (key) {
+                case 'Enter':
+                    e.stopPropagation();
+                    e.preventDefault();
+                    if (this.trigger.classList.contains('is-open')) {
+                        // Hide the dropdown and submit if open
+                        this.hideDropdown();
+                        this.onChange(this.dropdown.currentItem.option);
+                    }
+                    else {
+                        // Show the dropdown if closed
+                        this.showDropdown();
+                    }
+                    break;
+                case 'ArrowUp':
+                    // Arrow through the list box
+                    // Show the dropdown and move
+                    e.stopPropagation();
+                    e.preventDefault();
+                    this.showDropdown();
+                    this.dropdown.nextItem(e, -1);
+                    break;
+                case 'ArrowDown':
+                    // Arrow through the list box
+                    // Show the dropdown and move
+                    e.stopPropagation();
+                    e.preventDefault();
+                    this.showDropdown();
+                    this.dropdown.nextItem(e, 1);
+                    break;
+                case 'Escape':
+                    if (this.combobox.getAttribute('aria-expanded') == 'true') {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        this.hideDropdown();
+                    }
+                    break;
+                default:
+                    this.searchOptions(e);
+                    break;
+            }
+        }
+        searchOptions(e) {
+            //Should we only search if e.target.value.length > 2?
+            const target = e.target;
+            if (this.type === ComboboxTypes.autocomplete && target) {
+                const results = this.options.filter((option) => {
+                    return option.label.toLowerCase().includes(target.value.toLowerCase()); // && (this.pillList.items.map(i => i.value).indexOf(option) == -1)
+                });
+                this.dropdown.updateOptions(results);
+            }
+            this.showDropdown();
+        }
+        buttonTemplate = (placeholder = 'Select an Option…') => html$1 `
+    <div
+      role="combobox"
+      tabindex="0"
+      class="input combobox__input readonly"
+      id="combobox"
+      aria-labelledby="label"
+      aria-controls="listbox"
+      aria-expanded="false"
+      aria-haspopup="listbox"
+      role="combobox"
+    >
+      <span class="slds-truncate" id="combobox-value-id-94"
+        >${placeholder}</span
+      >
+    </div>
+  `;
+        inputTemplate = (placeholder) => html$1 `
+    <input
+      type="text"
+      class="input combobox__input"
+      id="combobox"
+      disabled=""
+      placeholder="${placeholder}"
+      autocomplete="off"
+      aria-autocomplete="list"
+      aria-controls="listbox"
+      aria-expanded="false"
+      aria-haspopup="listbox"
+      role="combobox"
+    />
+  `;
+        template = (type, label, placeholder, showLabel) => html$1 `<div class="form-element">
+    <label
+      class="form-element__label ${showLabel ? '' : 'visuallyhidden'}"
+      for="combobox"
+      id="label"
+      >${label}</label
+    >
+    <div class="form-element__control">
+      <div class="combobox_container has-selection">
+        <div class="combobox dropdown-trigger dropdown-trigger_click">
+          <div
+            class="combobox__form-element input-has-icon input-has-icon_right"
+            role="none"
+          >
+            ${type === ComboboxTypes.readonly
+        ? this.buttonTemplate(placeholder)
+        : this.inputTemplate(placeholder)}
+          </div>
+          <div
+            id="listbox"
+            class="dropdown dropdown_length-with-icon-7 dropdown_fluid"
+            role="listbox"
+          >
+            <!-- ListBox -->
+          </div>
+        </div>
+      </div>
+      <!-- <div class="listbox_selection-group"> -->
+      <!-- Pills -->
+      <!-- </div> -->
+    </div>
+  </div>`;
+    }
+    const html$1 = String.raw;
+    customElements.define('o-combobox', Combobox);
+
     //@ts-ignore
     class Controls extends ReactiveMixin(HTMLElement) {
         newButton;
+        menu;
         constructor() {
             super();
             this.attachShadow({ mode: 'open' });
@@ -805,28 +1159,28 @@
         }
         disconnectedCallback() {
             super.disconnectedCallback();
-            this.newButton = this.shadowRoot.querySelector('#new');
-            this.newButton.removeEventListener('click', this.handleNewButton);
         }
         init() {
             const { shadowRoot } = this;
-            shadowRoot.innerHTML = html$1;
+            shadowRoot.innerHTML = html$3;
             const style = document.createElement('style');
-            style.innerHTML = css;
+            style.innerHTML = css$1;
             shadowRoot.prepend(style);
-            this.newButton = shadowRoot.querySelector('#new');
-            this.newButton.addEventListener('click', this.handleNewButton.bind(this));
-        }
-        render(_state) {
-            // console.log('render board', state.board);
-        }
-        handleNewButton() {
-            this.dispatch({
-                type: 'new',
-                data: {
-                    difficulty: difficultyLevel.EASY,
+            this.menu = new Combobox({
+                label: 'test',
+                placeholder: 'New',
+                options: [
+                    { label: 'Hard', value: difficultyLevel.HARD },
+                    { label: 'Medium', value: difficultyLevel.MED },
+                    { label: 'Easy', value: difficultyLevel.EASY },
+                    { label: 'Blank', value: 'blank' },
+                ],
+                onChange: ({ value }) => {
+                    this.dispatch({ type: 'new', data: { difficulty: value } });
                 },
+                showLabel: false,
             });
+            this.shadowRoot.querySelector('#controls').append(this.menu);
         }
     }
     customElements.define('sudoku-controls', Controls);
@@ -1072,15 +1426,16 @@
     <!DOCTYPE html>
     <style>
       button {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: var(--cell-text-color, black);
+        cursor: pointer;
         font-weight: var(--cell-font-weight, bold);
         font-size: var(--cell-text-size, 10px);
-        color: var(--cell-text-color, black);
-        border: none;
-        background: rgba(255, 255, 255, 0.1);
-        width: var(--cell-width, 100%);
         height: var(--cell-height, 100%);
-        padding: 0;
         margin: 0;
+        padding: 0;
+        width: var(--cell-width, 100%);
       }
       button.selected {
         background: var(--cell-background-color, #f3f3f3);
@@ -1099,7 +1454,7 @@
       }
       ${this.css}
     </style>
-    <button part="button">${this.value ?? ``}</button>
+    <button part="button" tabindex="-1">${this.value ?? ``}</button>
   `;
     }
     const hue = {
@@ -1137,9 +1492,9 @@
         }
         init() {
             const { shadowRoot } = this;
-            shadowRoot.innerHTML = html$4;
+            shadowRoot.innerHTML = html$6;
             const style = document.createElement('style');
-            style.innerHTML = css$1;
+            style.innerHTML = css$2;
             shadowRoot.prepend(style);
             this.cells = this.state.loops[this.type]
                 .map((row, i) => row.map((_value, j) => new BoardLoopsCell({
@@ -1180,7 +1535,9 @@
                 updatedState = state;
                 break;
             case 'new':
-                updatedState = initialState(generateBoard(action.data.difficulty));
+                const { difficulty } = action.data;
+                const board = difficulty === 'blank' ? null : generateBoard(difficulty);
+                updatedState = initialState(board);
                 break;
             case 'move':
                 state.location = action.data.location;
@@ -1205,7 +1562,7 @@
     };
     const initialBoard = NNArray(9, 0);
     const initialState = (savedBoard) => {
-        const board = savedBoard || initialBoard;
+        const board = savedBoard || cloneDeep(initialBoard);
         const possibilities = possibilitiesForBoard(board);
         return {
             board: board,

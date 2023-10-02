@@ -3,7 +3,7 @@ import './main.css';
 import { Action, initializeSubscriptions } from './utils/subscribe.js';
 import { Board, CellValue, State } from './types.js';
 import { BoardLens } from './components';
-import { NNArray } from './utils';
+import { NNArray, cloneDeep } from './utils';
 import { possibilitiesForBoard } from './utils/sudoku';
 import { generateBoard } from './utils/sudoku-solver';
 import { down, left, right, up } from './utils/move';
@@ -35,7 +35,9 @@ const reducer = (state: State, action: Action) => {
       updatedState = state;
       break;
     case 'new':
-      updatedState = initialState(generateBoard(action.data.difficulty));
+      const { difficulty } = action.data;
+      const board = difficulty === 'blank' ? null : generateBoard(difficulty);
+      updatedState = initialState(board);
       break;
     case 'move':
       state.location = action.data.location;
@@ -62,7 +64,7 @@ const reducer = (state: State, action: Action) => {
 const initialBoard = NNArray(9, 0);
 
 const initialState = (savedBoard?: Board): State => {
-  const board = savedBoard || initialBoard;
+  const board = savedBoard || cloneDeep(initialBoard);
   const possibilities = possibilitiesForBoard(board);
   return {
     board: board,

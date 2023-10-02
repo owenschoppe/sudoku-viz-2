@@ -103,15 +103,16 @@ export class BoardLoopsCell extends ReactiveMixin(HTMLElement) {
     <!DOCTYPE html>
     <style>
       button {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: var(--cell-text-color, black);
+        cursor: pointer;
         font-weight: var(--cell-font-weight, bold);
         font-size: var(--cell-text-size, 10px);
-        color: var(--cell-text-color, black);
-        border: none;
-        background: rgba(255, 255, 255, 0.1);
-        width: var(--cell-width, 100%);
         height: var(--cell-height, 100%);
-        padding: 0;
         margin: 0;
+        padding: 0;
+        width: var(--cell-width, 100%);
       }
       button.selected {
         background: var(--cell-background-color, #f3f3f3);
@@ -130,7 +131,7 @@ export class BoardLoopsCell extends ReactiveMixin(HTMLElement) {
       }
       ${this.css}
     </style>
-    <button part="button">${this.value ?? ``}</button>
+    <button part="button" tabindex="-1">${this.value ?? ``}</button>
   `;
 }
 

@@ -63,9 +63,11 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     const { i, j } = state.location;
     if (this.i === i && this.j === j) {
       this.input.classList.add('current');
+      this.input.setAttribute('tabindex', '0');
       this.input.focus();
     } else {
       this.input.classList.remove('current');
+      this.input.setAttribute('tabindex', '-1');
     }
   }
 
@@ -77,6 +79,9 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
   }
 
   handleChange(event: KeyboardEvent) {
+    if (event.key === 'Tab') {
+      return;
+    }
     event.preventDefault();
     if (
       isValidInput(
@@ -119,6 +124,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
       input {
         caret-color: transparent;
         color: var(--cell-text-color, black);
+        cursor: pointer;
         border: none;
         background: var(--cell-background-color, #f3f3f3);
         font-weight: var(--cell-font-weight, bold);
@@ -141,7 +147,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
         -moz-appearance: textfield;
       }
       input.current, input:focus {
-        outline: none;
+        /* outline: none; */
         box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);
       }
             ${this.css}

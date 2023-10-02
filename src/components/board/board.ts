@@ -53,10 +53,20 @@ export class Board extends ReactiveMixin(HTMLElement) {
   }
 
   handleKey(event: KeyboardEvent) {
-    this.dispatch({
-      type: 'arrow',
-      data: event,
-    });
+    switch (event.key) {
+      case 'ArrowUp':
+      case 'ArrowDown':
+      case 'ArrowLeft':
+      case 'ArrowRight':
+        this.dispatch({
+          type: 'arrow',
+          data: event,
+        });
+        break;
+      default:
+        console.log(event);
+        break;
+    }
   }
 
   render(_state) {

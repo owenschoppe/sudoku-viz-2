@@ -5,9 +5,12 @@ import html from './controls.html';
 
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 import { difficultyLevel } from '../../utils/sudoku-solver.js';
+import { Combobox } from '../../base-components/combobox';
 
 export class Controls extends ReactiveMixin(HTMLElement) {
   newButton: HTMLButtonElement;
+
+  menu: Combobox;
 
   constructor() {
     super();
@@ -21,8 +24,6 @@ export class Controls extends ReactiveMixin(HTMLElement) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.newButton = this.shadowRoot.querySelector('#new');
-    this.newButton.removeEventListener('click', this.handleNewButton);
   }
 
   init() {
@@ -34,21 +35,21 @@ export class Controls extends ReactiveMixin(HTMLElement) {
     style.innerHTML = css;
     shadowRoot.prepend(style);
 
-    this.newButton = shadowRoot.querySelector('#new');
-    this.newButton.addEventListener('click', this.handleNewButton.bind(this));
-  }
-
-  render(_state) {
-    // console.log('render board', state.board);
-  }
-
-  handleNewButton() {
-    this.dispatch({
-      type: 'new',
-      data: {
-        difficulty: difficultyLevel.EASY,
+    this.menu = new Combobox({
+      label: 'test',
+      placeholder: 'New',
+      options: [
+        { label: 'Hard', value: difficultyLevel.HARD },
+        { label: 'Medium', value: difficultyLevel.MED },
+        { label: 'Easy', value: difficultyLevel.EASY },
+        { label: 'Blank', value: 'blank' },
+      ],
+      onChange: ({ value }) => {
+        this.dispatch({ type: 'new', data: { difficulty: value } });
       },
+      showLabel: false,
     });
+    this.shadowRoot.querySelector('#controls').append(this.menu);
   }
 }
 
