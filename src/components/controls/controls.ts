@@ -5,12 +5,13 @@ import html from './controls.html';
 
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 import { difficultyLevel } from '../../utils/sudoku-solver.js';
-import { Combobox } from '../../base-components/combobox';
+import { Menu } from '../../base-components/menu';
+import { MenuTypes } from '../../base-components/menu/types';
 
 export class Controls extends ReactiveMixin(HTMLElement) {
   newButton: HTMLButtonElement;
 
-  menu: Combobox;
+  menu: Menu;
 
   constructor() {
     super();
@@ -35,9 +36,8 @@ export class Controls extends ReactiveMixin(HTMLElement) {
     style.innerHTML = css;
     shadowRoot.prepend(style);
 
-    this.menu = new Combobox({
-      label: 'test',
-      placeholder: 'New',
+    this.menu = new Menu({
+      label: 'New',
       options: [
         { label: 'Hard', value: difficultyLevel.HARD },
         { label: 'Medium', value: difficultyLevel.MED },
@@ -47,7 +47,7 @@ export class Controls extends ReactiveMixin(HTMLElement) {
       onChange: ({ value }) => {
         this.dispatch({ type: 'new', data: { difficulty: value } });
       },
-      showLabel: false,
+      type: MenuTypes.menu,
     });
     this.shadowRoot.querySelector('#controls').append(this.menu);
   }

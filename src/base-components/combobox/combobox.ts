@@ -1,23 +1,25 @@
 //@ts-ignore
 import css from './combobox.css';
-//@ts-ignore
 
-import { DropdownListbox } from '../dropdown-listbox';
+import { DropdownListbox } from '../_internals/dropdown-listbox';
 import {
   ChangeCallback,
   ComboboxParams,
   ComboboxTypes,
   DropdownOption,
 } from './types';
+import { DropdownListTypes } from '../_internals/types';
 
 export class Combobox extends HTMLElement {
-  combobox: HTMLDivElement;
+  combobox: HTMLDivElement | HTMLInputElement;
 
   trigger: HTMLDivElement;
 
   dropdown: DropdownListbox;
 
   label: string;
+
+  value: string;
 
   placeholder: string;
 
@@ -69,6 +71,7 @@ export class Combobox extends HTMLElement {
       this.options,
       this.handleChange.bind(this),
       this.handleNavigate,
+      DropdownListTypes.listbox,
     );
     shadowRoot.querySelector('[role=listbox]').append(this.dropdown.render());
 
@@ -129,6 +132,12 @@ export class Combobox extends HTMLElement {
 
   handleChange(option: DropdownOption) {
     this.onChange(option);
+    this.value = option.value; // value or label?
+    if (this.combobox instanceof HTMLInputElement) {
+      this.combobox.value = this.value;
+    } else {
+      this.combobox.children[0].textContent = this.value;
+    }
   }
 
   handleNavigate(_id: string, _option: DropdownOption) {}
@@ -215,9 +224,7 @@ export class Combobox extends HTMLElement {
       aria-haspopup="listbox"
       role="combobox"
     >
-      <span class="slds-truncate" id="combobox-value-id-94"
-        >${placeholder}</span
-      >
+      <span class="slds-truncate" id="combobox-value">${placeholder}</span>
     </div>
   `;
 

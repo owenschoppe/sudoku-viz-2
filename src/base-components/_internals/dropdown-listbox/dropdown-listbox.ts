@@ -1,10 +1,11 @@
-import { Direction, ListMixin } from '../../mixins/list-mixin';
+import { Direction, ListMixin } from '../../../mixins/list-mixin';
 import {
   ChangeCallback,
   DropdownOption,
   NavigateCallback,
-} from '../combobox/types';
+} from '../../combobox/types';
 import { ListItem } from '../list-item';
+import { DropdownListTypes } from '../types';
 
 export class DropdownListbox extends ListMixin(Array) {
   dropdown: HTMLUListElement;
@@ -16,15 +17,20 @@ export class DropdownListbox extends ListMixin(Array) {
   onChange: ChangeCallback;
   onNavigate: NavigateCallback;
 
+  type: DropdownListTypes;
+
   constructor(
     options: DropdownOption[],
     onChange: ChangeCallback,
     onNavigate: NavigateCallback,
+    type: DropdownListTypes,
   ) {
     super();
 
     this.onChange = onChange;
     this.onNavigate = onNavigate;
+
+    this.type = type;
 
     this.dropdown = document.createElement('ul');
     this.dropdown.setAttribute('role', 'presentation');
@@ -43,10 +49,9 @@ export class DropdownListbox extends ListMixin(Array) {
     this.updateOptions(options);
   }
 
-  selectItem(e: MouseEvent, listItem: ListItem) {
+  selectItem(e: MouseEvent | KeyboardEvent, listItem: ListItem) {
     e.preventDefault();
     if (listItem && this.onChange) {
-      debugger;
       this.onChange(listItem.option);
     }
   }
@@ -69,8 +74,6 @@ export class DropdownListbox extends ListMixin(Array) {
     return this.dropdown;
   }
 
-  private;
-
   updateOptions(options: DropdownOption[]) {
     this._options = options;
     this.items = [];
@@ -87,10 +90,13 @@ export class DropdownListbox extends ListMixin(Array) {
           block: 'nearest',
           inline: 'nearest',
         });
+        item.element.setAttribute('tabindex', '0');
+        item.element.focus();
         this.currentItem = item;
         this.onNavigate?.(item.id, item.option);
       } else {
         item.element.setAttribute('aria-selected', 'false');
+        item.element.setAttribute('tabindex', '-1');
       }
     });
   }
@@ -100,6 +106,7 @@ export class DropdownListbox extends ListMixin(Array) {
       option,
       this.selectItem.bind(this),
       this.hoverItem.bind(this),
+      this.type,
     );
     item.id = `option-${i}`;
     this.items.push(item);

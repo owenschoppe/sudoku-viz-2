@@ -1,4 +1,5 @@
-import { DropdownOption } from '../combobox/types';
+import { DropdownOption } from '../../combobox/types';
+import { DropdownListTypes } from '../types';
 
 type SelectCallback = (event: MouseEvent, item: ListItem) => void;
 
@@ -6,8 +7,13 @@ type HoverCallback = (event: MouseEvent, item: ListItem) => void;
 
 export class ListItem {
   option: DropdownOption;
+
   element: HTMLLIElement;
+
+  type: DropdownListTypes;
+
   onSelect: SelectCallback;
+
   onHover: HoverCallback;
 
   _id: string;
@@ -16,14 +22,16 @@ export class ListItem {
     option: DropdownOption,
     onSelect: SelectCallback,
     onHover: HoverCallback,
+    type: DropdownListTypes,
   ) {
     this.onSelect = onSelect;
     this.onHover = onHover;
     this.option = option;
+    this.type = type;
 
     this.element = document.createElement('li');
     this.element.classList.add('listbox-item', 'listbox__option');
-    this.element.setAttribute('role', 'option');
+    this.element.setAttribute('role', this.role());
 
     this.element.innerHTML = this.template();
 
@@ -57,6 +65,16 @@ export class ListItem {
   set id(_id: string) {
     this._id = _id;
     this.element.setAttribute('id', _id);
+  }
+
+  role() {
+    switch (this.type) {
+      case DropdownListTypes.menu:
+        return 'menuitem';
+      case DropdownListTypes.listbox:
+      default:
+        return 'option';
+    }
   }
 
   template = () => html` <span

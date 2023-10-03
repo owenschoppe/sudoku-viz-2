@@ -143,10 +143,12 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
       }
       button.only {
         background: white;
+        border-radius: 25%;
         /* opacity: 1; */
       }
       button.possibility {
         background: var(--cell-background-possibility-color, #f3f3f3);
+        border-radius: 50%;
         /* opacity: 0.5; */
       }
       button.current {

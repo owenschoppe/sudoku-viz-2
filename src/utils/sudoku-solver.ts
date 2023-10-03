@@ -10,9 +10,9 @@ import { possibilitiesForCell } from './sudoku';
 import { Board } from '../types';
 
 export enum difficultyLevel {
-  HARD,
-  MED,
-  EASY,
+  HARD = 'hard',
+  MED = 'med',
+  EASY = 'easy',
 }
 
 /**

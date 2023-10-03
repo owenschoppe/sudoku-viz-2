@@ -647,10 +647,12 @@
       }
       button.only {
         background: white;
+        border-radius: 25%;
         /* opacity: 1; */
       }
       button.possibility {
         background: var(--cell-background-possibility-color, #f3f3f3);
+        border-radius: 50%;
         /* opacity: 0.5; */
       }
       button.current {
@@ -727,9 +729,9 @@
 
     var difficultyLevel;
     (function (difficultyLevel) {
-        difficultyLevel[difficultyLevel["HARD"] = 0] = "HARD";
-        difficultyLevel[difficultyLevel["MED"] = 1] = "MED";
-        difficultyLevel[difficultyLevel["EASY"] = 2] = "EASY";
+        difficultyLevel["HARD"] = "hard";
+        difficultyLevel["MED"] = "med";
+        difficultyLevel["EASY"] = "easy";
     })(difficultyLevel || (difficultyLevel = {}));
     /**
      * Evidently boards with more blank values are easier to solve than boards with fewer.
@@ -812,7 +814,7 @@
         return false;
     };
 
-    var css = "/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n.input {\n  background: white;\n  font-size: 14px;\n}\n\n.readonly {\n  cursor: pointer;\n  height: 32px;\n  line-height: 32px;\n  padding: 0 8px;\n}\n\n/* Input */\n\n.combobox input {\n  width: 100%;\n  line-height: 19px;\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  border: 1px solid var(--color-border, #ddd);\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  margin: var(--space-xxxsmall, 2px);\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
+    var css = "/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n/* Trigger */\n\n.button {\n  width: 100%;\n  cursor: pointer;\n  height: 32px;\n  line-height: 32px;\n  padding: 0 8px;\n  border-radius: 0;\n  border: none;\n  display: block;\n  background: white;\n  font-size: 14px;\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  border: 1px solid var(--color-border, #ddd);\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  margin: var(--space-xxxsmall, 2px);\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
 
     const ListMixin = (Base) => class List extends Base {
         items = [];
@@ -829,19 +831,27 @@
         }
     };
 
+    var DropdownListTypes;
+    (function (DropdownListTypes) {
+        DropdownListTypes[DropdownListTypes["menu"] = 0] = "menu";
+        DropdownListTypes[DropdownListTypes["listbox"] = 1] = "listbox";
+    })(DropdownListTypes || (DropdownListTypes = {}));
+
     class ListItem {
         option;
         element;
+        type;
         onSelect;
         onHover;
         _id;
-        constructor(option, onSelect, onHover) {
+        constructor(option, onSelect, onHover, type) {
             this.onSelect = onSelect;
             this.onHover = onHover;
             this.option = option;
+            this.type = type;
             this.element = document.createElement('li');
             this.element.classList.add('listbox-item', 'listbox__option');
-            this.element.setAttribute('role', 'option');
+            this.element.setAttribute('role', this.role());
             this.element.innerHTML = this.template();
             this.element.querySelector('.listbox__option-text').textContent =
                 this.option.label;
@@ -861,6 +871,15 @@
             this._id = _id;
             this.element.setAttribute('id', _id);
         }
+        role() {
+            switch (this.type) {
+                case DropdownListTypes.menu:
+                    return 'menuitem';
+                case DropdownListTypes.listbox:
+                default:
+                    return 'option';
+            }
+        }
         template = () => html$2 ` <span
     class="listbox__option-text listbox__option-text_entity"
   ></span>`;
@@ -873,10 +892,12 @@
         _options;
         onChange;
         onNavigate;
-        constructor(options, onChange, onNavigate) {
+        type;
+        constructor(options, onChange, onNavigate, type) {
             super();
             this.onChange = onChange;
             this.onNavigate = onNavigate;
+            this.type = type;
             this.dropdown = document.createElement('ul');
             this.dropdown.setAttribute('role', 'presentation');
             this.dropdown.classList.add('listbox', 'listbox_vertical');
@@ -892,7 +913,6 @@
         selectItem(e, listItem) {
             e.preventDefault();
             if (listItem && this.onChange) {
-                debugger;
                 this.onChange(listItem.option);
             }
         }
@@ -911,7 +931,6 @@
         render() {
             return this.dropdown;
         }
-        private;
         updateOptions(options) {
             this._options = options;
             this.items = [];
@@ -927,69 +946,71 @@
                         block: 'nearest',
                         inline: 'nearest',
                     });
+                    item.element.setAttribute('tabindex', '0');
+                    item.element.focus();
                     this.currentItem = item;
                     this.onNavigate?.(item.id, item.option);
                 }
                 else {
                     item.element.setAttribute('aria-selected', 'false');
+                    item.element.setAttribute('tabindex', '-1');
                 }
             });
         }
         addItem(option, i) {
-            var item = new ListItem(option, this.selectItem.bind(this), this.hoverItem.bind(this));
+            var item = new ListItem(option, this.selectItem.bind(this), this.hoverItem.bind(this), this.type);
             item.id = `option-${i}`;
             this.items.push(item);
             this.dropdown.appendChild(item.element);
         }
     }
 
-    var ComboboxTypes;
-    (function (ComboboxTypes) {
-        ComboboxTypes[ComboboxTypes["readonly"] = 0] = "readonly";
-        ComboboxTypes[ComboboxTypes["autocomplete"] = 1] = "autocomplete";
-    })(ComboboxTypes || (ComboboxTypes = {}));
+    var MenuTypes;
+    (function (MenuTypes) {
+        MenuTypes[MenuTypes["menu"] = 0] = "menu";
+        MenuTypes[MenuTypes["checkboxmenu"] = 1] = "checkboxmenu";
+        MenuTypes[MenuTypes["radiomenu"] = 2] = "radiomenu";
+    })(MenuTypes || (MenuTypes = {}));
 
     //@ts-ignore
-    class Combobox extends HTMLElement {
-        combobox;
+    class Menu extends HTMLElement {
+        button;
         trigger;
         dropdown;
         label;
-        placeholder;
         _options;
         onChange;
         type;
-        showLabel;
-        constructor({ label, placeholder, options, onChange, type = ComboboxTypes.readonly, showLabel = true, }) {
+        constructor({ label, options, onChange, type = MenuTypes.menu }) {
             super();
             this.attachShadow({ mode: 'open' });
             this.label = label;
-            this.showLabel = showLabel;
-            this.placeholder = placeholder;
             this._options = options;
             this.onChange = onChange;
             this.type = type;
         }
         connectedCallback() {
             const { shadowRoot } = this;
-            shadowRoot.innerHTML = this.template(this.type, this.label, this.placeholder, this.showLabel);
+            shadowRoot.innerHTML = this.template(this.label);
             const style = document.createElement('style');
             style.innerHTML = css;
             shadowRoot.prepend(style);
-            this.combobox = shadowRoot.querySelector('[role=combobox]');
+            this.button = shadowRoot.querySelector('#button');
             this.trigger = shadowRoot.querySelector('.dropdown-trigger');
-            this.dropdown = new DropdownListbox(this.options, this.handleChange.bind(this), this.handleNavigate);
-            shadowRoot.querySelector('[role=listbox]').append(this.dropdown.render());
-            this.combobox.addEventListener('keydown', this.handlePress.bind(this), true);
-            this.combobox.addEventListener('input', this.searchOptions.bind(this, true));
-            this.combobox.addEventListener('click', this.searchOptions.bind(this, true));
-            this.combobox.addEventListener('blur', this.handleBlur.bind(this), false);
+            this.dropdown = new DropdownListbox(this.options, this.handleChange.bind(this), this.handleNavigate, DropdownListTypes.menu);
+            shadowRoot.querySelector('[role=menu]').append(this.dropdown.render());
+            this.trigger.addEventListener('keydown', this.handlePress.bind(this), true);
+            this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
+            this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
+            // this.button.addEventListener('blur', this.handleBlur.bind(this), false);
+            document.body.addEventListener('focus', this.handleBlur.bind(this), true);
         }
         disconnectedCallback() {
-            this.combobox.removeEventListener('keydown', this.handlePress.bind(this), true);
-            this.combobox.removeEventListener('input', this.searchOptions.bind(this));
-            this.combobox.removeEventListener('click', this.searchOptions.bind(this));
-            this.combobox.removeEventListener('blur', this.handleBlur.bind(this), false);
+            this.trigger.removeEventListener('keydown', this.handlePress.bind(this), true);
+            this.trigger.removeEventListener('input', this.searchOptions.bind(this));
+            this.button.removeEventListener('click', this.toggleDropdown.bind(this));
+            // this.button.removeEventListener('blur', this.handleBlur.bind(this), false);
+            document.body.removeEventListener('focus', this.handleBlur.bind(this));
         }
         get options() {
             return this._options;
@@ -1000,24 +1021,32 @@
         }
         showDropdown() {
             this.trigger.classList.add('is-open');
-            this.combobox.setAttribute('aria-expanded', 'true');
-            this.combobox.setAttribute('aria-activedescendant', this.dropdown.currentItem.id);
+            this.button.setAttribute('aria-expanded', 'true');
+            this.button.setAttribute('aria-activedescendant', this.dropdown.currentItem.id);
         }
         hideDropdown() {
             this.trigger.classList.remove('is-open');
-            this.combobox.setAttribute('aria-expanded', 'false');
-            this.combobox.removeAttribute('aria-activedescendant');
+            this.button.setAttribute('aria-expanded', 'false');
+            this.button.removeAttribute('aria-activedescendant');
         }
+        toggleDropdown() {
+            if (this.trigger.classList.contains('is-open')) {
+                this.hideDropdown();
+            }
+            else {
+                this.showDropdown();
+            }
+        }
+        private;
         handleChange(option) {
             this.onChange(option);
         }
         handleNavigate(_id, _option) { }
         handleBlur(_e) {
-            // if (e.target.value.trim().length > 0) {
-            //   //To increase discoverability of the feature, if someone leaves the field with data in it, treat it like a tag.
-            //   // this.pillList.addPill(e.target.value, e.target);
-            // }
-            this.hideDropdown();
+            console.log('handleBlur', _e);
+            if (!this.trigger.contains(document.activeElement)) {
+                this.hideDropdown();
+            }
         }
         handleFocus(_e) {
             this.showDropdown();
@@ -1055,7 +1084,7 @@
                     this.dropdown.nextItem(e, 1);
                     break;
                 case 'Escape':
-                    if (this.combobox.getAttribute('aria-expanded') == 'true') {
+                    if (this.button.getAttribute('aria-expanded') == 'true') {
                         e.stopPropagation();
                         e.preventDefault();
                         this.hideDropdown();
@@ -1066,84 +1095,32 @@
                     break;
             }
         }
-        searchOptions(e) {
+        searchOptions(_e) {
             //Should we only search if e.target.value.length > 2?
-            const target = e.target;
-            if (this.type === ComboboxTypes.autocomplete && target) {
-                const results = this.options.filter((option) => {
-                    return option.label.toLowerCase().includes(target.value.toLowerCase()); // && (this.pillList.items.map(i => i.value).indexOf(option) == -1)
-                });
-                this.dropdown.updateOptions(results);
-            }
+            // const target = e.target as HTMLInputElement;
+            // const results = this.options.filter((option) => {
+            //   return option.label.toLowerCase().startsWith(`${e.key}`.toLowerCase());
+            // });
+            // this.dropdown.selectItem(e, results[0]);
             this.showDropdown();
         }
-        buttonTemplate = (placeholder = 'Select an Option…') => html$1 `
-    <div
-      role="combobox"
-      tabindex="0"
-      class="input combobox__input readonly"
-      id="combobox"
-      aria-labelledby="label"
-      aria-controls="listbox"
-      aria-expanded="false"
-      aria-haspopup="listbox"
-      role="combobox"
-    >
-      <span class="slds-truncate" id="combobox-value-id-94"
-        >${placeholder}</span
+        template = (label) => html$1 `
+    <div class="dropdown-trigger dropdown-trigger_click">
+      <button id="button" class="button" aria-haspopup="true" title="${label}">
+        <span>${label}</span>
+      </button>
+      <div
+        id="listbox"
+        class="dropdown dropdown_length-with-icon-7 dropdown_fluid"
+        role="menu"
       >
-    </div>
-  `;
-        inputTemplate = (placeholder) => html$1 `
-    <input
-      type="text"
-      class="input combobox__input"
-      id="combobox"
-      disabled=""
-      placeholder="${placeholder}"
-      autocomplete="off"
-      aria-autocomplete="list"
-      aria-controls="listbox"
-      aria-expanded="false"
-      aria-haspopup="listbox"
-      role="combobox"
-    />
-  `;
-        template = (type, label, placeholder, showLabel) => html$1 `<div class="form-element">
-    <label
-      class="form-element__label ${showLabel ? '' : 'visuallyhidden'}"
-      for="combobox"
-      id="label"
-      >${label}</label
-    >
-    <div class="form-element__control">
-      <div class="combobox_container has-selection">
-        <div class="combobox dropdown-trigger dropdown-trigger_click">
-          <div
-            class="combobox__form-element input-has-icon input-has-icon_right"
-            role="none"
-          >
-            ${type === ComboboxTypes.readonly
-        ? this.buttonTemplate(placeholder)
-        : this.inputTemplate(placeholder)}
-          </div>
-          <div
-            id="listbox"
-            class="dropdown dropdown_length-with-icon-7 dropdown_fluid"
-            role="listbox"
-          >
-            <!-- ListBox -->
-          </div>
-        </div>
+        <!-- ListBox -->
       </div>
-      <!-- <div class="listbox_selection-group"> -->
-      <!-- Pills -->
-      <!-- </div> -->
     </div>
-  </div>`;
+  `;
     }
     const html$1 = String.raw;
-    customElements.define('o-combobox', Combobox);
+    customElements.define('o-menu', Menu);
 
     //@ts-ignore
     class Controls extends ReactiveMixin(HTMLElement) {
@@ -1166,9 +1143,8 @@
             const style = document.createElement('style');
             style.innerHTML = css$1;
             shadowRoot.prepend(style);
-            this.menu = new Combobox({
-                label: 'test',
-                placeholder: 'New',
+            this.menu = new Menu({
+                label: 'New',
                 options: [
                     { label: 'Hard', value: difficultyLevel.HARD },
                     { label: 'Medium', value: difficultyLevel.MED },
@@ -1178,7 +1154,7 @@
                 onChange: ({ value }) => {
                     this.dispatch({ type: 'new', data: { difficulty: value } });
                 },
-                showLabel: false,
+                type: MenuTypes.menu,
             });
             this.shadowRoot.querySelector('#controls').append(this.menu);
         }

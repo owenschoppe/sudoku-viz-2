@@ -1,0 +1,200 @@
+//@ts-ignore
+import css from './menu.css';
+
+import { DropdownListbox } from '../_internals/dropdown-listbox/index.js';
+import {
+  ChangeCallback,
+  DropdownOption,
+  MenuParams,
+  MenuTypes,
+} from './types.js';
+import { DropdownListTypes } from '../_internals/types.js';
+
+export class Menu extends HTMLElement {
+  button: HTMLButtonElement;
+
+  trigger: HTMLDivElement;
+
+  dropdown: DropdownListbox;
+
+  label: string;
+
+  _options: DropdownOption[];
+
+  onChange: ChangeCallback;
+
+  type: MenuTypes;
+
+  constructor({ label, options, onChange, type = MenuTypes.menu }: MenuParams) {
+    super();
+    this.attachShadow({ mode: 'open' });
+
+    this.label = label;
+    this._options = options;
+    this.onChange = onChange;
+    this.type = type;
+  }
+
+  connectedCallback() {
+    const { shadowRoot } = this;
+
+    shadowRoot.innerHTML = this.template(this.label);
+
+    const style = document.createElement('style');
+    style.innerHTML = css;
+    shadowRoot.prepend(style);
+
+    this.button = shadowRoot.querySelector('#button');
+    this.trigger = shadowRoot.querySelector('.dropdown-trigger');
+
+    this.dropdown = new DropdownListbox(
+      this.options,
+      this.handleChange.bind(this),
+      this.handleNavigate,
+      DropdownListTypes.menu,
+    );
+    shadowRoot.querySelector('[role=menu]').append(this.dropdown.render());
+
+    this.trigger.addEventListener('keydown', this.handlePress.bind(this), true);
+    this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
+    this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
+    // this.button.addEventListener('blur', this.handleBlur.bind(this), false);
+    document.body.addEventListener('focus', this.handleBlur.bind(this), true);
+  }
+
+  disconnectedCallback() {
+    this.trigger.removeEventListener(
+      'keydown',
+      this.handlePress.bind(this),
+      true,
+    );
+    this.trigger.removeEventListener('input', this.searchOptions.bind(this));
+    this.button.removeEventListener('click', this.toggleDropdown.bind(this));
+    // this.button.removeEventListener('blur', this.handleBlur.bind(this), false);
+    document.body.removeEventListener('focus', this.handleBlur.bind(this));
+  }
+
+  get options() {
+    return this._options;
+  }
+
+  set options(options) {
+    this._options = options;
+    this.dropdown.updateOptions(options);
+  }
+
+  showDropdown() {
+    this.trigger.classList.add('is-open');
+    this.button.setAttribute('aria-expanded', 'true');
+    this.button.setAttribute(
+      'aria-activedescendant',
+      this.dropdown.currentItem.id,
+    );
+  }
+
+  hideDropdown() {
+    this.trigger.classList.remove('is-open');
+    this.button.setAttribute('aria-expanded', 'false');
+    this.button.removeAttribute('aria-activedescendant');
+  }
+
+  toggleDropdown() {
+    if (this.trigger.classList.contains('is-open')) {
+      this.hideDropdown();
+    } else {
+      this.showDropdown();
+    }
+  }
+
+  private;
+
+  handleChange(option: DropdownOption) {
+    this.onChange(option);
+  }
+
+  handleNavigate(_id: string, _option: DropdownOption) {}
+
+  handleBlur(_e?: FocusEvent) {
+    console.log('handleBlur', _e);
+    if (!this.trigger.contains(document.activeElement)) {
+      this.hideDropdown();
+    }
+  }
+
+  handleFocus(_e: FocusEvent) {
+    this.showDropdown();
+  }
+
+  handlePress(e: KeyboardEvent) {
+    const { key } = e;
+    switch (key) {
+      case 'Enter':
+        e.stopPropagation();
+        e.preventDefault();
+        if (this.trigger.classList.contains('is-open')) {
+          // Hide the dropdown and submit if open
+          this.hideDropdown();
+          this.onChange(this.dropdown.currentItem.option);
+        } else {
+          // Show the dropdown if closed
+          this.showDropdown();
+        }
+        break;
+      case 'ArrowUp':
+        // Arrow through the list box
+        // Show the dropdown and move
+        e.stopPropagation();
+        e.preventDefault();
+        this.showDropdown();
+        this.dropdown.nextItem(e, -1);
+        break;
+      case 'ArrowDown':
+        // Arrow through the list box
+        // Show the dropdown and move
+        e.stopPropagation();
+        e.preventDefault();
+        this.showDropdown();
+        this.dropdown.nextItem(e, 1);
+        break;
+      case 'Escape':
+        if (this.button.getAttribute('aria-expanded') == 'true') {
+          e.stopPropagation();
+          e.preventDefault();
+          this.hideDropdown();
+        }
+        break;
+      default:
+        this.searchOptions(e);
+        break;
+    }
+  }
+
+  searchOptions(_e: KeyboardEvent) {
+    //Should we only search if e.target.value.length > 2?
+    // const target = e.target as HTMLInputElement;
+    // const results = this.options.filter((option) => {
+    //   return option.label.toLowerCase().startsWith(`${e.key}`.toLowerCase());
+    // });
+    // this.dropdown.selectItem(e, results[0]);
+    this.showDropdown();
+  }
+
+  template = (label: string) => html`
+    <div class="dropdown-trigger dropdown-trigger_click">
+      <button id="button" class="button" aria-haspopup="true" title="${label}">
+        <span>${label}</span>
+      </button>
+      <div
+        id="listbox"
+        class="dropdown dropdown_length-with-icon-7 dropdown_fluid"
+        role="menu"
+      >
+        <!-- ListBox -->
+      </div>
+    </div>
+  `;
+}
+
+const html = String.raw;
+
+customElements.define('o-menu', Menu);
