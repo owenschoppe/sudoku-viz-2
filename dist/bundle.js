@@ -349,13 +349,14 @@
         value;
         css;
         input;
+        isEditable;
         constructor({ i, j, css }) {
             super();
             this.attachShadow({ mode: 'open' });
             this.i = i;
             this.j = j;
             this.css = css;
-            this.value = this.state.board[i][j];
+            // this.value = this.state.board[i][j];
         }
         connectedCallback() {
             this.init();
@@ -374,6 +375,7 @@
         }
         render(state) {
             const value = state.board[this.i][this.j];
+            this.isEditable = this.state.original[this.i][this.j] === 0;
             if (value !== this.value) {
                 this.state = state;
                 this.value = value;
@@ -390,6 +392,9 @@
                 this.input.classList.remove('current');
                 this.input.setAttribute('tabindex', '-1');
             }
+            if (!this.isEditable) {
+                this.input.classList.add('locked');
+            }
         }
         handleClick() {
             this.dispatch({
@@ -403,7 +408,8 @@
             }
             event.preventDefault();
             if (isValidInput(event.key, this.state.possibilities[this.i][this.j].possibilities) &&
-                Number(event.key) !== this.value) {
+                Number(event.key) !== this.value &&
+                this.isEditable) {
                 this.value = this.dispatch({
                     type: 'update',
                     data: {
@@ -414,7 +420,7 @@
                     },
                 }).board[this.i][this.j];
             }
-            else if (event.key === 'Backspace') {
+            else if (event.key === 'Backspace' && this.isEditable) {
                 this.value = this.dispatch({
                     type: 'update',
                     data: {
@@ -439,7 +445,7 @@
         color: var(--cell-text-color, black);
         cursor: pointer;
         border: none;
-        background: var(--cell-background-color, #f3f3f3);
+        background: var(--cell-background-color, white);
         font-weight: var(--cell-font-weight, bold);
         font-size: var(--cell-text-size, 10px);
         height: var(--cell-height, 100%);
@@ -462,6 +468,10 @@
       input.current, input:focus {
         /* outline: none; */
         box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);
+      }
+      input.locked {
+        color: #666;
+        background-color: #f3f3f3;
       }
             ${this.css}
     </style>
@@ -1542,6 +1552,7 @@
         const possibilities = possibilitiesForBoard(board);
         return {
             board: board,
+            original: cloneDeep(board),
             possibilities,
             loops: {
                 row: getLoopsForBoardByType(possibilities, 'row'),
@@ -1553,7 +1564,7 @@
     };
     (() => {
         const storedState = JSON.parse(window.localStorage.getItem('state'));
-        initializeSubscriptions(initialState(storedState?.board), reducer);
+        initializeSubscriptions(storedState, reducer);
         // Move this stuff to a web component so we can utilize templates
         document.body.innerHTML = `<sudoku-controls></sudoku-controls>
   <div id="app">

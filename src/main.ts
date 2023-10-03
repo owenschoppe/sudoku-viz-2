@@ -68,6 +68,7 @@ const initialState = (savedBoard?: Board): State => {
   const possibilities = possibilitiesForBoard(board);
   return {
     board: board,
+    original: cloneDeep(board),
     possibilities,
     loops: {
       row: getLoopsForBoardByType(possibilities, 'row'),
@@ -81,7 +82,7 @@ const initialState = (savedBoard?: Board): State => {
 (() => {
   const storedState = JSON.parse(window.localStorage.getItem('state'));
 
-  initializeSubscriptions(initialState(storedState?.board), reducer);
+  initializeSubscriptions(storedState, reducer);
 
   // Move this stuff to a web component so we can utilize templates
   document.body.innerHTML = `<sudoku-controls></sudoku-controls>

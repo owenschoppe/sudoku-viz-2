@@ -20,6 +20,7 @@ export type CellsPerValue = Record<CellValue, CellAddress[]>;
 
 export type State = {
   board: Board;
+  original: Board;
   possibilities: PossibilitiesForBoard;
   loops: {
     row: LoopObj[][];

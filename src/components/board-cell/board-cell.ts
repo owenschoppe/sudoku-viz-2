@@ -21,6 +21,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
   value: CellValue | 0;
   css: string;
   input: HTMLInputElement;
+  isEditable: boolean;
 
   constructor({ i, j, css }: { css?: string; i: number; j: number }) {
     super();
@@ -28,7 +29,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     this.i = i;
     this.j = j;
     this.css = css;
-    this.value = this.state.board[i][j];
+    // this.value = this.state.board[i][j];
   }
 
   connectedCallback() {
@@ -54,6 +55,8 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
 
   render(state: State) {
     const value = state.board[this.i][this.j];
+    this.isEditable = this.state.original[this.i][this.j] === 0;
+
     if (value !== this.value) {
       this.state = state;
       this.value = value;
@@ -68,6 +71,9 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     } else {
       this.input.classList.remove('current');
       this.input.setAttribute('tabindex', '-1');
+    }
+    if (!this.isEditable) {
+      this.input.classList.add('locked');
     }
   }
 
@@ -88,7 +94,8 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
         event.key,
         this.state.possibilities[this.i][this.j].possibilities,
       ) &&
-      Number(event.key) !== this.value
+      Number(event.key) !== this.value &&
+      this.isEditable
     ) {
       this.value = this.dispatch({
         type: 'update',
@@ -99,7 +106,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
           // color: this.getColor(),
         },
       }).board[this.i][this.j];
-    } else if (event.key === 'Backspace') {
+    } else if (event.key === 'Backspace' && this.isEditable) {
       this.value = this.dispatch({
         type: 'update',
         data: {
@@ -126,7 +133,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
         color: var(--cell-text-color, black);
         cursor: pointer;
         border: none;
-        background: var(--cell-background-color, #f3f3f3);
+        background: var(--cell-background-color, white);
         font-weight: var(--cell-font-weight, bold);
         font-size: var(--cell-text-size, 10px);
         height: var(--cell-height, 100%);
@@ -149,6 +156,10 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
       input.current, input:focus {
         /* outline: none; */
         box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);
+      }
+      input.locked {
+        color: #666;
+        background-color: #f3f3f3;
       }
             ${this.css}
     </style>
