@@ -141,6 +141,10 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
         padding: 0;
         text-align: center;
         width: var(--cell-width, 100%);
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
       }
       /* Hide numeric input buttons */
       /* Chrome, Safari, Edge, Opera */
@@ -153,8 +157,12 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
       input[type=number] {
         -moz-appearance: textfield;
       }
-      input.current, input:focus {
-        /* outline: none; */
+      input.current {
+        outline: none;
+        box-shadow: 0 0 0 2px inset hsl(196deg 76% 45% / 80%);
+      }
+      input:focus {
+        outline: none;
         box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);
       }
       input.locked {
