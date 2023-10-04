@@ -44,13 +44,22 @@ export const possibilitiesForCell = (board: Board, i: number, j: number) => {
     8: 1,
     9: 1,
   } as Possibilities;
+  const value = board[i][j];
+  const singlePossibility = Object.keys(basePossibilities).reduce(
+    (possibilities, current) => {
+      possibilities[current] = Number(current) === value ? 1 : 0;
+      return possibilities;
+    },
+    {},
+  );
   const taken = allValuesExcludingCell(board, i, j);
   const possibilities = taken.reduce((current, value) => {
     current[value] = 0;
     return current;
   }, basePossibilities);
   return {
-    possibilities,
+    possibilities:
+      value && possibilities[value] ? singlePossibility : possibilities,
     possibilityCount: 9 - taken.length,
     value: board[i][j],
   };

@@ -212,13 +212,18 @@
             8: 1,
             9: 1,
         };
+        const value = board[i][j];
+        const singlePossibility = Object.keys(basePossibilities).reduce((possibilities, current) => {
+            possibilities[current] = Number(current) === value ? 1 : 0;
+            return possibilities;
+        }, {});
         const taken = allValuesExcludingCell(board, i, j);
         const possibilities = taken.reduce((current, value) => {
             current[value] = 0;
             return current;
         }, basePossibilities);
         return {
-            possibilities,
+            possibilities: value && possibilities[value] ? singlePossibility : possibilities,
             possibilityCount: 9 - taken.length,
             value: board[i][j],
         };
@@ -675,6 +680,10 @@
       }
       button.current {
         box-shadow: 0 0 0 1px white;
+      }
+      button.current.only {
+        border-radius: 0;
+        box-shadow: 0 0 0 2px var(--cell-focus-color, white)
       }
       :host{
         display: block;
@@ -1229,11 +1238,11 @@
      */
     const getConnectedCells = (cell, possibilities, cellsPerValue, cellSteps = {}, // order doesn't matter
     valueSteps = {}) => {
-        const possibleValues = possibilities[cell.i][cell.j].possibilities;
+        const { possibilities: possibleValues, value, possibilityCount, } = possibilities[cell.i][cell.j];
         const values = Object.keys(possibleValues);
         const unmatchedValues = values.filter((value) => possibleValues[value] && !valueSteps[possibleValues[value]]);
-        const unmatchedValue = unmatchedValues.slice(-1)[0]; // ?
-        return unmatchedValue
+        const unmatchedValue = unmatchedValues.slice(-1)[0]; // why does this only work when selecting the last element?
+        return unmatchedValue && !value && possibilityCount > 1 // end cycle for cells that contain a value
             ? getConnectedValues(unmatchedValue, possibilities, cellsPerValue, cellSteps, { ...valueSteps, [unmatchedValue]: true })
             : Object.values(cellSteps);
     };
@@ -1250,6 +1259,7 @@
     valueSteps = {}) => {
         const unmatchedCells = cellsPerValue[value].filter((cell) => !cellSteps[cellString(cell)]);
         const unmatchedCell = unmatchedCells.slice(-1)[0]; // ?
+        // const { possibilityCount } = possibilities[unmatchedCell.i][unmatchedCell.j];
         return unmatchedCell
             ? getConnectedCells(unmatchedCell, possibilities, cellsPerValue, { ...cellSteps, [cellString(unmatchedCell)]: unmatchedCell }, valueSteps)
             : Object.values(cellSteps);

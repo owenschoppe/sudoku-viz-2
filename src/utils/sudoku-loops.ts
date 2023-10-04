@@ -57,14 +57,19 @@ export const getConnectedCells = (
   cellSteps: Record<string, CellAddress> = {}, // order doesn't matter
   valueSteps: Record<number, boolean> = {},
 ): CellAddress[] => {
-  const possibleValues = possibilities[cell.i][cell.j].possibilities;
+  const {
+    possibilities: possibleValues,
+    value,
+    possibilityCount,
+  } = possibilities[cell.i][cell.j];
+
   const values = Object.keys(possibleValues) as unknown as CellValue[];
   const unmatchedValues = values.filter(
     (value) => possibleValues[value] && !valueSteps[possibleValues[value]],
   );
-  const unmatchedValue = unmatchedValues.slice(-1)[0]; // ?
+  const unmatchedValue = unmatchedValues.slice(-1)[0]; // why does this only work when selecting the last element?
 
-  return unmatchedValue
+  return unmatchedValue && !value && possibilityCount > 1 // end cycle for cells that contain a value
     ? getConnectedValues(
         unmatchedValue,
         possibilities,
@@ -95,6 +100,7 @@ const getConnectedValues = (
     (cell) => !cellSteps[cellString(cell)],
   );
   const unmatchedCell = unmatchedCells.slice(-1)[0]; // ?
+  // const { possibilityCount } = possibilities[unmatchedCell.i][unmatchedCell.j];
   return unmatchedCell
     ? getConnectedCells(
         unmatchedCell,

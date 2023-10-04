@@ -154,6 +154,10 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
       button.current {
         box-shadow: 0 0 0 1px white;
       }
+      button.current.only {
+        border-radius: 0;
+        box-shadow: 0 0 0 2px var(--cell-focus-color, white)
+      }
       :host{
         display: block;
       }

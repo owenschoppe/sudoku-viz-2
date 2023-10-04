@@ -49,6 +49,21 @@ const fourCellLoop: Board = [
   [1, 3, 8, 4, 6, 5, 2, 7, 9],
 ];
 
+// 0,4 0,6 0,8 where 0,6 can only be 5
+// 0,4 1,4 where 1,4 can only be 5
+// Shouldn't be a loop
+// const threeCellsWithOneDefinite: Board = [
+//   [7, 9, 4, 0, 0, 2, 0, 8, 0],
+//   [0, 2, 8, 0, 0, 1, 9, 4, 3],
+//   [5, 3, 1, 9, 8, 4, 7, 6, 2],
+//   [8, 4, 3, 5, 0, 0, 2, 1, 0],
+//   [0, 0, 0, 8, 0, 3, 4, 7, 0],
+//   [1, 0, 5, 0, 2, 0, 8, 0, 9],
+//   [9, 8, 0, 0, 7, 0, 1, 0, 4],
+//   [4, 5, 2, 1, 6, 8, 0, 0, 0],
+//   [3, 1, 0, 2, 4, 0, 6, 0, 0],
+// ];
+
 describe('possibilities', () => {
   it('should have specified possibilites', () => {
     // select 4 cells and ensure that they have the defined possibilities in order to build the board
@@ -249,6 +264,16 @@ describe('getConnectedCells', () => {
   // add more complex test cases:
   // three pairwise cells
   // three cells, mutually three values
+
+  it('should not return loop in fourCell row 3 when value is set', () => {
+    const board = cloneDeep(fourCellLoop);
+    board[3][4] = 1;
+    const boardPossibilities = possibilitiesForBoard(board);
+    const cellsPerValue = cellsPerValueInRows(boardPossibilities)[3];
+    expect(
+      getConnectedCells({ i: 3, j: 4 }, boardPossibilities, cellsPerValue),
+    ).toStrictEqual([]);
+  });
 });
 
 describe('getLoopsForBoard', () => {

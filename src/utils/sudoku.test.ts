@@ -185,9 +185,9 @@ describe('possibilitiesForCell', () => {
       3: 0,
       4: 0,
       5: 0,
-      6: 1,
-      7: 1,
-      8: 1,
+      6: 0,
+      7: 0,
+      8: 0,
       9: 0,
     });
     expect(result.possibilityCount).toEqual(4);
@@ -238,9 +238,9 @@ describe('possibilitiesForBoard', () => {
       3: 0,
       4: 0,
       5: 0,
-      6: 1,
-      7: 1,
-      8: 1,
+      6: 0,
+      7: 0,
+      8: 0,
       9: 0,
     });
     expect(result[1][0].possibilityCount).toEqual(4);
