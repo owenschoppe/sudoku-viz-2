@@ -1562,6 +1562,12 @@
                 updatedState = state;
         }
         window.localStorage.setItem('state', JSON.stringify(updatedState));
+        if (updatedState.board.flat().every((value) => value > 0)) {
+            document.querySelector('#solved').classList.remove('hidden');
+        }
+        else {
+            document.querySelector('#solved').classList.add('hidden');
+        }
         return updatedState;
     };
     const initialBoard = NNArray(9, 0);
@@ -1585,11 +1591,12 @@
         initializeSubscriptions(storedState, reducer);
         // Move this stuff to a web component so we can utilize templates
         document.body.innerHTML = `<sudoku-controls></sudoku-controls>
+  
   <div id="app">
       <div id="board"><h2>Board</h2><sudoku-board class="main-board"/></div>
       <div><h2>Possibilities</h2><div id="viewer"></div></div>
       <div><h2>Connections</h2><div id="loops"></div></div>
-    </div>`;
+    </div><div id="solved" class="overflow-container"><div class="shimmer"></div><div class="flex center"><div class="shimmer-text">SOLVED!</div></div></div>`;
         const secondary = Array(9)
             .fill(null)
             .map((_, i) => new BoardLens((i + 1)));

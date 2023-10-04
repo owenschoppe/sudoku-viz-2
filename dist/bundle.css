@@ -70,3 +70,60 @@ h2 {
 sudoku-controls {
   width: 100%;
 }
+
+.hidden {
+  display: none;
+}
+
+.overflow-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -100;
+}
+
+.shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0) 80%
+  );
+
+  animation: shimmer 6s linear alternate;
+  animation-fill-mode: forwards;
+}
+
+.flex {
+  display: flex;
+}
+
+.center {
+  align-items: center;
+  justify-content: center;
+}
+
+.shimmer-text {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 4rem;
+  font-weight: 900;
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-75%);
+  }
+  to {
+    transform: translateX(25%);
+  }
+}
