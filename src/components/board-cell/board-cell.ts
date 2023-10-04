@@ -74,6 +74,8 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     }
     if (!this.isEditable) {
       this.input.classList.add('locked');
+    } else {
+      this.input.classList.remove('locked');
     }
   }
 

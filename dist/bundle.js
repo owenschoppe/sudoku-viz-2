@@ -400,6 +400,9 @@
             if (!this.isEditable) {
                 this.input.classList.add('locked');
             }
+            else {
+                this.input.classList.remove('locked');
+            }
         }
         handleClick() {
             this.dispatch({
