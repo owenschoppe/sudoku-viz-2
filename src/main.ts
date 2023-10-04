@@ -96,7 +96,7 @@ const initialState = (savedBoard?: Board): State => {
       <div id="board"><h2>Board</h2><sudoku-board class="main-board"/></div>
       <div><h2>Possibilities</h2><div id="viewer"></div></div>
       <div><h2>Connections</h2><div id="loops"></div></div>
-    </div><div id="solved" class="overflow-container"><div class="shimmer"></div><div class="flex center"><div class="shimmer-text">SOLVED!</div></div></div>`;
+    </div><div id="solved" class="overflow-container hidden"><div class="shimmer"></div><div class="flex center"><div class="shimmer-text">SOLVED!</div></div></div>`;
 
   const secondary = Array(9)
     .fill(null)

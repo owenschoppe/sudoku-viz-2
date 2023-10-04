@@ -153,8 +153,8 @@ describe('generateBoard', () => {
       .flat()
       .map((x) => x === 0)
       .filter(Boolean).length;
-    expect(emptyCells).toBeGreaterThanOrEqual(33);
-    expect(emptyCells).toBeLessThanOrEqual(37);
+    expect(emptyCells).toBeGreaterThanOrEqual(28);
+    expect(emptyCells).toBeLessThanOrEqual(32);
   });
 
   it('should generate med board', () => {
@@ -164,8 +164,8 @@ describe('generateBoard', () => {
       .flat()
       .map((x) => x === 0)
       .filter(Boolean).length;
-    expect(emptyCells).toBeGreaterThanOrEqual(28);
-    expect(emptyCells).toBeLessThanOrEqual(32);
+    expect(emptyCells).toBeGreaterThanOrEqual(33);
+    expect(emptyCells).toBeLessThanOrEqual(37);
   });
 
   it('should generate hard board', () => {
@@ -175,7 +175,7 @@ describe('generateBoard', () => {
       .flat()
       .map((x) => x === 0)
       .filter(Boolean).length;
-    expect(emptyCells).toBeGreaterThanOrEqual(23);
-    expect(emptyCells).toBeLessThanOrEqual(27);
+    expect(emptyCells).toBeGreaterThanOrEqual(38);
+    expect(emptyCells).toBeLessThanOrEqual(42);
   });
 });

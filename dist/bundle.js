@@ -765,9 +765,9 @@
      * Perhaps this is due to the increasing number of possible solutions.
      */
     const difficultyLevelValues = {
-        [difficultyLevel.HARD]: [23, 24, 25, 26, 27],
-        [difficultyLevel.MED]: [28, 29, 30, 31, 32],
-        [difficultyLevel.EASY]: [33, 34, 35, 36, 37],
+        [difficultyLevel.HARD]: [38, 39, 40, 41, 42],
+        [difficultyLevel.MED]: [33, 34, 35, 36, 37],
+        [difficultyLevel.EASY]: [28, 29, 30, 31, 32],
     };
     /**
      * Generate a board for the given difficulty level
@@ -1596,7 +1596,7 @@
       <div id="board"><h2>Board</h2><sudoku-board class="main-board"/></div>
       <div><h2>Possibilities</h2><div id="viewer"></div></div>
       <div><h2>Connections</h2><div id="loops"></div></div>
-    </div><div id="solved" class="overflow-container"><div class="shimmer"></div><div class="flex center"><div class="shimmer-text">SOLVED!</div></div></div>`;
+    </div><div id="solved" class="overflow-container hidden"><div class="shimmer"></div><div class="flex center"><div class="shimmer-text">SOLVED!</div></div></div>`;
         const secondary = Array(9)
             .fill(null)
             .map((_, i) => new BoardLens((i + 1)));

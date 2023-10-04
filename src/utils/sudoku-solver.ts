@@ -20,9 +20,9 @@ export enum difficultyLevel {
  * Perhaps this is due to the increasing number of possible solutions.
  */
 const difficultyLevelValues = {
-  [difficultyLevel.HARD]: [23, 24, 25, 26, 27],
-  [difficultyLevel.MED]: [28, 29, 30, 31, 32],
-  [difficultyLevel.EASY]: [33, 34, 35, 36, 37],
+  [difficultyLevel.HARD]: [38, 39, 40, 41, 42],
+  [difficultyLevel.MED]: [33, 34, 35, 36, 37],
+  [difficultyLevel.EASY]: [28, 29, 30, 31, 32],
 };
 
 /**
