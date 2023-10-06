@@ -29,6 +29,11 @@ export type State = {
   };
   color?: string;
   location: CellAddress;
+  moves: Move[];
+};
+
+export type Move = CellAddress & {
+  priorValue: 0 | CellValue;
 };
 
 export type Action = {

@@ -54,9 +54,9 @@
         }
     };
 
-    var css$2 = ":host {\n  /* --my-button-color-public: var(--my-button-color-public, blue); */\n  --board-size: var(--public-board-size, 240px);\n  --board-cell-gap: var(--public-board-gap, 2px);\n  --board-group-gap: var(--public-board-gap, 4px);\n}\n\n/* ::part(button) {\n  color: darkgreen;\n} */\n\n.grid {\n  display: grid;\n  grid-template-rows:\n    1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap)\n    1fr 1fr 1fr;\n  grid-template-columns:\n    1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap)\n    1fr 1fr 1fr;\n  grid-template-areas:\n    'c00 c01 c02 . c03 c04 c05 . c06 c07 c08'\n    'c10 c11 c12 . c13 c14 c15 . c16 c17 c18'\n    'c20 c21 c22 . c23 c24 c25 . c26 c27 c28'\n    '... ... ... . ... ... ... . ... ... ...'\n    'c30 c31 c32 . c33 c34 c35 . c36 c37 c38'\n    'c40 c41 c42 . c43 c44 c45 . c46 c47 c48'\n    'c50 c51 c52 . c53 c54 c55 . c56 c57 c58'\n    '... ... ... . ... ... ... . ... ... ...'\n    'c60 c61 c62 . c63 c64 c65 . c66 c67 c68'\n    'c70 c71 c72 . c73 c74 c75 . c76 c77 c78'\n    'c80 c81 c82 . c83 c84 c85 . c86 c87 c88';\n  height: var(--board-size);\n  width: var(--board-size);\n  row-gap: var(--board-cell-gap);\n  column-gap: var(--board-cell-gap);\n  line-height: 0;\n}\n";
+    var css$3 = ":host {\n  /* --my-button-color-public: var(--my-button-color-public, blue); */\n  --board-size: var(--public-board-size, 240px);\n  --board-cell-gap: var(--public-board-gap, 2px);\n  --board-group-gap: var(--public-board-gap, 4px);\n}\n\n/* ::part(button) {\n  color: darkgreen;\n} */\n\n.grid {\n  display: grid;\n  grid-template-rows:\n    1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap)\n    1fr 1fr 1fr;\n  grid-template-columns:\n    1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap)\n    1fr 1fr 1fr;\n  grid-template-areas:\n    'c00 c01 c02 . c03 c04 c05 . c06 c07 c08'\n    'c10 c11 c12 . c13 c14 c15 . c16 c17 c18'\n    'c20 c21 c22 . c23 c24 c25 . c26 c27 c28'\n    '... ... ... . ... ... ... . ... ... ...'\n    'c30 c31 c32 . c33 c34 c35 . c36 c37 c38'\n    'c40 c41 c42 . c43 c44 c45 . c46 c47 c48'\n    'c50 c51 c52 . c53 c54 c55 . c56 c57 c58'\n    '... ... ... . ... ... ... . ... ... ...'\n    'c60 c61 c62 . c63 c64 c65 . c66 c67 c68'\n    'c70 c71 c72 . c73 c74 c75 . c76 c77 c78'\n    'c80 c81 c82 . c83 c84 c85 . c86 c87 c88';\n  height: var(--board-size);\n  width: var(--board-size);\n  row-gap: var(--board-cell-gap);\n  column-gap: var(--board-cell-gap);\n  line-height: 0;\n}\n";
 
-    var html$6 = "<div id=\"board\" class=\"grid\"></div>\n";
+    var html$7 = "<div id=\"board\" class=\"grid\"></div>\n";
 
     // // Generic Contructor with constraints
     // type GConstructor<T = {}> = new (...args: any[]) => T;
@@ -397,7 +397,6 @@
                 this.input.classList.remove('current');
                 this.input.setAttribute('tabindex', '-1');
             }
-            console.log(this.i, this.j, !this.isEditable);
             if (!this.isEditable) {
                 this.input.classList.add('locked');
             }
@@ -446,7 +445,7 @@
         //   return `rgb(${step * this.i},${step * this.j},${step * this.value})`;
         // }
         // Todo
-        template = () => html$5 `
+        template = () => html$6 `
     <!DOCTYPE html>
     <style>
       input {
@@ -466,6 +465,7 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        box-shadow: 0 0 0 1px var(--g-13);
       }
       /* Hide numeric input buttons */
       /* Chrome, Safari, Edge, Opera */
@@ -480,11 +480,11 @@
       }
       input.current {
         outline: none;
-        box-shadow: 0 0 0 2px inset hsl(196deg 76% 45% / 80%);
+        box-shadow: 0 0 0 2px inset var(--public-board-cell-focus, var(--highlight-color));
       }
       input:focus {
         outline: none;
-        box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);
+        box-shadow: 0 0 0 4px inset var(--public-board-cell-focus, var(--highlight-color));
       }
       input.locked {
         color: #666;
@@ -498,7 +498,7 @@
     />
   `;
     }
-    const html$5 = String.raw;
+    const html$6 = String.raw;
     customElements.define('board-cell', BoardCell);
 
     //@ts-ignore
@@ -518,9 +518,9 @@
         }
         init() {
             const { shadowRoot } = this;
-            shadowRoot.innerHTML = html$6;
+            shadowRoot.innerHTML = html$7;
             const style = document.createElement('style');
-            style.innerHTML = css$2;
+            style.innerHTML = css$3;
             shadowRoot.prepend(style);
             this.cells = this.state.board
                 .map((row, i) => row.map((_value, j) => new BoardCell({
@@ -651,7 +651,7 @@
         //   return `rgb(${step * this.i},${step * this.j},${step * this.value})`;
         // }
         // Todo
-        template = () => html$4 `
+        template = () => html$5 `
     <!DOCTYPE html>
     <style>
       button {
@@ -697,7 +697,7 @@
     <button part="button" tabindex="-1">${this.value ?? ``}</button>
   `;
     }
-    const html$4 = String.raw;
+    const html$5 = String.raw;
     customElements.define('board-lens-cell', BoardLensCell);
 
     //@ts-ignore
@@ -719,9 +719,9 @@
         }
         init() {
             const { shadowRoot } = this;
-            shadowRoot.innerHTML = html$6;
+            shadowRoot.innerHTML = html$7;
             const style = document.createElement('style');
-            style.innerHTML = css$2;
+            style.innerHTML = css$3;
             shadowRoot.prepend(style);
             this.cells = this.state.board
                 .map((row, i) => row.map((_value, j) => new BoardLensCell({
@@ -754,9 +754,9 @@
     const brightness$1 = 75;
     customElements.define('sudoku-board-lens', BoardLens);
 
-    var css$1 = ".flex {\n  height: 32px;\n  padding: 8px 0;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  gap: 8px;\n  align-content: center;\n  justify-content: flex-start;\n}\n\n.primary {\n  border: 0;\n  background: white;\n  color: black;\n}\n\n.primary:hover,\n.primary:focus {\n  border: 0;\n  background: white;\n  outline: none;\n  box-shadow: 0 0 0 3px inset chartreuse;\n  color: black;\n}\n\n.primary:active {\n  border: 0;\n  background: lavenderblush;\n  color: black;\n}\n";
+    var css$2 = "#controls {\n  margin: var(--xl);\n  padding: 0;\n}\n\n.flex {\n  height: 32px;\n  padding: 8px 0;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  gap: 8px;\n  align-content: center;\n  justify-content: flex-start;\n}\n\n.secondary {\n  --o-button-background: transparent;\n  --o-button-color: var(--g-a-13);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--g-a-13);\n}\n\n.primary {\n  --o-button-background: var(--g-a-13);\n  --o-button-color: var(--g-a-1);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--highlight-color);\n}\n";
 
-    var html$3 = "<div class=\"flex\" id=\"controls\"></div>\n";
+    var html$4 = "<div class=\"flex\" id=\"controls\"></div>\n";
 
     var difficultyLevel;
     (function (difficultyLevel) {
@@ -845,7 +845,7 @@
         return false;
     };
 
-    var css = "/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n/* Trigger */\n\n.button {\n  width: 100%;\n  cursor: pointer;\n  height: 32px;\n  line-height: 32px;\n  padding: 0 8px;\n  border-radius: 0;\n  border: none;\n  display: block;\n  background: white;\n  font-size: 14px;\n}\n\n.button:focus {\n  outline: none;\n  box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  /* border: 1px solid var(--color-border, #ddd); */\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.listbox__option:focus {\n  outline: none;\n  box-shadow: 4px 0 0 0 inset hsl(196deg 76% 45% / 80%);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  /* margin: var(--space-xxxsmall, 2px); */\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
+    var css$1 = "/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n/* Trigger */\n\n.button {\n  width: 100%;\n  cursor: pointer;\n  height: 32px;\n  line-height: 32px;\n  padding: 0 8px;\n  border-radius: 0;\n  border: none;\n  display: block;\n  background: white;\n  font-size: 14px;\n}\n\n.button:focus {\n  outline: none;\n  box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  /* border: 1px solid var(--color-border, #ddd); */\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.listbox__option:focus {\n  outline: none;\n  box-shadow: 4px 0 0 0 inset hsl(196deg 76% 45% / 80%);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  /* margin: var(--space-xxxsmall, 2px); */\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
 
     const ListMixin = (Base) => class List extends Base {
         items = [];
@@ -911,11 +911,11 @@
                     return 'option';
             }
         }
-        template = () => html$2 ` <span
+        template = () => html$3 ` <span
     class="listbox__option-text listbox__option-text_entity"
   ></span>`;
     }
-    const html$2 = String.raw;
+    const html$3 = String.raw;
 
     class DropdownListbox extends ListMixin(Array) {
         dropdown;
@@ -1024,7 +1024,7 @@
             const { shadowRoot } = this;
             shadowRoot.innerHTML = this.template(this.label);
             const style = document.createElement('style');
-            style.innerHTML = css;
+            style.innerHTML = css$1;
             shadowRoot.prepend(style);
             this.button = shadowRoot.querySelector('#button');
             this.trigger = shadowRoot.querySelector('.dropdown-trigger');
@@ -1135,7 +1135,7 @@
             // this.dropdown.selectItem(e, results[0]);
             this.showDropdown();
         }
-        template = (label) => html$1 `
+        template = (label) => html$2 `
     <div class="dropdown-trigger dropdown-trigger_click">
       <button id="button" class="button" aria-haspopup="true" title="${label}">
         <span>${label}</span>
@@ -1150,8 +1150,44 @@
     </div>
   `;
     }
-    const html$1 = String.raw;
+    const html$2 = String.raw;
     customElements.define('o-menu', Menu);
+
+    var css = ":host {\n  --c: black;\n  --bg: white;\n  --b: 0;\n  --b-radius: 0;\n  --gap: 0.25rem;\n  --lh: var(--xxl);\n  --p: 0 0.5rem;\n  --shadow: 0 0 0 3px inset black;\n}\n\n.button {\n  background: var(--o-button-background, var(--bg));\n  border: var(--o-button-border, var(--b));\n  border-radius: var(--o-button-border-radius, var(--b-radius));\n  color: var(--o-button-color, var(--c));\n  line-height: var(--o-button-height, var(--lh));\n  padding: var(--o-button-padding, var(--p));\n  display: flex;\n  gap: var(--o-button-gap, var(--gap));\n}\n\n.button:hover {\n  background: var(\n    --o-button-background-hover,\n    var(--o-button-background, var(--bg))\n  );\n  border: var(--o-button-border-hover, var(--o-button-border, var(--b)));\n  box-shadow: var(\n    --o-button-shadow-hover,\n    var(--o-button-shadow, var(--shadow))\n  );\n  color: var(--o-button-color-hover, var(--o-button-color, var(--c)));\n  outline: none;\n}\n\n.button:focus {\n  border: var(--o-button-background-focus, var(--o-button-border, var(--b)));\n  background: var(\n    --o-button-border-focus,\n    var(--o-button-background, var(--bg))\n  );\n  box-shadow: var(\n    --o-button-shadow-focus,\n    var(--o-button-shadow, var(--shadow))\n  );\n  color: var(--o-button-color-focus, var(--o-button-color, var(--c)));\n  outline: none;\n}\n\n.button:active {\n  background: var(\n    --o-button-background-active,\n    var(--o-button-background, var(--bg))\n  );\n  border: var(--o-button-border-active, var(--o-button-border, var(--b)));\n  color: var(--o-button-color-active, var(--o-button-color, var(--c)));\n}\n";
+
+    //@ts-ignore
+    class Button extends HTMLElement {
+        button;
+        label;
+        onClick;
+        constructor({ label, onClick }) {
+            super();
+            this.attachShadow({ mode: 'open' });
+            this.label = label;
+            this.onClick = onClick;
+        }
+        connectedCallback() {
+            const { shadowRoot } = this;
+            shadowRoot.innerHTML = this.template(this.label);
+            const style = document.createElement('style');
+            style.innerHTML = css;
+            shadowRoot.prepend(style);
+            this.button = shadowRoot.querySelector('button');
+            this.button.addEventListener('click', this.onClick.bind(this));
+        }
+        disconnectedCallback() {
+            this.button.removeEventListener('click', this.onClick.bind(this));
+        }
+        template = (label) => html$1 `
+    <button part="button" class="button">
+      <slot name="before"></slot>
+      ${label}
+      <slot name="after"></slot>
+    </button>
+  `;
+    }
+    const html$1 = String.raw;
+    customElements.define('o-button', Button);
 
     //@ts-ignore
     class Controls extends ReactiveMixin(HTMLElement) {
@@ -1170,9 +1206,9 @@
         }
         init() {
             const { shadowRoot } = this;
-            shadowRoot.innerHTML = html$3;
+            shadowRoot.innerHTML = html$4;
             const style = document.createElement('style');
-            style.innerHTML = css$1;
+            style.innerHTML = css$2;
             shadowRoot.prepend(style);
             this.menu = new Menu({
                 label: 'New',
@@ -1188,6 +1224,15 @@
                 type: MenuTypes.menu,
             });
             this.shadowRoot.querySelector('#controls').append(this.menu);
+            const undo = new Button({
+                label: 'Undo',
+                onClick: () => {
+                    console.log('undo');
+                    this.dispatch({ type: 'undo', data: {} });
+                },
+            });
+            undo.classList.add('secondary');
+            this.shadowRoot.querySelector('#controls').append(undo);
         }
     }
     customElements.define('sudoku-controls', Controls);
@@ -1500,9 +1545,9 @@
         }
         init() {
             const { shadowRoot } = this;
-            shadowRoot.innerHTML = html$6;
+            shadowRoot.innerHTML = html$7;
             const style = document.createElement('style');
-            style.innerHTML = css$2;
+            style.innerHTML = css$3;
             shadowRoot.prepend(style);
             this.cells = this.state.loops[this.type]
                 .map((row, i) => row.map((_value, j) => new BoardLoopsCell({
@@ -1519,9 +1564,20 @@
     customElements.define('sudoku-board-loops', BoardLoops);
 
     /**
+     *  mutates state
+     */
+    const updateBoardState = (state, i, j, value) => {
+        state.board[i][j] = value;
+        state.possibilities = possibilitiesForBoard(state.board);
+        state.loops = {
+            row: getLoopsForBoardByType(state.possibilities, 'row'),
+            column: getLoopsForBoardByType(state.possibilities, 'column'),
+            group: getLoopsForBoardByType(state.possibilities, 'group'),
+        };
+        return state;
+    };
+    /**
      * Reducer function to manage sudoku calculations
-     * TODO: save state in local storage to avoid losing it on reload
-     * TODO: add selected cell to state and add keyboard handler
      * @param state
      * @param action
      * @returns
@@ -1530,16 +1586,18 @@
         let updatedState;
         switch (action.type) {
             case 'update':
-                const { i, j, value, color } = action.data;
-                state.board[i][j] = value;
-                state.color = color;
-                state.possibilities = possibilitiesForBoard(state.board);
-                state.loops = {
-                    row: getLoopsForBoardByType(state.possibilities, 'row'),
-                    column: getLoopsForBoardByType(state.possibilities, 'column'),
-                    group: getLoopsForBoardByType(state.possibilities, 'group'),
-                };
-                updatedState = state;
+                const { i, j, value } = action.data;
+                state.moves = state.moves || [];
+                state.moves.push({
+                    i,
+                    j,
+                    priorValue: state.board[i][j],
+                });
+                updatedState = updateBoardState(state, i, j, value);
+                break;
+            case 'undo':
+                const { i: pI, j: pJ, priorValue: pV } = state.moves.pop();
+                updatedState = updatedState = updateBoardState(state, pI, pJ, pV);
                 break;
             case 'new':
                 const { difficulty } = action.data;
@@ -1587,19 +1645,36 @@
                 group: getLoopsForBoardByType(possibilities, 'group'),
             },
             location: { i: 0, j: 0 },
+            moves: [],
         };
     };
     (() => {
         const storedState = JSON.parse(window.localStorage.getItem('state'));
         initializeSubscriptions(storedState, reducer);
         // Move this stuff to a web component so we can utilize templates
-        document.body.innerHTML = `<sudoku-controls></sudoku-controls>
-  
-  <div id="app">
-      <div id="board"><h2>Board</h2><sudoku-board class="main-board"/></div>
-      <div><h2>Possibilities</h2><div id="viewer"></div></div>
-      <div><h2>Connections</h2><div id="loops"></div></div>
-    </div><div id="solved" class="overflow-container hidden"><div class="shimmer"></div><div class="flex center"><div class="shimmer-text">SOLVED!</div></div></div>`;
+        document.body.innerHTML = `
+    <div class="body dark">
+      <sudoku-controls></sudoku-controls>
+      <div id="app">
+        <div id="board">
+          <h2>Board</h2>
+          <sudoku-board class="main-board" />
+        </div>
+        <div>
+          <h2>Possibilities</h2>
+          <div id="viewer"></div>
+        </div>
+        <div>
+          <h2>Connections</h2>
+          <div id="loops"></div>
+        </div>
+      </div>
+      <div id="solved" class="overflow-container hidden">
+        <div class="shimmer"></div>
+        <div class="flex center"><div class="shimmer-text">SOLVED!</div></div>
+      </div>
+    </div>
+  `;
         const secondary = Array(9)
             .fill(null)
             .map((_, i) => new BoardLens((i + 1)));

@@ -1,0 +1,93 @@
+/* import into bundle.css in bundler config */
+:root {
+  /* spacing */
+  --xs: 0.125rem;
+  --s: 0.25rem;
+  --m: 0.5rem;
+  --l: 0.75rem;
+  --xl: 1rem;
+  --xxl: 2rem;
+  --xxxl: 4rem;
+
+  --g-1: rgb(255, 255, 255);
+  --g-2: rgb(250, 250, 249);
+  --g-3: rgb(243, 242, 242);
+  --g-4: rgb(236, 235, 234);
+  --g-5: rgb(221, 219, 218);
+  --g-6: rgb(201, 199, 197);
+  --g-7: rgb(176, 173, 171);
+  --g-8: rgb(150, 148, 146);
+  --g-9: rgb(112, 110, 107);
+  --g-10: rgb(81, 79, 77);
+  --g-11: rgb(62, 62, 60);
+  --g-12: rgb(43, 40, 38);
+  --g-13: rgb(8, 7, 7);
+}
+
+.light {
+  --g-a-1: var(--g-1);
+  --g-a-2: var(--g-2);
+  --g-a-3: var(--g-3);
+  --g-a-4: var(--g-4);
+  --g-a-5: var(--g-5);
+  --g-a-6: var(--g-6);
+  --g-a-7: var(--g-7);
+  --g-a-8: var(--g-8);
+  --g-a-9: var(--g-9);
+  --g-a-10: var(--g-10);
+  --g-a-11: var(--g-11);
+  --g-a-12: var(--g-12);
+  --g-a-13: var(--g-13);
+}
+
+.dark {
+  --g-a-1: var(--g-13);
+  --g-a-2: var(--g-12);
+  --g-a-3: var(--g-11);
+  --g-a-4: var(--g-10);
+  --g-a-5: var(--g-9);
+  --g-a-6: var(--g-8);
+  --g-a-7: var(--g-7);
+  --g-a-8: var(--g-6);
+  --g-a-9: var(--g-5);
+  --g-a-10: var(--g-4);
+  --g-a-11: var(--g-3);
+  --g-a-12: var(--g-2);
+  --g-a-13: var(--g-1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .light.adaptive {
+    --g-a-1: var(--g-13);
+    --g-a-2: var(--g-12);
+    --g-a-3: var(--g-11);
+    --g-a-4: var(--g-10);
+    --g-a-5: var(--g-9);
+    --g-a-6: var(--g-8);
+    --g-a-7: var(--g-7);
+    --g-a-8: var(--g-6);
+    --g-a-9: var(--g-5);
+    --g-a-10: var(--g-4);
+    --g-a-11: var(--g-3);
+    --g-a-12: var(--g-2);
+    --g-a-13: var(--g-1);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .dark.adaptive {
+    --g-a-1: var(--g-1);
+    --g-a-2: var(--g-2);
+    --g-a-3: var(--g-3);
+    --g-a-4: var(--g-4);
+    --g-a-5: var(--g-5);
+    --g-a-6: var(--g-6);
+    --g-a-7: var(--g-7);
+    --g-a-8: var(--g-8);
+    --g-a-9: var(--g-9);
+    --g-a-10: var(--g-10);
+    --g-a-11: var(--g-11);
+    --g-a-12: var(--g-12);
+    --g-a-13: var(--g-13);
+  }
+}

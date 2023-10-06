@@ -11,6 +11,20 @@ import serve from 'rollup-plugin-serve';
 
 const production = !process.env.ROLLUP_WATCH;
 
+// const template = ({ attributes, bundle, files, publicPath, title }) => {
+//   return `<!DOCTYPE html>
+// <html ${attributes}>
+//   <head>
+//     ${metas}
+//     <title>${title}</title>
+//     ${links}
+//   </head>
+//   <body class="theme">
+//     ${scripts}
+//   </body>
+// </html>`;
+// };
+
 export default {
   input: 'src/main.ts',
   output: {
@@ -22,7 +36,7 @@ export default {
     resolve(), // tells Rollup how to find date-fns in node_modules
     postcss({
       extract: true,
-      include: 'src/*.css',
+      include: ['src/*.css', 'src/base-components/*.css'],
     }),
     string({
       include: '**/*.html',
@@ -41,6 +55,7 @@ export default {
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width' },
       ],
+      // template,
       // template: templateExternalFiles([
       //   { type: 'css', file: 'index.css', pos: 'before' },
       // ]),

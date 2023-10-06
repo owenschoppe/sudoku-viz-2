@@ -1,4 +1,5 @@
 import './main.css';
+import './base-components/global.css';
 
 import { Action, initializeSubscriptions } from './utils/subscribe.js';
 import { Board, CellValue, State } from './types.js';
@@ -11,9 +12,21 @@ import { LoopType, getLoopsForBoardByType } from './utils/sudoku-loops';
 import { BoardLoops } from './components/board-loops';
 
 /**
+ *  mutates state
+ */
+const updateBoardState = (state, i, j, value) => {
+  state.board[i][j] = value;
+  state.possibilities = possibilitiesForBoard(state.board);
+  state.loops = {
+    row: getLoopsForBoardByType(state.possibilities, 'row'),
+    column: getLoopsForBoardByType(state.possibilities, 'column'),
+    group: getLoopsForBoardByType(state.possibilities, 'group'),
+  };
+  return state;
+};
+
+/**
  * Reducer function to manage sudoku calculations
- * TODO: save state in local storage to avoid losing it on reload
- * TODO: add selected cell to state and add keyboard handler
  * @param state
  * @param action
  * @returns
@@ -22,17 +35,18 @@ const reducer = (state: State, action: Action) => {
   let updatedState: State;
   switch (action.type) {
     case 'update':
-      const { i, j, value, color } = action.data;
-      state.board[i][j] = value;
-      state.color = color;
-      state.possibilities = possibilitiesForBoard(state.board);
-      state.loops = {
-        row: getLoopsForBoardByType(state.possibilities, 'row'),
-        column: getLoopsForBoardByType(state.possibilities, 'column'),
-        group: getLoopsForBoardByType(state.possibilities, 'group'),
-      };
-      // console.log(i, j, value, state);
-      updatedState = state;
+      const { i, j, value } = action.data;
+      state.moves = state.moves || [];
+      state.moves.push({
+        i,
+        j,
+        priorValue: state.board[i][j],
+      });
+      updatedState = updateBoardState(state, i, j, value);
+      break;
+    case 'undo':
+      const { i: pI, j: pJ, priorValue: pV } = state.moves.pop();
+      updatedState = updatedState = updateBoardState(state, pI, pJ, pV);
       break;
     case 'new':
       const { difficulty } = action.data;
@@ -81,6 +95,7 @@ const initialState = (savedBoard?: Board): State => {
       group: getLoopsForBoardByType(possibilities, 'group'),
     },
     location: { i: 0, j: 0 },
+    moves: [],
   };
 };
 
@@ -90,13 +105,29 @@ const initialState = (savedBoard?: Board): State => {
   initializeSubscriptions(storedState, reducer);
 
   // Move this stuff to a web component so we can utilize templates
-  document.body.innerHTML = `<sudoku-controls></sudoku-controls>
-  
-  <div id="app">
-      <div id="board"><h2>Board</h2><sudoku-board class="main-board"/></div>
-      <div><h2>Possibilities</h2><div id="viewer"></div></div>
-      <div><h2>Connections</h2><div id="loops"></div></div>
-    </div><div id="solved" class="overflow-container hidden"><div class="shimmer"></div><div class="flex center"><div class="shimmer-text">SOLVED!</div></div></div>`;
+  document.body.innerHTML = `
+    <div class="body dark">
+      <sudoku-controls></sudoku-controls>
+      <div id="app">
+        <div id="board">
+          <h2>Board</h2>
+          <sudoku-board class="main-board" />
+        </div>
+        <div>
+          <h2>Possibilities</h2>
+          <div id="viewer"></div>
+        </div>
+        <div>
+          <h2>Connections</h2>
+          <div id="loops"></div>
+        </div>
+      </div>
+      <div id="solved" class="overflow-container hidden">
+        <div class="shimmer"></div>
+        <div class="flex center"><div class="shimmer-text">SOLVED!</div></div>
+      </div>
+    </div>
+  `;
 
   const secondary = Array(9)
     .fill(null)

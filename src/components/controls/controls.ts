@@ -7,6 +7,7 @@ import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 import { difficultyLevel } from '../../utils/sudoku-solver.js';
 import { Menu } from '../../base-components/menu';
 import { MenuTypes } from '../../base-components/menu/types';
+import { Button } from '../../base-components/button';
 
 export class Controls extends ReactiveMixin(HTMLElement) {
   newButton: HTMLButtonElement;
@@ -50,6 +51,16 @@ export class Controls extends ReactiveMixin(HTMLElement) {
       type: MenuTypes.menu,
     });
     this.shadowRoot.querySelector('#controls').append(this.menu);
+
+    const undo = new Button({
+      label: 'Undo',
+      onClick: () => {
+        console.log('undo');
+        this.dispatch({ type: 'undo', data: {} });
+      },
+    });
+    undo.classList.add('secondary');
+    this.shadowRoot.querySelector('#controls').append(undo);
   }
 }
 

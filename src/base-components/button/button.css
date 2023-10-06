@@ -1,0 +1,58 @@
+:host {
+  --c: black;
+  --bg: white;
+  --b: 0;
+  --b-radius: 0;
+  --gap: 0.25rem;
+  --lh: var(--xxl);
+  --p: 0 0.5rem;
+  --shadow: 0 0 0 3px inset black;
+}
+
+.button {
+  background: var(--o-button-background, var(--bg));
+  border: var(--o-button-border, var(--b));
+  border-radius: var(--o-button-border-radius, var(--b-radius));
+  color: var(--o-button-color, var(--c));
+  line-height: var(--o-button-height, var(--lh));
+  padding: var(--o-button-padding, var(--p));
+  display: flex;
+  gap: var(--o-button-gap, var(--gap));
+}
+
+.button:hover {
+  background: var(
+    --o-button-background-hover,
+    var(--o-button-background, var(--bg))
+  );
+  border: var(--o-button-border-hover, var(--o-button-border, var(--b)));
+  box-shadow: var(
+    --o-button-shadow-hover,
+    var(--o-button-shadow, var(--shadow))
+  );
+  color: var(--o-button-color-hover, var(--o-button-color, var(--c)));
+  outline: none;
+}
+
+.button:focus {
+  border: var(--o-button-background-focus, var(--o-button-border, var(--b)));
+  background: var(
+    --o-button-border-focus,
+    var(--o-button-background, var(--bg))
+  );
+  box-shadow: var(
+    --o-button-shadow-focus,
+    var(--o-button-shadow, var(--shadow))
+  );
+  color: var(--o-button-color-focus, var(--o-button-color, var(--c)));
+  outline: none;
+}
+
+.button:active {
+  background: var(
+    --o-button-background-active,
+    var(--o-button-background, var(--bg))
+  );
+  border: var(--o-button-border-active, var(--o-button-border, var(--b)));
+  color: var(--o-button-color-active, var(--o-button-color, var(--c)));
+}

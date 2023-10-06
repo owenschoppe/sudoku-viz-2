@@ -1,3 +1,8 @@
+#controls {
+  margin: var(--xl);
+  padding: 0;
+}
+
 .flex {
   height: 32px;
   padding: 8px 0;
@@ -9,23 +14,16 @@
   justify-content: flex-start;
 }
 
+.secondary {
+  --o-button-background: transparent;
+  --o-button-color: var(--g-a-13);
+  --o-button-border: 0;
+  --o-button-shadow: 0 0 0 3px inset var(--g-a-13);
+}
+
 .primary {
-  border: 0;
-  background: white;
-  color: black;
-}
-
-.primary:hover,
-.primary:focus {
-  border: 0;
-  background: white;
-  outline: none;
-  box-shadow: 0 0 0 3px inset chartreuse;
-  color: black;
-}
-
-.primary:active {
-  border: 0;
-  background: lavenderblush;
-  color: black;
+  --o-button-background: var(--g-a-13);
+  --o-button-color: var(--g-a-1);
+  --o-button-border: 0;
+  --o-button-shadow: 0 0 0 3px inset var(--highlight-color);
 }
