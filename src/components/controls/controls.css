@@ -1,6 +1,6 @@
 #controls {
-  margin: var(--xl);
-  padding: 0;
+  padding: var(--xl);
+  margin: 0;
 }
 
 .flex {

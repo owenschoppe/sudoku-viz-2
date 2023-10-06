@@ -754,7 +754,7 @@
     const brightness$1 = 75;
     customElements.define('sudoku-board-lens', BoardLens);
 
-    var css$2 = "#controls {\n  margin: var(--xl);\n  padding: 0;\n}\n\n.flex {\n  height: 32px;\n  padding: 8px 0;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  gap: 8px;\n  align-content: center;\n  justify-content: flex-start;\n}\n\n.secondary {\n  --o-button-background: transparent;\n  --o-button-color: var(--g-a-13);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--g-a-13);\n}\n\n.primary {\n  --o-button-background: var(--g-a-13);\n  --o-button-color: var(--g-a-1);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--highlight-color);\n}\n";
+    var css$2 = "#controls {\n  padding: var(--xl);\n  margin: 0;\n}\n\n.flex {\n  height: 32px;\n  padding: 8px 0;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  gap: 8px;\n  align-content: center;\n  justify-content: flex-start;\n}\n\n.secondary {\n  --o-button-background: transparent;\n  --o-button-color: var(--g-a-13);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--g-a-13);\n}\n\n.primary {\n  --o-button-background: var(--g-a-13);\n  --o-button-color: var(--g-a-1);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--highlight-color);\n}\n";
 
     var html$4 = "<div class=\"flex\" id=\"controls\"></div>\n";
 
