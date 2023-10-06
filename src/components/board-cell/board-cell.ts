@@ -55,7 +55,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
 
   render(state: State) {
     const value = state.board[this.i][this.j];
-    this.isEditable = this.state.original[this.i][this.j] === 0;
+    this.isEditable = state.original[this.i][this.j] === 0;
 
     if (value !== this.value) {
       this.state = state;

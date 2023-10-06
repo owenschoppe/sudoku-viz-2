@@ -380,7 +380,7 @@
         }
         render(state) {
             const value = state.board[this.i][this.j];
-            this.isEditable = this.state.original[this.i][this.j] === 0;
+            this.isEditable = state.original[this.i][this.j] === 0;
             if (value !== this.value) {
                 this.state = state;
                 this.value = value;
@@ -397,6 +397,7 @@
                 this.input.classList.remove('current');
                 this.input.setAttribute('tabindex', '-1');
             }
+            console.log(this.i, this.j, !this.isEditable);
             if (!this.isEditable) {
                 this.input.classList.add('locked');
             }
@@ -1538,7 +1539,6 @@
                     column: getLoopsForBoardByType(state.possibilities, 'column'),
                     group: getLoopsForBoardByType(state.possibilities, 'group'),
                 };
-                // console.log(i, j, value, state);
                 updatedState = state;
                 break;
             case 'new':
