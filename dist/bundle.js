@@ -1653,9 +1653,9 @@
         initializeSubscriptions(storedState, reducer);
         // Move this stuff to a web component so we can utilize templates
         document.body.innerHTML = `
-    <div class="body dark">
+    <div id="app" class="dark">
       <sudoku-controls></sudoku-controls>
-      <div id="app">
+      <div id="viz">
         <div id="board">
           <h2>Board</h2>
           <sudoku-board class="main-board" />
