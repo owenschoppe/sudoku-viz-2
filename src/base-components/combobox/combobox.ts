@@ -2,13 +2,9 @@
 import css from './combobox.css';
 
 import { DropdownListbox } from '../_internals/dropdown-listbox';
-import {
-  ChangeCallback,
-  ComboboxParams,
-  ComboboxTypes,
-  DropdownOption,
-} from './types';
+import { ChangeCallback, ComboboxParams, ComboboxTypes } from './types';
 import { DropdownListTypes } from '../_internals/types';
+import { DropdownOption } from '../menu/types';
 
 export class Combobox extends HTMLElement {
   combobox: HTMLDivElement | HTMLInputElement;
@@ -71,7 +67,7 @@ export class Combobox extends HTMLElement {
       this.options,
       this.handleChange.bind(this),
       this.handleNavigate,
-      DropdownListTypes.listbox,
+      DropdownListTypes.option,
     );
     shadowRoot.querySelector('[role=listbox]').append(this.dropdown.render());
 
@@ -130,9 +126,9 @@ export class Combobox extends HTMLElement {
     this.combobox.removeAttribute('aria-activedescendant');
   }
 
-  handleChange(option: DropdownOption) {
-    this.onChange(option);
-    this.value = option.value; // value or label?
+  handleChange(options: DropdownOption[]) {
+    this.onChange(options);
+    this.value = options[0].label; // value or label? label. but we callback with the whole option.
     if (this.combobox instanceof HTMLInputElement) {
       this.combobox.value = this.value;
     } else {
@@ -164,7 +160,7 @@ export class Combobox extends HTMLElement {
         if (this.trigger.classList.contains('is-open')) {
           // Hide the dropdown and submit if open
           this.hideDropdown();
-          this.onChange(this.dropdown.currentItem.option);
+          this.onChange([this.dropdown.currentItem.option]);
         } else {
           // Show the dropdown if closed
           this.showDropdown();

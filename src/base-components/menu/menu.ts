@@ -1,13 +1,11 @@
 //@ts-ignore
 import css from './menu.css';
 
-import { DropdownListbox } from '../_internals/dropdown-listbox/index.js';
 import {
-  ChangeCallback,
-  DropdownOption,
-  MenuParams,
-  MenuTypes,
-} from './types.js';
+  DropdownListbox,
+  getReturnValue,
+} from '../_internals/dropdown-listbox/index.js';
+import { ChangeCallback, DropdownOption, MenuParams } from './types.js';
 import { DropdownListTypes } from '../_internals/types.js';
 import { debouncedSearch } from '../../utils/core/debounce';
 
@@ -24,9 +22,14 @@ export class Menu extends HTMLElement {
 
   onChange: ChangeCallback;
 
-  type: MenuTypes;
+  type: DropdownListTypes;
 
-  constructor({ label, options, onChange, type = MenuTypes.menu }: MenuParams) {
+  constructor({
+    label,
+    options,
+    onChange,
+    type = DropdownListTypes.menuitem,
+  }: MenuParams) {
     super();
     this.attachShadow({ mode: 'open' });
 
@@ -52,7 +55,7 @@ export class Menu extends HTMLElement {
       this.options,
       this.handleChange.bind(this),
       this.handleNavigate,
-      DropdownListTypes.menu,
+      this.type,
     );
     shadowRoot.querySelector('[role=menu]').append(this.dropdown.render());
 
@@ -115,8 +118,8 @@ export class Menu extends HTMLElement {
 
   private;
 
-  handleChange(option: DropdownOption) {
-    this.onChange(option);
+  handleChange(options: DropdownOption[]) {
+    this.onChange(options);
   }
 
   handleNavigate(_id: string, _option: DropdownOption) {}
@@ -136,12 +139,22 @@ export class Menu extends HTMLElement {
     const { key } = e;
     switch (key) {
       case 'Enter':
+      case 'Space':
         e.stopPropagation();
         e.preventDefault();
         if (this.trigger.classList.contains('is-open')) {
           // Hide the dropdown and submit if open
           this.hideDropdown();
-          this.onChange(this.dropdown.currentItem.option);
+
+          // TODO: move all of the keyboard handling to dropdownlist so that this can make use of the same onchange logic.
+          // this.onChange([this.dropdown.currentItem.option]);
+          this.onChange(
+            getReturnValue(
+              this.type,
+              this.dropdown.items,
+              this.dropdown.currentItem,
+            ),
+          );
         } else {
           // Show the dropdown if closed
           this.showDropdown();

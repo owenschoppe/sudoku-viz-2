@@ -1,4 +1,6 @@
 export enum DropdownListTypes {
-  'menu',
-  'listbox',
+  'menuitem' = 'menuitem',
+  'menuitemcheckbox' = 'menuitemcheckbox',
+  'menuitemradio' = 'menuitemradio',
+  'option' = 'option',
 }

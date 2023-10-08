@@ -1,14 +1,23 @@
-#controls {
-  padding: var(--xl);
+#wrapper {
+  padding: 0;
   margin: 0;
+  width: 100%;
 }
 
 .flex {
-  height: 32px;
-  padding: 8px 0;
-  width: 100%;
   display: flex;
+}
+
+.flex-row {
   flex-direction: row;
+}
+
+#controls {
+  padding: var(--xl);
+  margin: 0;
+  width: 100%;
+  height: 32px;
+  /* padding: 8px 0; */
   gap: 8px;
   align-content: center;
   justify-content: flex-start;
@@ -26,4 +35,8 @@
   --o-button-color: var(--g-a-1);
   --o-button-border: 0;
   --o-button-shadow: 0 0 0 3px inset var(--highlight-color);
+}
+
+.bumpRight {
+  margin-left: auto;
 }

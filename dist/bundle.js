@@ -754,9 +754,9 @@
     const brightness$1 = 75;
     customElements.define('sudoku-board-lens', BoardLens);
 
-    var css$2 = "#controls {\n  padding: var(--xl);\n  margin: 0;\n}\n\n.flex {\n  height: 32px;\n  padding: 8px 0;\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  gap: 8px;\n  align-content: center;\n  justify-content: flex-start;\n}\n\n.secondary {\n  --o-button-background: transparent;\n  --o-button-color: var(--g-a-13);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--g-a-13);\n}\n\n.primary {\n  --o-button-background: var(--g-a-13);\n  --o-button-color: var(--g-a-1);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--highlight-color);\n}\n";
+    var css$2 = "#wrapper {\n  padding: 0;\n  margin: 0;\n  width: 100%;\n}\n\n.flex {\n  display: flex;\n}\n\n.flex-row {\n  flex-direction: row;\n}\n\n#controls {\n  padding: var(--xl);\n  margin: 0;\n  width: 100%;\n  height: 32px;\n  /* padding: 8px 0; */\n  gap: 8px;\n  align-content: center;\n  justify-content: flex-start;\n}\n\n.secondary {\n  --o-button-background: transparent;\n  --o-button-color: var(--g-a-13);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--g-a-13);\n}\n\n.primary {\n  --o-button-background: var(--g-a-13);\n  --o-button-color: var(--g-a-1);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--highlight-color);\n}\n\n.bumpRight {\n  margin-left: auto;\n}\n";
 
-    var html$4 = "<div class=\"flex\" id=\"controls\"></div>\n";
+    var html$4 = "<div id=\"wrapper\" class=\"flex flex-row\">\n  <div id=\"controls\" class=\"flex flex-row\"></div>\n</div>\n";
 
     var difficultyLevel;
     (function (difficultyLevel) {
@@ -845,7 +845,7 @@
         return false;
     };
 
-    var css$1 = "/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n/* Trigger */\n\n.button {\n  width: 100%;\n  cursor: pointer;\n  height: 32px;\n  line-height: 32px;\n  padding: 0 8px;\n  border-radius: 0;\n  border: none;\n  display: block;\n  background: white;\n  font-size: 14px;\n}\n\n.button:focus {\n  outline: none;\n  box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  /* border: 1px solid var(--color-border, #ddd); */\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.listbox__option:focus {\n  outline: none;\n  box-shadow: 4px 0 0 0 inset hsl(196deg 76% 45% / 80%);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  /* margin: var(--space-xxxsmall, 2px); */\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
+    var css$1 = "/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n/* Trigger */\n\n.button {\n  width: 100%;\n  cursor: pointer;\n  height: 32px;\n  line-height: 32px;\n  padding: 0 8px;\n  border-radius: 0;\n  border: none;\n  display: block;\n  background: white;\n  font-size: 14px;\n}\n\n.button:focus {\n  outline: none;\n  box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  /* border: 1px solid var(--color-border, #ddd); */\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.listbox__option:focus {\n  outline: none;\n  box-shadow: 4px 0 0 0 inset hsl(196deg 76% 45% / 80%);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n  display: flex;\n  flex-direction: row;\n  gap: 4px;\n  align-items: center;\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  /* margin: var(--space-xxxsmall, 2px); */\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n.check {\n  width: 8px;\n  height: 8px;\n  border-radius: 50%;\n  background-color: transparent;\n  flex: none;\n}\n\n.check.checked {\n  background-color: black;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
 
     const ListMixin = (Base) => class List extends Base {
         items = [];
@@ -864,30 +864,51 @@
 
     var DropdownListTypes;
     (function (DropdownListTypes) {
-        DropdownListTypes[DropdownListTypes["menu"] = 0] = "menu";
-        DropdownListTypes[DropdownListTypes["listbox"] = 1] = "listbox";
+        DropdownListTypes["menuitem"] = "menuitem";
+        DropdownListTypes["menuitemcheckbox"] = "menuitemcheckbox";
+        DropdownListTypes["menuitemradio"] = "menuitemradio";
+        DropdownListTypes["option"] = "option";
     })(DropdownListTypes || (DropdownListTypes = {}));
 
     class ListItem {
-        option;
         element;
+        check;
         type;
         onSelect;
         onHover;
+        _option;
         _id;
         constructor(option, onSelect, onHover, type) {
             this.onSelect = onSelect;
             this.onHover = onHover;
-            this.option = option;
+            this._option = option;
             this.type = type;
             this.element = document.createElement('li');
             this.element.classList.add('listbox-item', 'listbox__option');
-            this.element.setAttribute('role', this.role());
+            this.element.setAttribute('role', type);
             this.element.innerHTML = this.template();
-            this.element.querySelector('.listbox__option-text').textContent =
-                this.option.label;
+            if (this.type === DropdownListTypes.menuitemcheckbox ||
+                this.type === DropdownListTypes.menuitemradio) {
+                this.check = document.createElement('div');
+                this.check.classList.add('check');
+                this.element.append(this.check);
+            }
+            this.update();
             this.element.addEventListener('mousedown', this.handleClick.bind(this), true);
             this.element.addEventListener('mouseover', this.handleHover.bind(this), true);
+        }
+        update() {
+            console.log(this.option);
+            this.element.querySelector('.listbox__option-text').textContent =
+                this._option.label;
+            if (this.check) {
+                if (this._option.value) {
+                    this.check.classList.add('checked');
+                }
+                else {
+                    this.check.classList.remove('checked');
+                }
+            }
         }
         handleClick(e) {
             this.onSelect(e, this);
@@ -902,14 +923,12 @@
             this._id = _id;
             this.element.setAttribute('id', _id);
         }
-        role() {
-            switch (this.type) {
-                case DropdownListTypes.menu:
-                    return 'menuitem';
-                case DropdownListTypes.listbox:
-                default:
-                    return 'option';
-            }
+        get option() {
+            return this._option;
+        }
+        set option(_option) {
+            this._option = _option;
+            this.update();
         }
         template = () => html$3 ` <span
     class="listbox__option-text listbox__option-text_entity"
@@ -944,7 +963,7 @@
         selectItem(e, listItem) {
             e.preventDefault();
             if (listItem && this.onChange) {
-                this.onChange(listItem.option);
+                this.onChange(getReturnValue(this.type, this.items, listItem));
             }
         }
         nextItem(e, dir) {
@@ -964,6 +983,7 @@
         }
         updateOptions(options) {
             this._options = options;
+            this.dropdown.innerHTML = ''; //
             this.items = [];
             this.options.forEach(this.addItem.bind(this));
         }
@@ -991,6 +1011,7 @@
                 }
             });
         }
+        // Convert to createOrUpdateItem?
         addItem(option, i) {
             var item = new ListItem(option, this.selectItem.bind(this), this.hoverItem.bind(this), this.type);
             item.id = `option-${i}`;
@@ -998,13 +1019,27 @@
             this.dropdown.appendChild(item.element);
         }
     }
-
-    var MenuTypes;
-    (function (MenuTypes) {
-        MenuTypes[MenuTypes["menu"] = 0] = "menu";
-        MenuTypes[MenuTypes["checkboxmenu"] = 1] = "checkboxmenu";
-        MenuTypes[MenuTypes["radiomenu"] = 2] = "radiomenu";
-    })(MenuTypes || (MenuTypes = {}));
+    const getReturnValue = (type, items, currentItem) => {
+        switch (type) {
+            case DropdownListTypes.menuitemcheckbox:
+                return [
+                    ...items.map((item) => {
+                        if (item === currentItem) {
+                            currentItem.option = {
+                                ...currentItem.option,
+                                value: !currentItem.option.value,
+                            };
+                        }
+                        return item.option;
+                    }),
+                ];
+            case DropdownListTypes.menuitem:
+            case DropdownListTypes.menuitemradio:
+            case DropdownListTypes.option:
+            default:
+                return [currentItem.option];
+        }
+    };
 
     const debounce = (fn, ms) => {
         let timeout = null;
@@ -1039,7 +1074,7 @@
         _options;
         onChange;
         type;
-        constructor({ label, options, onChange, type = MenuTypes.menu }) {
+        constructor({ label, options, onChange, type = DropdownListTypes.menuitem, }) {
             super();
             this.attachShadow({ mode: 'open' });
             this.label = label;
@@ -1055,7 +1090,7 @@
             shadowRoot.prepend(style);
             this.button = shadowRoot.querySelector('#button');
             this.trigger = shadowRoot.querySelector('.dropdown-trigger');
-            this.dropdown = new DropdownListbox(this.options, this.handleChange.bind(this), this.handleNavigate, DropdownListTypes.menu);
+            this.dropdown = new DropdownListbox(this.options, this.handleChange.bind(this), this.handleNavigate, this.type);
             shadowRoot.querySelector('[role=menu]').append(this.dropdown.render());
             this.searchOptions = debouncedSearch(this.dropdown.options.map((option) => option.label), (index) => {
                 this.dropdown.updateCurrent(index);
@@ -1098,8 +1133,8 @@
             }
         }
         private;
-        handleChange(option) {
-            this.onChange(option);
+        handleChange(options) {
+            this.onChange(options);
         }
         handleNavigate(_id, _option) { }
         handleBlur(_e) {
@@ -1115,12 +1150,15 @@
             const { key } = e;
             switch (key) {
                 case 'Enter':
+                case 'Space':
                     e.stopPropagation();
                     e.preventDefault();
                     if (this.trigger.classList.contains('is-open')) {
                         // Hide the dropdown and submit if open
                         this.hideDropdown();
-                        this.onChange(this.dropdown.currentItem.option);
+                        // TODO: move all of the keyboard handling to dropdownlist so that this can make use of the same onchange logic.
+                        // this.onChange([this.dropdown.currentItem.option]);
+                        this.onChange(getReturnValue(this.type, this.dropdown.items, this.dropdown.currentItem));
                     }
                     else {
                         // Show the dropdown if closed
@@ -1214,7 +1252,9 @@
     class Controls extends ReactiveMixin(HTMLElement) {
         newButton;
         menu;
+        settings;
         constructor() {
+            console.log('controls constructor');
             super();
             this.attachShadow({ mode: 'open' });
         }
@@ -1228,21 +1268,22 @@
         init() {
             const { shadowRoot } = this;
             shadowRoot.innerHTML = html$4;
+            debugger;
             const style = document.createElement('style');
             style.innerHTML = css$2;
             shadowRoot.prepend(style);
             this.menu = new Menu({
                 label: 'New',
                 options: [
-                    { label: 'Hard', value: difficultyLevel.HARD },
-                    { label: 'Medium', value: difficultyLevel.MED },
-                    { label: 'MedEasy', value: difficultyLevel.EASY },
-                    { label: 'Blank', value: 'blank' },
+                    { id: 'hard', label: 'Hard', value: difficultyLevel.HARD },
+                    { id: 'med', label: 'Medium', value: difficultyLevel.MED },
+                    { id: 'easy', label: 'Easy', value: difficultyLevel.EASY },
+                    { id: 'blank', label: 'Blank', value: 'blank' },
                 ],
-                onChange: ({ value }) => {
+                onChange: ([{ value }]) => {
                     this.dispatch({ type: 'new', data: { difficulty: value } });
                 },
-                type: MenuTypes.menu,
+                type: DropdownListTypes.menuitem,
             });
             this.shadowRoot.querySelector('#controls').append(this.menu);
             const undo = new Button({
@@ -1254,8 +1295,29 @@
             });
             undo.classList.add('secondary');
             this.shadowRoot.querySelector('#controls').append(undo);
+            this.settings = new Menu({
+                label: 'Settings',
+                options: [],
+                onChange: (values) => {
+                    this.dispatch({
+                        type: 'settings',
+                        data: { settings: optionsToSettings(values) },
+                    });
+                },
+                type: DropdownListTypes.menuitemcheckbox,
+            });
+            // this.settings.classList.add('bumpRight');
+            this.shadowRoot.querySelector('#controls').append(this.settings);
+        }
+        render(state) {
+            this.settings.options = settingsToOptions(state.settings);
         }
     }
+    const settingsToOptions = (settings) => Object.entries(settings || {}).map(([id, option]) => ({ ...option, id }));
+    const optionsToSettings = (options) => options?.reduce((settings, { id, label, value }) => {
+        settings[id] = { label, value };
+        return settings;
+    }, {});
     customElements.define('sudoku-controls', Controls);
 
     const up = (addr) => ({
@@ -1623,7 +1685,7 @@
             case 'new':
                 const { difficulty } = action.data;
                 const board = difficulty === 'blank' ? null : generateBoard(difficulty);
-                updatedState = initialState(board);
+                updatedState = initialState(state, board);
                 break;
             case 'move':
                 state.location = action.data.location;
@@ -1640,9 +1702,14 @@
                     direction[action.data.key]?.(state.location) || state.location;
                 updatedState = state;
                 break;
+            case 'settings':
+                state.settings = action.data.settings;
+                updatedState = state;
+                break;
             default:
                 updatedState = state;
         }
+        // TODO: move to app logic in new viz component
         window.localStorage.setItem('state', JSON.stringify(updatedState));
         if (updatedState.board.flat().every((value) => value > 0)) {
             document.querySelector('#solved').classList.remove('hidden');
@@ -1653,7 +1720,7 @@
         return updatedState;
     };
     const initialBoard = NNArray(9, 0);
-    const initialState = (savedBoard) => {
+    const initialState = (priorState, savedBoard) => {
         const board = savedBoard || cloneDeep(initialBoard);
         const possibilities = possibilitiesForBoard(board);
         return {
@@ -1667,6 +1734,12 @@
             },
             location: { i: 0, j: 0 },
             moves: [],
+            // TODO: store settings in separate local storage object?
+            settings: priorState?.settings || {
+                possibilities: { label: 'Show Possibilities', value: true },
+                connections: { label: 'Show Connctions', value: true },
+                highlight: { label: 'Highlight Only Possibility', value: true },
+            },
         };
     };
     (() => {
@@ -1704,11 +1777,6 @@
         const tertiary = ['row', 'column', 'group'].map((type) => new BoardLoops(type));
         tertiary.forEach((board) => board.classList.add('secondary-board'));
         document.querySelector('#loops').append(...tertiary);
-        // Add hot reloading in dev mode
-        document.write('<script src="http://' +
-            (location.host || 'localhost').split(':')[0] +
-            ':35729/livereload.js?snipver=1"></' +
-            'script>');
     })();
 
 })();

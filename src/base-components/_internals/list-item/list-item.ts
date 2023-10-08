@@ -1,4 +1,4 @@
-import { DropdownOption } from '../../combobox/types';
+import { DropdownOption } from '../../menu/types';
 import { DropdownListTypes } from '../types';
 
 type SelectCallback = (event: MouseEvent, item: ListItem) => void;
@@ -6,15 +6,17 @@ type SelectCallback = (event: MouseEvent, item: ListItem) => void;
 type HoverCallback = (event: MouseEvent, item: ListItem) => void;
 
 export class ListItem {
-  option: DropdownOption;
-
   element: HTMLLIElement;
+
+  check?: HTMLDivElement;
 
   type: DropdownListTypes;
 
   onSelect: SelectCallback;
 
   onHover: HoverCallback;
+
+  _option: DropdownOption;
 
   _id: string;
 
@@ -26,17 +28,26 @@ export class ListItem {
   ) {
     this.onSelect = onSelect;
     this.onHover = onHover;
-    this.option = option;
+    this._option = option;
     this.type = type;
 
     this.element = document.createElement('li');
     this.element.classList.add('listbox-item', 'listbox__option');
-    this.element.setAttribute('role', this.role());
+    this.element.setAttribute('role', type);
 
     this.element.innerHTML = this.template();
 
-    this.element.querySelector('.listbox__option-text').textContent =
-      this.option.label;
+    if (
+      this.type === DropdownListTypes.menuitemcheckbox ||
+      this.type === DropdownListTypes.menuitemradio
+    ) {
+      this.check = document.createElement('div');
+      this.check.classList.add('check');
+
+      this.element.append(this.check);
+    }
+
+    this.update();
 
     this.element.addEventListener(
       'mousedown',
@@ -48,6 +59,20 @@ export class ListItem {
       this.handleHover.bind(this),
       true,
     );
+  }
+
+  update() {
+    console.log(this.option);
+    this.element.querySelector('.listbox__option-text').textContent =
+      this._option.label;
+
+    if (this.check) {
+      if (this._option.value) {
+        this.check.classList.add('checked');
+      } else {
+        this.check.classList.remove('checked');
+      }
+    }
   }
 
   handleClick(e: MouseEvent) {
@@ -67,14 +92,13 @@ export class ListItem {
     this.element.setAttribute('id', _id);
   }
 
-  role() {
-    switch (this.type) {
-      case DropdownListTypes.menu:
-        return 'menuitem';
-      case DropdownListTypes.listbox:
-      default:
-        return 'option';
-    }
+  get option() {
+    return this._option;
+  }
+
+  set option(_option: DropdownOption) {
+    this._option = _option;
+    this.update();
   }
 
   template = () => html` <span

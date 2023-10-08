@@ -67,6 +67,20 @@ const almostFinalBoard: Board = [
   [9, 7, 4, 8, 6, 3, 2, 5, 0],
 ];
 
+// has complex interlock
+// const hardBoard: Board =
+// [
+//   [0, 3, 9, 7, 6, 2, 0, 5, 0],
+//   [8, 6, 7, 4, 5, 1, 9, 3, 2],
+//   [5, 0, 0, 9, 8, 3, 6, 7, 0],
+//   [3, 8, 6, 5, 2, 7, 4, 1, 9],
+//   [9, 7, 4, 3, 1, 8, 5, 2, 6],
+//   [2, 1, 5, 6, 9, 4, 7, 8, 3],
+//   [7, 5, 3, 2, 4, 9, 0, 6, 0],
+//   [6, 9, 8, 1, 3, 5, 2, 4, 7],
+//   [0, 0, 0, 8, 7, 6, 3, 9, 5],
+// ];
+
 describe('solver', () => {
   it('should generate board', () => {
     jest.spyOn(global.Math, 'random').mockReturnValue(1);

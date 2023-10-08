@@ -6,15 +6,20 @@ import html from './controls.html';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 import { difficultyLevel } from '../../utils/sudoku-solver.js';
 import { Menu } from '../../base-components/menu';
-import { MenuTypes } from '../../base-components/menu/types';
 import { Button } from '../../base-components/button';
+import { DropdownListTypes } from '../../base-components/_internals/types';
+import { Settings, State } from '../../types';
+import { DropdownOption } from '../../base-components/menu/types';
 
 export class Controls extends ReactiveMixin(HTMLElement) {
   newButton: HTMLButtonElement;
 
   menu: Menu;
 
+  settings: Menu;
+
   constructor() {
+    console.log('controls constructor');
     super();
     this.attachShadow({ mode: 'open' });
   }
@@ -33,6 +38,8 @@ export class Controls extends ReactiveMixin(HTMLElement) {
 
     shadowRoot.innerHTML = html;
 
+    debugger;
+
     const style = document.createElement('style');
     style.innerHTML = css;
     shadowRoot.prepend(style);
@@ -40,15 +47,15 @@ export class Controls extends ReactiveMixin(HTMLElement) {
     this.menu = new Menu({
       label: 'New',
       options: [
-        { label: 'Hard', value: difficultyLevel.HARD },
-        { label: 'Medium', value: difficultyLevel.MED },
-        { label: 'MedEasy', value: difficultyLevel.EASY },
-        { label: 'Blank', value: 'blank' },
+        { id: 'hard', label: 'Hard', value: difficultyLevel.HARD },
+        { id: 'med', label: 'Medium', value: difficultyLevel.MED },
+        { id: 'easy', label: 'Easy', value: difficultyLevel.EASY },
+        { id: 'blank', label: 'Blank', value: 'blank' },
       ],
-      onChange: ({ value }) => {
+      onChange: ([{ value }]) => {
         this.dispatch({ type: 'new', data: { difficulty: value } });
       },
-      type: MenuTypes.menu,
+      type: DropdownListTypes.menuitem,
     });
     this.shadowRoot.querySelector('#controls').append(this.menu);
 
@@ -61,7 +68,34 @@ export class Controls extends ReactiveMixin(HTMLElement) {
     });
     undo.classList.add('secondary');
     this.shadowRoot.querySelector('#controls').append(undo);
+
+    this.settings = new Menu({
+      label: 'Settings',
+      options: [],
+      onChange: (values) => {
+        this.dispatch({
+          type: 'settings',
+          data: { settings: optionsToSettings(values) },
+        });
+      },
+      type: DropdownListTypes.menuitemcheckbox,
+    });
+    // this.settings.classList.add('bumpRight');
+    this.shadowRoot.querySelector('#controls').append(this.settings);
+  }
+
+  render(state: State) {
+    this.settings.options = settingsToOptions(state.settings);
   }
 }
+
+const settingsToOptions = (settings: Settings): DropdownOption[] =>
+  Object.entries(settings || {}).map(([id, option]) => ({ ...option, id }));
+
+const optionsToSettings = (options: DropdownOption[]): Settings =>
+  options?.reduce((settings, { id, label, value }) => {
+    settings[id] = { label, value };
+    return settings;
+  }, {} as Settings);
 
 customElements.define('sudoku-controls', Controls);

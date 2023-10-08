@@ -1,17 +1,23 @@
+import { DropdownListTypes } from '../_internals/types';
+
 export type MenuParams = {
   label: string;
   options: DropdownOption[];
   onChange: ChangeCallback;
-  type?: MenuTypes;
+  type?: DropdownListTypes;
 };
 
-export enum MenuTypes {
-  menu,
-  checkboxmenu,
-  radiomenu,
-}
+// export enum MenuTypes {
+//   menu,
+//   checkboxmenu,
+//   radiomenu,
+// }
 
-export type DropdownOption = { label: string; value: string };
+export type DropdownOption = {
+  id: string;
+  label: string;
+  value: string | boolean;
+};
 
-export type ChangeCallback = (option: DropdownOption) => void;
+export type ChangeCallback = (option: DropdownOption[]) => void;
 export type NavigateCallback = (id: string, option: DropdownOption) => void;

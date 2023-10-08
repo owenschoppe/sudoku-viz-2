@@ -1,0 +1,52 @@
+:host {
+  --main-board: 478px;
+  --board-gap: 8px;
+  --highlight-color: hsl(196deg 76% 45% / 80%);
+}
+
+.main-board {
+  --public-board-size: var(--main-board);
+}
+
+.secondary-board {
+  --public-board-size: 154px;
+  --board-cell-gap: 1px;
+  --board-group-gap: 2px;
+}
+
+#viz {
+  display: flex;
+  column-gap: 16px;
+  padding: 16px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#viewer {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    'c00 c01 c02'
+    'c10 c11 c12'
+    'c20 c21 c22';
+  height: var(--main-board);
+  width: var(--main-board);
+  row-gap: var(--board-gap);
+  column-gap: var(--board-gap);
+  line-height: 0;
+}
+
+#loops {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'c0'
+    'c1'
+    'c2';
+  height: var(--main-board);
+  width: auto;
+  row-gap: var(--board-gap);
+  line-height: 0;
+}

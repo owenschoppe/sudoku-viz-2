@@ -30,10 +30,22 @@ export type State = {
   color?: string;
   location: CellAddress;
   moves: Move[];
+  settings: Settings;
 };
 
 export type Move = CellAddress & {
   priorValue: 0 | CellValue;
+};
+
+export type Settings = {
+  possibilities: Setting;
+  highlight: Setting;
+  connections: Setting;
+};
+
+export type Setting = {
+  label: string;
+  value: boolean;
 };
 
 export type Action = {

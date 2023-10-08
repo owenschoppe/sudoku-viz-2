@@ -1,9 +1,6 @@
 import { Direction, ListMixin } from '../../../mixins/list-mixin';
-import {
-  ChangeCallback,
-  DropdownOption,
-  NavigateCallback,
-} from '../../combobox/types';
+import { ChangeCallback, NavigateCallback } from '../../combobox/types';
+import { DropdownOption } from '../../menu/types';
 import { ListItem } from '../list-item';
 import { DropdownListTypes } from '../types';
 
@@ -52,7 +49,7 @@ export class DropdownListbox extends ListMixin(Array) {
   selectItem(e: MouseEvent | KeyboardEvent, listItem: ListItem) {
     e.preventDefault();
     if (listItem && this.onChange) {
-      this.onChange(listItem.option);
+      this.onChange(getReturnValue(this.type, this.items, listItem));
     }
   }
 
@@ -76,6 +73,7 @@ export class DropdownListbox extends ListMixin(Array) {
 
   updateOptions(options: DropdownOption[]) {
     this._options = options;
+    this.dropdown.innerHTML = ''; //
     this.items = [];
     this.options.forEach(this.addItem.bind(this));
   }
@@ -104,6 +102,7 @@ export class DropdownListbox extends ListMixin(Array) {
     });
   }
 
+  // Convert to createOrUpdateItem?
   addItem(option: DropdownOption, i: number) {
     var item = new ListItem(
       option,
@@ -116,3 +115,29 @@ export class DropdownListbox extends ListMixin(Array) {
     this.dropdown.appendChild(item.element);
   }
 }
+
+export const getReturnValue = (
+  type: DropdownListTypes,
+  items: ListItem[],
+  currentItem: ListItem,
+) => {
+  switch (type) {
+    case DropdownListTypes.menuitemcheckbox:
+      return [
+        ...items.map((item: ListItem) => {
+          if (item === currentItem) {
+            currentItem.option = {
+              ...currentItem.option,
+              value: !currentItem.option.value,
+            };
+          }
+          return item.option;
+        }),
+      ];
+    case DropdownListTypes.menuitem:
+    case DropdownListTypes.menuitemradio:
+    case DropdownListTypes.option:
+    default:
+      return [currentItem.option];
+  }
+};

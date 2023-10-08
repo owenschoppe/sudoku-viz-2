@@ -51,7 +51,7 @@ const reducer = (state: State, action: Action) => {
     case 'new':
       const { difficulty } = action.data;
       const board = difficulty === 'blank' ? null : generateBoard(difficulty);
-      updatedState = initialState(board);
+      updatedState = initialState(state, board);
       break;
     case 'move':
       state.location = action.data.location;
@@ -68,9 +68,14 @@ const reducer = (state: State, action: Action) => {
         direction[action.data.key]?.(state.location) || state.location;
       updatedState = state;
       break;
+    case 'settings':
+      state.settings = action.data.settings;
+      updatedState = state;
+      break;
     default:
       updatedState = state;
   }
+  // TODO: move to app logic in new viz component
   window.localStorage.setItem('state', JSON.stringify(updatedState));
   if (updatedState.board.flat().every((value) => value > 0)) {
     document.querySelector('#solved').classList.remove('hidden');
@@ -82,7 +87,7 @@ const reducer = (state: State, action: Action) => {
 
 const initialBoard = NNArray(9, 0);
 
-const initialState = (savedBoard?: Board): State => {
+const initialState = (priorState?: State, savedBoard?: Board): State => {
   const board = savedBoard || cloneDeep(initialBoard);
   const possibilities = possibilitiesForBoard(board);
   return {
@@ -96,6 +101,12 @@ const initialState = (savedBoard?: Board): State => {
     },
     location: { i: 0, j: 0 },
     moves: [],
+    // TODO: store settings in separate local storage object?
+    settings: priorState?.settings || {
+      possibilities: { label: 'Show Possibilities', value: true },
+      connections: { label: 'Show Connctions', value: true },
+      highlight: { label: 'Highlight Only Possibility', value: true },
+    },
   };
 };
 
@@ -140,12 +151,4 @@ const initialState = (savedBoard?: Board): State => {
   );
   tertiary.forEach((board) => board.classList.add('secondary-board'));
   document.querySelector('#loops').append(...tertiary);
-
-  // Add hot reloading in dev mode
-  document.write(
-    '<script src="http://' +
-      (location.host || 'localhost').split(':')[0] +
-      ':35729/livereload.js?snipver=1"></' +
-      'script>',
-  );
 })();

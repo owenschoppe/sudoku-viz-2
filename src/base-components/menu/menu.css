@@ -70,6 +70,10 @@
 
 .dropdown .listbox__option {
   padding: var(--space-xsmall, 8px);
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
 }
 
 /* Pills */
@@ -97,6 +101,18 @@
   padding: 0;
   position: absolute;
   width: 1px;
+}
+
+.check {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: transparent;
+  flex: none;
+}
+
+.check.checked {
+  background-color: black;
 }
 
 /* .pill {
