@@ -42,7 +42,7 @@ export class Controls extends ReactiveMixin(HTMLElement) {
       options: [
         { label: 'Hard', value: difficultyLevel.HARD },
         { label: 'Medium', value: difficultyLevel.MED },
-        { label: 'Easy', value: difficultyLevel.EASY },
+        { label: 'MedEasy', value: difficultyLevel.EASY },
         { label: 'Blank', value: 'blank' },
       ],
       onChange: ({ value }) => {

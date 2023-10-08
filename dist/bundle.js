@@ -968,6 +968,9 @@
             this.options.forEach(this.addItem.bind(this));
         }
         updateCurrent(index) {
+            if (index === -1) {
+                return;
+            }
             index = index || 0;
             this.items.forEach((item, i) => {
                 if (i == index) {
@@ -1003,6 +1006,30 @@
         MenuTypes[MenuTypes["radiomenu"] = 2] = "radiomenu";
     })(MenuTypes || (MenuTypes = {}));
 
+    const debounce = (fn, ms) => {
+        let timeout = null;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => fn(...args), ms);
+        };
+    };
+    const debouncedSearch = (options, callback) => {
+        let query = '';
+        const debouncedQueryReset = debounce(() => {
+            query = '';
+        }, 500);
+        return (e) => {
+            query += e.key;
+            debouncedQueryReset();
+            callback(options.reduceRight((found, current, i) => {
+                if (current.toLowerCase().startsWith(`${query}`.toLowerCase())) {
+                    found = i;
+                }
+                return found;
+            }, -1));
+        };
+    };
+
     //@ts-ignore
     class Menu extends HTMLElement {
         button;
@@ -1030,17 +1057,19 @@
             this.trigger = shadowRoot.querySelector('.dropdown-trigger');
             this.dropdown = new DropdownListbox(this.options, this.handleChange.bind(this), this.handleNavigate, DropdownListTypes.menu);
             shadowRoot.querySelector('[role=menu]').append(this.dropdown.render());
+            this.searchOptions = debouncedSearch(this.dropdown.options.map((option) => option.label), (index) => {
+                this.dropdown.updateCurrent(index);
+                this.showDropdown();
+            });
             this.trigger.addEventListener('keydown', this.handlePress.bind(this), true);
             this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
             this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
-            // this.button.addEventListener('blur', this.handleBlur.bind(this), false);
             document.body.addEventListener('focus', this.handleBlur.bind(this), true);
         }
         disconnectedCallback() {
             this.trigger.removeEventListener('keydown', this.handlePress.bind(this), true);
             this.trigger.removeEventListener('input', this.searchOptions.bind(this));
             this.button.removeEventListener('click', this.toggleDropdown.bind(this));
-            // this.button.removeEventListener('blur', this.handleBlur.bind(this), false);
             document.body.removeEventListener('focus', this.handleBlur.bind(this));
         }
         get options() {
@@ -1126,15 +1155,7 @@
                     break;
             }
         }
-        searchOptions(_e) {
-            //Should we only search if e.target.value.length > 2?
-            // const target = e.target as HTMLInputElement;
-            // const results = this.options.filter((option) => {
-            //   return option.label.toLowerCase().startsWith(`${e.key}`.toLowerCase());
-            // });
-            // this.dropdown.selectItem(e, results[0]);
-            this.showDropdown();
-        }
+        searchOptions;
         template = (label) => html$2 `
     <div class="dropdown-trigger dropdown-trigger_click">
       <button id="button" class="button" aria-haspopup="true" title="${label}">
@@ -1215,7 +1236,7 @@
                 options: [
                     { label: 'Hard', value: difficultyLevel.HARD },
                     { label: 'Medium', value: difficultyLevel.MED },
-                    { label: 'Easy', value: difficultyLevel.EASY },
+                    { label: 'MedEasy', value: difficultyLevel.EASY },
                     { label: 'Blank', value: 'blank' },
                 ],
                 onChange: ({ value }) => {

@@ -81,6 +81,9 @@ export class DropdownListbox extends ListMixin(Array) {
   }
 
   updateCurrent(index?: number) {
+    if (index === -1) {
+      return;
+    }
     index = index || 0;
     this.items.forEach((item: ListItem, i) => {
       if (i == index) {

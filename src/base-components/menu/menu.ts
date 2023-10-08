@@ -9,6 +9,7 @@ import {
   MenuTypes,
 } from './types.js';
 import { DropdownListTypes } from '../_internals/types.js';
+import { debouncedSearch } from '../../utils/core/debounce';
 
 export class Menu extends HTMLElement {
   button: HTMLButtonElement;
@@ -55,10 +56,17 @@ export class Menu extends HTMLElement {
     );
     shadowRoot.querySelector('[role=menu]').append(this.dropdown.render());
 
+    this.searchOptions = debouncedSearch(
+      this.dropdown.options.map((option) => option.label),
+      (index: number) => {
+        this.dropdown.updateCurrent(index);
+        this.showDropdown();
+      },
+    );
+
     this.trigger.addEventListener('keydown', this.handlePress.bind(this), true);
     this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
     this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
-    // this.button.addEventListener('blur', this.handleBlur.bind(this), false);
     document.body.addEventListener('focus', this.handleBlur.bind(this), true);
   }
 
@@ -70,7 +78,6 @@ export class Menu extends HTMLElement {
     );
     this.trigger.removeEventListener('input', this.searchOptions.bind(this));
     this.button.removeEventListener('click', this.toggleDropdown.bind(this));
-    // this.button.removeEventListener('blur', this.handleBlur.bind(this), false);
     document.body.removeEventListener('focus', this.handleBlur.bind(this));
   }
 
@@ -169,15 +176,7 @@ export class Menu extends HTMLElement {
     }
   }
 
-  searchOptions(_e: KeyboardEvent) {
-    //Should we only search if e.target.value.length > 2?
-    // const target = e.target as HTMLInputElement;
-    // const results = this.options.filter((option) => {
-    //   return option.label.toLowerCase().startsWith(`${e.key}`.toLowerCase());
-    // });
-    // this.dropdown.selectItem(e, results[0]);
-    this.showDropdown();
-  }
+  searchOptions: (e: KeyboardEvent) => void;
 
   template = (label: string) => html`
     <div class="dropdown-trigger dropdown-trigger_click">
