@@ -20,7 +20,6 @@
         };
         const dispatch = (action) => {
             setState(reducer$1(getState(), action));
-            // console.log(getState(), action);
             subscribers.forEach((renderFn) => renderFn(getState()));
             return getState();
         };
@@ -68,7 +67,6 @@
         unsubscribe;
         constructor(...args) {
             super(...args);
-            // console.log('subscribe', this.render);
             const { unsubscribe, dispatch, state } = subscribe(this.render.bind(this));
             this.state = state;
             this.dispatch = dispatch;
@@ -545,14 +543,9 @@
                         data: event,
                     });
                     break;
-                default:
-                    console.log(event);
-                    break;
             }
         }
-        render(_state) {
-            // console.log('render board', state.board);
-        }
+        render(_state) { }
     }
     customElements.define('sudoku-board', Board);
 
@@ -758,7 +751,7 @@
     const brightness$1 = 75;
     customElements.define('sudoku-board-lens', BoardLens);
 
-    var css$3 = "#wrapper {\n  padding: 0;\n  margin: 0;\n  width: 100%;\n}\n\n.flex {\n  display: flex;\n}\n\n.flex-row {\n  flex-direction: row;\n}\n\n#controls {\n  padding: var(--xl);\n  margin: 0;\n  width: 100%;\n  height: 32px;\n  /* padding: 8px 0; */\n  gap: 8px;\n  align-content: center;\n  justify-content: flex-start;\n}\n\n.secondary {\n  --o-button-background: transparent;\n  --o-button-color: var(--g-a-13);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--g-a-13);\n}\n\n.primary {\n  --o-button-background: var(--g-a-13);\n  --o-button-color: var(--g-a-1);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--highlight-color);\n}\n\n.bumpRight {\n  margin-left: auto;\n}\n";
+    var css$3 = "#wrapper {\n  padding: 0;\n  margin: 0;\n  width: 100%;\n}\n\n.flex {\n  display: flex;\n}\n\n.flex-row {\n  flex-direction: row;\n}\n\n#controls {\n  padding: var(--xl);\n  margin: 0;\n  width: 100%;\n  height: 32px;\n  gap: 8px;\n  align-content: center;\n  justify-content: flex-start;\n}\n\n.secondary {\n  --o-button-background: transparent;\n  --o-button-color: var(--g-a-13);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--g-a-13);\n}\n\n.primary {\n  --o-button-background: var(--g-a-13);\n  --o-button-color: var(--g-a-1);\n  --o-button-border: 0;\n  --o-button-shadow: 0 0 0 3px inset var(--highlight-color);\n}\n\n.bumpRight {\n  margin-left: auto;\n}\n";
 
     var html$5 = "<div id=\"wrapper\" class=\"flex flex-row\">\n  <div id=\"controls\" class=\"flex flex-row\"></div>\n</div>\n";
 
@@ -849,7 +842,7 @@
         return false;
     };
 
-    var css$2 = "/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n/* Trigger */\n\n.button {\n  width: 100%;\n  cursor: pointer;\n  height: 32px;\n  line-height: 32px;\n  padding: 0 8px;\n  border-radius: 0;\n  border: none;\n  display: block;\n  background: white;\n  font-size: 14px;\n}\n\n.button:focus {\n  outline: none;\n  box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  /* border: 1px solid var(--color-border, #ddd); */\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.listbox__option:focus {\n  outline: none;\n  box-shadow: 4px 0 0 0 inset hsl(196deg 76% 45% / 80%);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n  display: flex;\n  flex-direction: row;\n  gap: 4px;\n  align-items: center;\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  /* margin: var(--space-xxxsmall, 2px); */\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n.check {\n  width: 8px;\n  height: 8px;\n  border-radius: 50%;\n  background-color: transparent;\n  flex: none;\n}\n\n.check.checked {\n  background-color: black;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
+    var css$2 = ":host {\n  --button-height: var(--xxl);\n}\n\n/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n/* Trigger */\n\n.button {\n  width: 100%;\n  cursor: pointer;\n  height: var(--button-height);\n  line-height: var(--button-height);\n  padding: 0 8px;\n  border-radius: 0;\n  border: none;\n  display: block;\n  background: white;\n  font-size: 14px;\n  user-select: none;\n}\n\n.button:focus {\n  outline: none;\n  box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n  user-select: none;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical.dropdown_left {\n  right: 0;\n}\n\n.listbox_vertical.dropdown_top {\n  bottom: var(--button-height);\n}\n\n.listbox_vertical.fixed_width {\n  width: 100%;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  /* border: 1px solid var(--color-border, #ddd); */\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.listbox__option:focus {\n  outline: none;\n  box-shadow: 4px 0 0 0 inset hsl(196deg 76% 45% / 80%);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n  display: flex;\n  flex-direction: row;\n  gap: 4px;\n  align-items: center;\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  /* margin: var(--space-xxxsmall, 2px); */\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n.check {\n  width: 8px;\n  height: 8px;\n  border-radius: 50%;\n  background-color: transparent;\n  flex: none;\n}\n\n[aria-checked='true'] .check {\n  background-color: black;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
 
     const ListMixin = (Base) => class List extends Base {
         items = [];
@@ -895,22 +888,21 @@
                 this.type === DropdownListTypes.menuitemradio) {
                 this.check = document.createElement('div');
                 this.check.classList.add('check');
-                this.element.append(this.check);
+                this.element.prepend(this.check);
             }
             this.update();
             this.element.addEventListener('mousedown', this.handleClick.bind(this), true);
             this.element.addEventListener('mouseover', this.handleHover.bind(this), true);
         }
         update() {
-            console.log(this.option);
             this.element.querySelector('.listbox__option-text').textContent =
                 this._option.label;
             if (this.check) {
                 if (this._option.value) {
-                    this.check.classList.add('checked');
+                    this.element.setAttribute('aria-checked', 'true');
                 }
                 else {
-                    this.check.classList.remove('checked');
+                    this.element.setAttribute('aria-checked', 'false');
                 }
             }
         }
@@ -985,6 +977,20 @@
         render() {
             return this.dropdown;
         }
+        // // doesn't work
+        // positionDropdown({ scrollHeight, scrollWidth }) {
+        //   const { x, y, width, height } = this.dropdown.getBoundingClientRect();
+        //   if (x + width > scrollWidth) {
+        //     this.dropdown.classList.add('dropdown_left');
+        //   } else {
+        //     this.dropdown.classList.remove('dropdown_left');
+        //   }
+        //   if (y + height > scrollHeight) {
+        //     this.dropdown.classList.add('dropdown_top');
+        //   } else {
+        //     this.dropdown.classList.remove('dropdown_top');
+        //   }
+        // }
         updateOptions(options) {
             this._options = options;
             this.dropdown.innerHTML = ''; //
@@ -1119,14 +1125,18 @@
             this.dropdown.updateOptions(options);
         }
         showDropdown() {
+            // const { scrollHeight, scrollWidth } = document.body;
             this.trigger.classList.add('is-open');
             this.button.setAttribute('aria-expanded', 'true');
-            this.button.setAttribute('aria-activedescendant', this.dropdown.currentItem.id);
+            this.button.setAttribute('aria-activedescendant', this.dropdown.currentItem?.id);
+            // this.dropdown.positionDropdown({ scrollHeight, scrollWidth });
         }
         hideDropdown() {
+            // const { scrollHeight, scrollWidth } = document.body;
             this.trigger.classList.remove('is-open');
             this.button.setAttribute('aria-expanded', 'false');
             this.button.removeAttribute('aria-activedescendant');
+            // this.dropdown.positionDropdown({ scrollHeight, scrollWidth });
         }
         toggleDropdown() {
             if (this.trigger.classList.contains('is-open')) {
@@ -1258,7 +1268,6 @@
         menu;
         settings;
         constructor() {
-            console.log('controls constructor');
             super();
             this.attachShadow({ mode: 'open' });
         }
@@ -1292,7 +1301,6 @@
             const undo = new Button({
                 label: 'Undo',
                 onClick: () => {
-                    console.log('undo');
                     this.dispatch({ type: 'undo', data: {} });
                 },
             });
@@ -1309,8 +1317,9 @@
                 },
                 type: DropdownListTypes.menuitemcheckbox,
             });
-            // this.settings.classList.add('bumpRight');
+            this.settings.classList.add('bumpRight');
             this.shadowRoot.querySelector('#controls').append(this.settings);
+            this.settings.dropdown.dropdown.classList.add('dropdown_left');
         }
         render(state) {
             this.settings.options = settingsToOptions(state.settings);
@@ -1489,7 +1498,6 @@
         secondary;
         tertiary;
         constructor() {
-            console.log('viz constructor');
             super();
             this.attachShadow({ mode: 'open' });
         }
@@ -1825,20 +1833,6 @@
         document.body.innerHTML = `
     <div id="app" class="dark">
       <sudoku-controls></sudoku-controls>
-      <!--<div id="viz">
-        <div id="board">
-          <h2>Board</h2>
-          <sudoku-board class="main-board" />
-        </div>
-        <div>
-          <h2>Possibilities</h2>
-          <div id="viewer"></div>
-        </div>
-        <div>
-          <h2>Connections</h2>
-          <div id="loops"></div>
-        </div>
-      </div>-->
       <sudoku-layout></sudoku-layout>
       <div id="solved" class="overflow-container hidden">
         <div class="shimmer"></div>

@@ -119,20 +119,6 @@ const initialState = (priorState?: State, savedBoard?: Board): State => {
   document.body.innerHTML = `
     <div id="app" class="dark">
       <sudoku-controls></sudoku-controls>
-      <!--<div id="viz">
-        <div id="board">
-          <h2>Board</h2>
-          <sudoku-board class="main-board" />
-        </div>
-        <div>
-          <h2>Possibilities</h2>
-          <div id="viewer"></div>
-        </div>
-        <div>
-          <h2>Connections</h2>
-          <div id="loops"></div>
-        </div>
-      </div>-->
       <sudoku-layout></sudoku-layout>
       <div id="solved" class="overflow-container hidden">
         <div class="shimmer"></div>

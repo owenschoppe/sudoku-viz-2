@@ -44,7 +44,7 @@ export class ListItem {
       this.check = document.createElement('div');
       this.check.classList.add('check');
 
-      this.element.append(this.check);
+      this.element.prepend(this.check);
     }
 
     this.update();
@@ -62,15 +62,14 @@ export class ListItem {
   }
 
   update() {
-    console.log(this.option);
     this.element.querySelector('.listbox__option-text').textContent =
       this._option.label;
 
     if (this.check) {
       if (this._option.value) {
-        this.check.classList.add('checked');
+        this.element.setAttribute('aria-checked', 'true');
       } else {
-        this.check.classList.remove('checked');
+        this.element.setAttribute('aria-checked', 'false');
       }
     }
   }

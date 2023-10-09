@@ -17,7 +17,6 @@ export const ReactiveMixin = <T extends Constructor>(Base: T) =>
 
     constructor(...args: any[]) {
       super(...args);
-      // console.log('subscribe', this.render);
       const { unsubscribe, dispatch, state } = subscribe(
         this.render.bind(this),
       );

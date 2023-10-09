@@ -64,14 +64,11 @@ export class Board extends ReactiveMixin(HTMLElement) {
         });
         break;
       default:
-        console.log(event);
         break;
     }
   }
 
-  render(_state) {
-    // console.log('render board', state.board);
-  }
+  render(_state) {}
 }
 
 customElements.define('sudoku-board', Board);

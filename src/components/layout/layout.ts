@@ -13,7 +13,6 @@ export class Layout extends ReactiveMixin(HTMLElement) {
   tertiary: BoardLoops[];
 
   constructor() {
-    console.log('viz constructor');
     super();
     this.attachShadow({ mode: 'open' });
   }

@@ -1,3 +1,7 @@
+:host {
+  --button-height: var(--xxl);
+}
+
 /* Combobox Container */
 .tag-input {
   grid-area: tags;
@@ -10,14 +14,15 @@
 .button {
   width: 100%;
   cursor: pointer;
-  height: 32px;
-  line-height: 32px;
+  height: var(--button-height);
+  line-height: var(--button-height);
   padding: 0 8px;
   border-radius: 0;
   border: none;
   display: block;
   background: white;
   font-size: 14px;
+  user-select: none;
 }
 
 .button:focus {
@@ -30,12 +35,25 @@
 .dropdown {
   position: relative;
   display: none;
+  user-select: none;
 }
 
 .is-open .dropdown {
   display: block;
   visibility: visible;
   opacity: 1;
+}
+
+.listbox_vertical.dropdown_left {
+  right: 0;
+}
+
+.listbox_vertical.dropdown_top {
+  bottom: var(--button-height);
+}
+
+.listbox_vertical.fixed_width {
+  width: 100%;
 }
 
 .listbox_vertical {
@@ -111,7 +129,7 @@
   flex: none;
 }
 
-.check.checked {
+[aria-checked='true'] .check {
   background-color: black;
 }
 

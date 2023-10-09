@@ -19,7 +19,6 @@ export class Controls extends ReactiveMixin(HTMLElement) {
   settings: Menu;
 
   constructor() {
-    console.log('controls constructor');
     super();
     this.attachShadow({ mode: 'open' });
   }
@@ -60,7 +59,6 @@ export class Controls extends ReactiveMixin(HTMLElement) {
     const undo = new Button({
       label: 'Undo',
       onClick: () => {
-        console.log('undo');
         this.dispatch({ type: 'undo', data: {} });
       },
     });
@@ -78,8 +76,9 @@ export class Controls extends ReactiveMixin(HTMLElement) {
       },
       type: DropdownListTypes.menuitemcheckbox,
     });
-    // this.settings.classList.add('bumpRight');
+    this.settings.classList.add('bumpRight');
     this.shadowRoot.querySelector('#controls').append(this.settings);
+    this.settings.dropdown.dropdown.classList.add('dropdown_left');
   }
 
   render(state: State) {
