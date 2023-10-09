@@ -1110,6 +1110,7 @@
             this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
             this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
             document.body.addEventListener('focus', this.handleBlur.bind(this), true);
+            document.body.addEventListener('click', this.handleBlur.bind(this), true);
         }
         disconnectedCallback() {
             this.trigger.removeEventListener('keydown', this.handlePress.bind(this), true);
@@ -1152,7 +1153,6 @@
         }
         handleNavigate(_id, _option) { }
         handleBlur(_e) {
-            console.log('handleBlur', _e);
             if (!this.trigger.contains(document.activeElement)) {
                 this.hideDropdown();
             }
