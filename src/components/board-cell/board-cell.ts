@@ -90,7 +90,15 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     if (event.key === 'Tab') {
       return;
     }
-    event.preventDefault();
+    if (
+      event.key === 'ArrowUp' ||
+      event.key === 'ArrowDown' ||
+      event.key === 'ArrowLeft' ||
+      event.key === 'ArrowRight'
+    ) {
+      event.preventDefault();
+      return;
+    }
     if (
       isValidInput(
         event.key,
@@ -99,6 +107,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
       Number(event.key) !== this.value &&
       this.isEditable
     ) {
+      event.preventDefault();
       this.value = this.dispatch({
         type: 'update',
         data: {
@@ -109,6 +118,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
         },
       }).board[this.i][this.j];
     } else if (event.key === 'Backspace' && this.isEditable) {
+      event.preventDefault();
       this.value = this.dispatch({
         type: 'update',
         data: {

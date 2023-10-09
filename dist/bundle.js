@@ -412,10 +412,17 @@
           if (event.key === 'Tab') {
               return;
           }
-          event.preventDefault();
+          if (event.key === 'ArrowUp' ||
+              event.key === 'ArrowDown' ||
+              event.key === 'ArrowLeft' ||
+              event.key === 'ArrowRight') {
+              event.preventDefault();
+              return;
+          }
           if (isValidInput(event.key, this.state.possibilities[this.i][this.j].possibilities) &&
               Number(event.key) !== this.value &&
               this.isEditable) {
+              event.preventDefault();
               this.value = this.dispatch({
                   type: 'update',
                   data: {
@@ -427,6 +434,7 @@
               }).board[this.i][this.j];
           }
           else if (event.key === 'Backspace' && this.isEditable) {
+              event.preventDefault();
               this.value = this.dispatch({
                   type: 'update',
                   data: {
@@ -1108,7 +1116,7 @@
           });
           this.trigger.addEventListener('keydown', this.handlePress.bind(this), true);
           this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
-          this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
+          this.button.addEventListener('click', this.toggleDropdown.bind(this), true); // TODO: doesn't work
           document.body.addEventListener('focus', this.handleBlur.bind(this), true);
           document.body.addEventListener('click', this.handleBlur.bind(this), true);
       }
@@ -1787,7 +1795,8 @@
               break;
           case 'undo':
               const { i: pI, j: pJ, priorValue: pV } = state.moves.pop();
-              updatedState = updatedState = updateBoardState(state, pI, pJ, pV);
+              updatedState = updateBoardState(state, pI, pJ, pV);
+              updatedState.location = { i: pI, j: pJ };
               break;
           case 'new':
               const { difficulty } = action.data;
@@ -1817,7 +1826,6 @@
               updatedState = state;
       }
       window.localStorage.setItem('state', JSON.stringify(updatedState));
-      console.log(updatedState.board.flat().every((value) => value > 0));
       // TODO: move to app logic in new viz component
       if (updatedState.board.flat().every((value) => value > 0)) {
           document.querySelector('#solved').classList.remove('hidden');

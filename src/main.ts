@@ -45,7 +45,8 @@ const reducer = (state: State, action: Action) => {
       break;
     case 'undo':
       const { i: pI, j: pJ, priorValue: pV } = state.moves.pop();
-      updatedState = updatedState = updateBoardState(state, pI, pJ, pV);
+      updatedState = updateBoardState(state, pI, pJ, pV);
+      updatedState.location = { i: pI, j: pJ };
       break;
     case 'new':
       const { difficulty } = action.data;
@@ -76,7 +77,6 @@ const reducer = (state: State, action: Action) => {
   }
   window.localStorage.setItem('state', JSON.stringify(updatedState));
 
-  console.log(updatedState.board.flat().every((value) => value > 0));
   // TODO: move to app logic in new viz component
   if (updatedState.board.flat().every((value) => value > 0)) {
     document.querySelector('#solved').classList.remove('hidden');
