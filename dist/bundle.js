@@ -1346,6 +1346,8 @@
 
   var css = ":host {\n  --main-board: 478px;\n  --board-gap: 8px;\n  --highlight-color: hsl(196deg 76% 45% / 80%);\n}\n\n.main-board {\n  --public-board-size: var(--main-board);\n}\n\n.secondary-board {\n  --public-board-size: 154px;\n  --board-cell-gap: 1px;\n  --board-group-gap: 2px;\n}\n\n#viz {\n  display: flex;\n  column-gap: 16px;\n  padding: 16px;\n  margin-left: auto;\n  margin-right: auto;\n}\n\n#viewer {\n  display: grid;\n  grid-template-rows: 1fr 1fr 1fr;\n  grid-template-columns: 1fr 1fr 1fr;\n  grid-template-areas:\n    'c00 c01 c02'\n    'c10 c11 c12'\n    'c20 c21 c22';\n  height: var(--main-board);\n  width: var(--main-board);\n  row-gap: var(--board-gap);\n  column-gap: var(--board-gap);\n  line-height: 0;\n}\n\n#loops {\n  display: grid;\n  grid-template-rows: 1fr 1fr 1fr;\n  grid-template-columns: 1fr;\n  grid-template-areas:\n    'c0'\n    'c1'\n    'c2';\n  height: var(--main-board);\n  width: auto;\n  row-gap: var(--board-gap);\n  line-height: 0;\n}\n\nh2 {\n  color: white;\n  font-size: 1rem;\n}\n\n.hidden {\n  display: none;\n}\n";
 
+  var loopCss = ":host {\n  position: relative;\n}\n\nh3 {\n  position: absolute;\n  /* rotate: 90deg; */\n  color: var(--g-a-13);\n  margin: 0;\n  padding: 0;\n  font-size: small;\n  transform: rotate(90deg);\n  transform-origin: bottom left;\n  left: calc(var(--board-size) + var(--l));\n}\n";
+
   /**
    * Cell element that implements the dispatch pattern.
    * Each WC class is responsible for tracking the child elements it creates
@@ -1489,7 +1491,7 @@
           const { shadowRoot } = this;
           shadowRoot.innerHTML = html$8;
           const style = document.createElement('style');
-          style.innerHTML = css$4;
+          style.innerHTML = css$4 + loopCss;
           shadowRoot.prepend(style);
           this.cells = this.state.loops[this.type]
               .map((row, i) => row.map((_value, j) => new BoardLoopsCell({
@@ -1501,8 +1503,17 @@
               .flat();
           this.board = shadowRoot.querySelector('#board');
           this.board.append(...this.cells);
+          const label = document.createElement('h3');
+          label.textContent = labels[this.type];
+          label.classList.add('rotate');
+          shadowRoot.prepend(label);
       }
   }
+  const labels = {
+      row: 'Rows',
+      column: 'Columns',
+      group: 'Groups',
+  };
   customElements.define('sudoku-board-loops', BoardLoops);
 
   //@ts-ignore

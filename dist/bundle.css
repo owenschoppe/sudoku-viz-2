@@ -88,7 +88,7 @@ sudoku-layout {
     transform: translateX(-75%);
   }
   to {
-    transform: translateX(25%);
+    transform: translateX(50%);
   }
 }
 

@@ -1,0 +1,15 @@
+:host {
+  position: relative;
+}
+
+h3 {
+  position: absolute;
+  /* rotate: 90deg; */
+  color: var(--g-a-13);
+  margin: 0;
+  padding: 0;
+  font-size: small;
+  transform: rotate(90deg);
+  transform-origin: bottom left;
+  left: calc(var(--board-size) + var(--l));
+}

@@ -1,6 +1,8 @@
 //@ts-ignore
 import css from '../board/board.css';
 //@ts-ignore
+import loopCss from './board-loops.css';
+//@ts-ignore
 import html from '../board/board.html';
 
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin';
@@ -33,7 +35,7 @@ export class BoardLoops extends ReactiveMixin(HTMLElement) {
     shadowRoot.innerHTML = html;
 
     const style = document.createElement('style');
-    style.innerHTML = css;
+    style.innerHTML = css + loopCss;
     shadowRoot.prepend(style);
 
     this.cells = this.state.loops[this.type]
@@ -52,7 +54,18 @@ export class BoardLoops extends ReactiveMixin(HTMLElement) {
 
     this.board = shadowRoot.querySelector('#board');
     this.board.append(...this.cells);
+
+    const label = document.createElement('h3');
+    label.textContent = labels[this.type];
+    label.classList.add('rotate');
+    shadowRoot.prepend(label);
   }
 }
+
+const labels = {
+  row: 'Rows',
+  column: 'Columns',
+  group: 'Groups',
+};
 
 customElements.define('sudoku-board-loops', BoardLoops);
