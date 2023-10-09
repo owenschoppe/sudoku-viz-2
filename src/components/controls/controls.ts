@@ -38,8 +38,6 @@ export class Controls extends ReactiveMixin(HTMLElement) {
 
     shadowRoot.innerHTML = html;
 
-    debugger;
-
     const style = document.createElement('style');
     style.innerHTML = css;
     shadowRoot.prepend(style);

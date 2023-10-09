@@ -50,3 +50,12 @@
   row-gap: var(--board-gap);
   line-height: 0;
 }
+
+h2 {
+  color: white;
+  font-size: 1rem;
+}
+
+.hidden {
+  display: none;
+}

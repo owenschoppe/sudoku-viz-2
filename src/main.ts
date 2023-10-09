@@ -119,7 +119,7 @@ const initialState = (priorState?: State, savedBoard?: Board): State => {
   document.body.innerHTML = `
     <div id="app" class="dark">
       <sudoku-controls></sudoku-controls>
-      <div id="viz">
+      <!--<div id="viz">
         <div id="board">
           <h2>Board</h2>
           <sudoku-board class="main-board" />
@@ -132,7 +132,8 @@ const initialState = (priorState?: State, savedBoard?: Board): State => {
           <h2>Connections</h2>
           <div id="loops"></div>
         </div>
-      </div>
+      </div>-->
+      <sudoku-layout></sudoku-layout>
       <div id="solved" class="overflow-container hidden">
         <div class="shimmer"></div>
         <div class="flex center"><div class="shimmer-text">SOLVED!</div></div>
@@ -144,11 +145,11 @@ const initialState = (priorState?: State, savedBoard?: Board): State => {
     .fill(null)
     .map((_, i) => new BoardLens((i + 1) as CellValue));
   secondary.forEach((board) => board.classList.add('secondary-board'));
-  document.querySelector('#viewer').append(...secondary);
+  // document.querySelector('#viewer').append(...secondary);
 
   const tertiary = ['row', 'column', 'group'].map(
     (type: LoopType) => new BoardLoops(type),
   );
   tertiary.forEach((board) => board.classList.add('secondary-board'));
-  document.querySelector('#loops').append(...tertiary);
+  // document.querySelector('#loops').append(...tertiary);
 })();

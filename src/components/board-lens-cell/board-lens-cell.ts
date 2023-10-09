@@ -85,7 +85,11 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
     this.button.classList.remove('selected', 'only', 'possibility');
     if (this.value === this.lens) {
       this.button.classList.add('selected');
-    } else if (possibilityCount === 1 && possibilities[this.lens]) {
+    } else if (
+      possibilityCount === 1 &&
+      possibilities[this.lens] &&
+      this.state.settings.highlight.value
+    ) {
       this.button.classList.add('only');
     } else if (possibilities[this.lens]) {
       this.button.classList.add('possibility');
@@ -96,7 +100,11 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
     const { possibilities, possibilityCount } =
       this.state.possibilities[this.i][this.j];
 
-    if (possibilityCount === 1 && isValidInput(this.lens, possibilities)) {
+    if (
+      possibilityCount === 1 &&
+      isValidInput(this.lens, possibilities) &&
+      this.state.settings.highlight.value
+    ) {
       this.value = this.dispatch({
         type: 'update',
         data: {
