@@ -1,15 +1,14 @@
 import './main.css';
 import './base-components/global.css';
+import './components';
 
 import { Action, initializeSubscriptions } from './utils/subscribe.js';
-import { Board, CellValue, State } from './types.js';
-import { BoardLens } from './components';
+import { Board, State } from './types.js';
 import { NNArray, cloneDeep } from './utils';
 import { possibilitiesForBoard } from './utils/sudoku';
 import { generateBoard } from './utils/sudoku-solver';
 import { down, left, right, up } from './utils/move';
-import { LoopType, getLoopsForBoardByType } from './utils/sudoku-loops';
-import { BoardLoops } from './components/board-loops';
+import { getLoopsForBoardByType } from './utils/sudoku-loops';
 
 /**
  *  mutates state
@@ -75,13 +74,16 @@ const reducer = (state: State, action: Action) => {
     default:
       updatedState = state;
   }
-  // TODO: move to app logic in new viz component
   window.localStorage.setItem('state', JSON.stringify(updatedState));
+
+  console.log(updatedState.board.flat().every((value) => value > 0));
+  // TODO: move to app logic in new viz component
   if (updatedState.board.flat().every((value) => value > 0)) {
     document.querySelector('#solved').classList.remove('hidden');
   } else {
     document.querySelector('#solved').classList.add('hidden');
   }
+
   return updatedState;
 };
 
@@ -115,7 +117,6 @@ const initialState = (priorState?: State, savedBoard?: Board): State => {
 
   initializeSubscriptions(storedState, reducer);
 
-  // Move this stuff to a web component so we can utilize templates
   document.body.innerHTML = `
     <div id="app" class="dark">
       <sudoku-controls></sudoku-controls>
@@ -126,16 +127,4 @@ const initialState = (priorState?: State, savedBoard?: Board): State => {
       </div>
     </div>
   `;
-
-  const secondary = Array(9)
-    .fill(null)
-    .map((_, i) => new BoardLens((i + 1) as CellValue));
-  secondary.forEach((board) => board.classList.add('secondary-board'));
-  // document.querySelector('#viewer').append(...secondary);
-
-  const tertiary = ['row', 'column', 'group'].map(
-    (type: LoopType) => new BoardLoops(type),
-  );
-  tertiary.forEach((board) => board.classList.add('secondary-board'));
-  // document.querySelector('#loops').append(...tertiary);
 })();

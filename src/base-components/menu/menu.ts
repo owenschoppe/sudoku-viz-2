@@ -54,7 +54,7 @@ export class Menu extends HTMLElement {
     this.dropdown = new DropdownListbox(
       this.options,
       this.handleChange.bind(this),
-      this.handleNavigate,
+      this.handleNavigate.bind(this),
       this.type,
     );
     shadowRoot.querySelector('[role=menu]').append(this.dropdown.render());
@@ -107,6 +107,7 @@ export class Menu extends HTMLElement {
     this.trigger.classList.remove('is-open');
     this.button.setAttribute('aria-expanded', 'false');
     this.button.removeAttribute('aria-activedescendant');
+    this.dropdown.updateCurrent(0);
   }
 
   toggleDropdown() {
@@ -123,7 +124,9 @@ export class Menu extends HTMLElement {
     this.onChange(options);
   }
 
-  handleNavigate(_id: string, _option: DropdownOption) {}
+  handleNavigate(id: string, _option: DropdownOption) {
+    this.button.setAttribute('aria-activedescendant', id);
+  }
 
   handleBlur(_e?: FocusEvent) {
     if (!this.trigger.contains(document.activeElement)) {
@@ -165,22 +168,29 @@ export class Menu extends HTMLElement {
         // Show the dropdown and move
         e.stopPropagation();
         e.preventDefault();
-        this.showDropdown();
-        this.dropdown.nextItem(e, -1);
+        if (this.trigger.classList.contains('is-open')) {
+          this.dropdown.nextItem(e, -1);
+        } else {
+          this.showDropdown();
+        }
         break;
       case 'ArrowDown':
         // Arrow through the list box
         // Show the dropdown and move
         e.stopPropagation();
         e.preventDefault();
-        this.showDropdown();
-        this.dropdown.nextItem(e, 1);
+        if (this.trigger.classList.contains('is-open')) {
+          this.dropdown.nextItem(e, 1);
+        } else {
+          this.showDropdown();
+        }
         break;
       case 'Escape':
         if (this.button.getAttribute('aria-expanded') == 'true') {
           e.stopPropagation();
           e.preventDefault();
           this.hideDropdown();
+          this.button.focus();
         }
         break;
       default:

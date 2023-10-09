@@ -23,11 +23,17 @@ body {
   align-items: center;
   background: var(--g-a-1);
   overflow: auto;
+  position: relative;
 }
 
 sudoku-controls {
   width: 100%;
   align-self: flex-start;
+  z-index: 2;
+}
+
+sudoku-layout {
+  z-index: 1;
 }
 
 .hidden {
@@ -41,7 +47,6 @@ sudoku-controls {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  z-index: -100;
 }
 
 .shimmer {
@@ -54,7 +59,7 @@ sudoku-controls {
   background: linear-gradient(
     100deg,
     rgba(255, 255, 255, 0) 20%,
-    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.25) 50%,
     rgba(255, 255, 255, 0) 80%
   );
 
