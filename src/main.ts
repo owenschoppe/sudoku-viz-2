@@ -106,7 +106,7 @@ const initialState = (priorState?: State, savedBoard?: Board): State => {
     // TODO: store settings in separate local storage object?
     settings: priorState?.settings || {
       possibilities: { label: 'Show Possibilities', value: true },
-      connections: { label: 'Show Connctions', value: true },
+      connections: { label: 'Show Connections', value: true },
       highlight: { label: 'Highlight Only Possibility', value: true },
     },
   };

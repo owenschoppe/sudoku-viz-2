@@ -141,13 +141,14 @@ export class Menu extends HTMLElement {
   }
 
   handlePress(e: KeyboardEvent) {
+    const isOpen = this.trigger.classList.contains('is-open');
     const { key } = e;
     switch (key) {
       case 'Enter':
-      case 'Space':
+      case ' ':
         e.stopPropagation();
         e.preventDefault();
-        if (this.trigger.classList.contains('is-open')) {
+        if (isOpen) {
           // Hide the dropdown and submit if open
           this.hideDropdown();
 
@@ -171,7 +172,7 @@ export class Menu extends HTMLElement {
         // Show the dropdown and move
         e.stopPropagation();
         e.preventDefault();
-        if (this.trigger.classList.contains('is-open')) {
+        if (isOpen) {
           this.dropdown.nextItem(e, -1);
         } else {
           this.showDropdown();
@@ -183,14 +184,14 @@ export class Menu extends HTMLElement {
         // Show the dropdown and move
         e.stopPropagation();
         e.preventDefault();
-        if (this.trigger.classList.contains('is-open')) {
+        if (isOpen) {
           this.dropdown.nextItem(e, 1);
         } else {
           this.showDropdown();
         }
         break;
       case 'Escape':
-        if (this.button.getAttribute('aria-expanded') == 'true') {
+        if (isOpen) {
           e.stopPropagation();
           e.preventDefault();
           this.hideDropdown();
@@ -198,7 +199,9 @@ export class Menu extends HTMLElement {
         }
         break;
       default:
-        this.searchOptions(e);
+        if (isOpen) {
+          this.searchOptions(e);
+        }
         break;
     }
   }
@@ -208,11 +211,7 @@ export class Menu extends HTMLElement {
       <button id="button" class="button" aria-haspopup="true" title="${label}">
         <span>${label}</span>
       </button>
-      <div
-        id="listbox"
-        class="dropdown dropdown_length-with-icon-7 dropdown_fluid"
-        role="menu"
-      >
+      <div id="listbox" class="dropdown dropdown-small" role="menu">
         <!-- ListBox -->
       </div>
     </div>

@@ -38,6 +38,10 @@
   user-select: none;
 }
 
+.dropdown-small .listbox_vertical {
+  width: 240px;
+}
+
 .is-open .dropdown {
   display: block;
   visibility: visible;

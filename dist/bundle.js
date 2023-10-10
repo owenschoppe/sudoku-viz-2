@@ -850,7 +850,7 @@
       return false;
   };
 
-  var css$2 = ":host {\n  --button-height: var(--xxl);\n}\n\n/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n/* Trigger */\n\n.button {\n  width: 100%;\n  cursor: pointer;\n  height: var(--button-height);\n  line-height: var(--button-height);\n  padding: 0 8px;\n  border-radius: 0;\n  border: none;\n  display: block;\n  background: white;\n  font-size: 14px;\n  user-select: none;\n}\n\n.button:focus {\n  outline: none;\n  box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n  user-select: none;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical.dropdown_left {\n  right: 0;\n}\n\n.listbox_vertical.dropdown_top {\n  bottom: var(--button-height);\n}\n\n.listbox_vertical.fixed_width {\n  width: 100%;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  /* border: 1px solid var(--color-border, #ddd); */\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.listbox__option:focus {\n  outline: none;\n  box-shadow: 4px 0 0 0 inset hsl(196deg 76% 45% / 80%);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n  display: flex;\n  flex-direction: row;\n  gap: 4px;\n  align-items: center;\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  /* margin: var(--space-xxxsmall, 2px); */\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n.check {\n  width: 8px;\n  height: 8px;\n  border-radius: 50%;\n  background-color: transparent;\n  flex: none;\n}\n\n[aria-checked='true'] .check {\n  background-color: black;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
+  var css$2 = ":host {\n  --button-height: var(--xxl);\n}\n\n/* Combobox Container */\n.tag-input {\n  grid-area: tags;\n  flex: 1 1 100%;\n  font-size: var(--font-xsmall, 12px);\n}\n\n/* Trigger */\n\n.button {\n  width: 100%;\n  cursor: pointer;\n  height: var(--button-height);\n  line-height: var(--button-height);\n  padding: 0 8px;\n  border-radius: 0;\n  border: none;\n  display: block;\n  background: white;\n  font-size: 14px;\n  user-select: none;\n}\n\n.button:focus {\n  outline: none;\n  box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);\n}\n\n/* Dropdown */\n\n.dropdown {\n  position: relative;\n  display: none;\n  user-select: none;\n}\n\n.dropdown-small .listbox_vertical {\n  width: 240px;\n}\n\n.is-open .dropdown {\n  display: block;\n  visibility: visible;\n  opacity: 1;\n}\n\n.listbox_vertical.dropdown_left {\n  right: 0;\n}\n\n.listbox_vertical.dropdown_top {\n  bottom: var(--button-height);\n}\n\n.listbox_vertical.fixed_width {\n  width: 100%;\n}\n\n.listbox_vertical {\n  padding: 0;\n  display: flex;\n  flex-direction: column;\n  /* width: 100%; */\n  position: absolute;\n  /* border: 1px solid var(--color-border, #ddd); */\n  box-shadow: 0 2px 8px var(--color-shadow, rgba(0, 0, 0, 0.25));\n  /* border-radius: 4px; */\n  overflow: hidden;\n  overflow-y: auto;\n  max-height: 216px;\n  margin: var(--space-xxsmall, 4px) 0;\n  z-index: 999;\n  background: var(--color-background, white);\n}\n\n.hidden {\n  display: none;\n}\n\n.listbox__option[aria-selected='true'] {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.listbox__option:focus {\n  outline: none;\n  box-shadow: 4px 0 0 0 inset hsl(196deg 76% 45% / 80%);\n}\n\n.dropdown .listbox__option {\n  padding: var(--space-xsmall, 8px);\n  display: flex;\n  flex-direction: row;\n  gap: 4px;\n  align-items: center;\n}\n\n/* Pills */\n\n.listbox.listbox_horizontal {\n  width: 100%;\n  padding: 0;\n  display: flex;\n  flex-wrap: wrap;\n  margin: var(--space-xxxsmall, 2px) calc(-1 * var(--space-xxxsmall, 2px));\n}\n\n.listbox-item {\n  cursor: pointer;\n  list-style: none;\n  /* margin: var(--space-xxxsmall, 2px); */\n}\n\n.visuallyhidden {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n.check {\n  width: 8px;\n  height: 8px;\n  border-radius: 50%;\n  background-color: transparent;\n  flex: none;\n}\n\n[aria-checked='true'] .check {\n  background-color: black;\n}\n\n/* .pill {\n  display: flex;\n  padding: var(--space-xxsmall, 4px);\n  border-radius: var(--border-radius, 4px);\n  border: 1px solid var(--color-border, #ddd);\n  background: var(--color-background, #fff);\n}\n\n.pill:hover {\n  background: var(--color-background--select-hover, #f2f2f2);\n}\n\n.pill:focus {\n  outline: 0;\n  box-shadow: 0 0 0 2px var(--color-primary--tint-alt, #bfe1de);\n}\n\n.pill__label {\n  flex: 1 1 auto;\n  margin-right: var(--space-xxsmall, 4px);\n}\n\n.pill__remove {\n  width: 12px;\n  height: 12px;\n  content: '';\n  right: 0;\n  margin-left: auto;\n  flex: 0 0 auto;\n  position: relative;\n  display: flex;\n  cursor: pointer;\n}\n\n.pill__remove:before {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill__remove:after {\n  height: 2px;\n  width: 12px;\n  content: '';\n  display: block;\n  background: var(--g8, #666);\n  transform: rotate(-45deg);\n  position: absolute;\n  right: 0;\n  top: 50%;\n  border-radius: 1px;\n}\n\n.pill:hover .pill__remove:before,\n.pill:focus .pill__remove:before {\n  background: var(--g9, #333);\n}\n\n.pill:hover .pill__remove:after,\n.pill:focus .pill__remove:after {\n  background: var(--g9, #333);\n} */\n";
 
   const ListMixin = (Base) => class List extends Base {
       items = [];
@@ -922,8 +922,9 @@
           this.onHover(e, this);
       }
       handleKey(e) {
+          console.log('key', e);
           switch (e.key) {
-              case 'Space':
+              case ' ':
               case 'Enter':
                   this.onSelect(e, this);
                   break;
@@ -1212,7 +1213,7 @@
               // case 'Space':
               // this.toggleDropdown();
               case 'Enter':
-              case 'Space':
+              case ' ':
                   console.log('Enter/Space', e);
                   // debugger;
                   e.stopPropagation();
@@ -1222,13 +1223,7 @@
                       this.hideDropdown();
                       // TODO: move all of the keyboard handling to dropdownlist so that this can make use of the same onchange logic.
                       // this.onChange([this.dropdown.currentItem.option]);
-                      // this.onChange(
-                      //   getReturnValue(
-                      //     this.type,
-                      //     this.dropdown.items,
-                      //     this.dropdown.currentItem,
-                      //   ),
-                      // );
+                      this.onChange(getReturnValue(this.type, this.dropdown.items, this.dropdown.currentItem));
                   }
                   else {
                       // Show the dropdown if closed
@@ -1281,11 +1276,7 @@
       <button id="button" class="button" aria-haspopup="true" title="${label}">
         <span>${label}</span>
       </button>
-      <div
-        id="listbox"
-        class="dropdown dropdown_length-with-icon-7 dropdown_fluid"
-        role="menu"
-      >
+      <div id="listbox" class="dropdown dropdown-small" role="menu">
         <!-- ListBox -->
       </div>
     </div>
@@ -1901,7 +1892,7 @@
           // TODO: store settings in separate local storage object?
           settings: priorState?.settings || {
               possibilities: { label: 'Show Possibilities', value: true },
-              connections: { label: 'Show Connctions', value: true },
+              connections: { label: 'Show Connections', value: true },
               highlight: { label: 'Highlight Only Possibility', value: true },
           },
       };
