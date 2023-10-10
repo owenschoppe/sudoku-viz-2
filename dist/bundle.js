@@ -1072,6 +1072,8 @@
           query = '';
       }, 500);
       return (e) => {
+          if (ignoreKeys[e.key])
+              return;
           query += e.key;
           debouncedQueryReset();
           callback(options.reduceRight((found, current, i) => {
@@ -1081,6 +1083,19 @@
               return found;
           }, -1));
       };
+  };
+  const ignoreKeys = {
+      Alt: true,
+      Shift: true,
+      Meta: true,
+      Control: true,
+      Tab: true,
+      Backspace: true,
+      Enter: true,
+      ArrowLeft: true,
+      ArrowRight: true,
+      ArrowUp: true,
+      ArrowDown: true,
   };
 
   //@ts-ignore
@@ -1092,6 +1107,7 @@
       _options;
       onChange;
       type;
+      searchOptions;
       constructor({ label, options, onChange, type = DropdownListTypes.menuitem, }) {
           super();
           this.attachShadow({ mode: 'open' });
@@ -1172,7 +1188,7 @@
       handleBlur(e) {
           // e.preventDefault();
           // e.stopPropagation();
-          console.log('handleBlur', e.target, document.activeElement, !this.trigger.contains(this.shadowRoot.activeElement));
+          console.log('handleBlur', e.target, this.shadowRoot.activeElement, !this.trigger.contains(this.shadowRoot.activeElement));
           if (!this.trigger.contains(this.shadowRoot.activeElement)) {
               this.hideDropdown();
           }
@@ -1184,7 +1200,8 @@
           const { key } = e;
           switch (key) {
               case 'Enter':
-              case 'Space':
+                  // case 'Space':
+                  debugger;
                   e.stopPropagation();
                   e.preventDefault();
                   if (this.trigger.classList.contains('is-open')) {
@@ -1192,13 +1209,20 @@
                       this.hideDropdown();
                       // TODO: move all of the keyboard handling to dropdownlist so that this can make use of the same onchange logic.
                       // this.onChange([this.dropdown.currentItem.option]);
-                      this.onChange(getReturnValue(this.type, this.dropdown.items, this.dropdown.currentItem));
+                      // this.onChange(
+                      //   getReturnValue(
+                      //     this.type,
+                      //     this.dropdown.items,
+                      //     this.dropdown.currentItem,
+                      //   ),
+                      // );
                   }
                   else {
                       // Show the dropdown if closed
                       this.showDropdown();
                   }
                   break;
+              case 'ArrowLeft':
               case 'ArrowUp':
                   // Arrow through the list box
                   // Show the dropdown and move
@@ -1211,6 +1235,7 @@
                       this.showDropdown();
                   }
                   break;
+              case 'ArrowRight':
               case 'ArrowDown':
                   // Arrow through the list box
                   // Show the dropdown and move
@@ -1236,7 +1261,6 @@
                   break;
           }
       }
-      searchOptions;
       template = (label) => html$3 `
     <div class="dropdown-trigger dropdown-trigger_click">
       <button id="button" class="button" aria-haspopup="true" title="${label}">

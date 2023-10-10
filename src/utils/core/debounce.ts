@@ -17,6 +17,7 @@ export const debouncedSearch = (
   }, 500);
 
   return (e: KeyboardEvent) => {
+    if (ignoreKeys[e.key]) return;
     query += e.key;
     debouncedQueryReset();
     callback(
@@ -28,4 +29,18 @@ export const debouncedSearch = (
       }, -1),
     );
   };
+};
+
+const ignoreKeys = {
+  Alt: true,
+  Shift: true,
+  Meta: true,
+  Control: true,
+  Tab: true,
+  Backspace: true,
+  Enter: true,
+  ArrowLeft: true,
+  ArrowRight: true,
+  ArrowUp: true,
+  ArrowDown: true,
 };

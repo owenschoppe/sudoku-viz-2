@@ -24,6 +24,8 @@ export class Menu extends HTMLElement {
 
   type: DropdownListTypes;
 
+  searchOptions: (e: KeyboardEvent) => void;
+
   constructor({
     label,
     options,
@@ -163,6 +165,7 @@ export class Menu extends HTMLElement {
           this.showDropdown();
         }
         break;
+      case 'ArrowLeft':
       case 'ArrowUp':
         // Arrow through the list box
         // Show the dropdown and move
@@ -174,6 +177,7 @@ export class Menu extends HTMLElement {
           this.showDropdown();
         }
         break;
+      case 'ArrowRight':
       case 'ArrowDown':
         // Arrow through the list box
         // Show the dropdown and move
@@ -198,8 +202,6 @@ export class Menu extends HTMLElement {
         break;
     }
   }
-
-  searchOptions: (e: KeyboardEvent) => void;
 
   template = (label: string) => html`
     <div class="dropdown-trigger dropdown-trigger_click">
