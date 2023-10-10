@@ -1,15 +1,33 @@
 :host {
   position: relative;
+  --font-size: var(--l);
 }
 
 h3 {
-  position: absolute;
-  /* rotate: 90deg; */
   color: var(--g-a-13);
   margin: 0;
   padding: 0;
-  font-size: small;
+  font-size: var(--font-size);
+  line-height: 1;
+}
+
+.rotate {
+  position: absolute;
+}
+
+.rotate-right {
   transform: rotate(90deg);
   transform-origin: bottom left;
-  left: calc(var(--board-size) + var(--l));
+  left: calc(var(--board-size) + var(--s));
+  top: calc(0px - var(--font-size));
+}
+
+.rotate-left {
+  transform: rotate(-90deg);
+  transform-origin: bottom left;
+  left: calc(0px - var(--s));
+  top: calc(0px - var(--font-size));
+  width: 0;
+  display: flex;
+  justify-content: end;
 }

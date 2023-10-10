@@ -899,7 +899,8 @@
               this.element.prepend(this.check);
           }
           this.update();
-          this.element.addEventListener('mousedown', this.handleClick.bind(this), true);
+          this.element.addEventListener('click', this.handleClick.bind(this), true);
+          this.element.addEventListener('keydown', this.handleKey.bind(this), true);
           this.element.addEventListener('mouseover', this.handleHover.bind(this), true);
       }
       update() {
@@ -919,6 +920,14 @@
       }
       handleHover(e) {
           this.onHover(e, this);
+      }
+      handleKey(e) {
+          switch (e.key) {
+              case 'Space':
+              case 'Enter':
+                  this.onSelect(e, this);
+                  break;
+          }
       }
       get id() {
           return this._id;
@@ -1197,14 +1206,18 @@
           this.showDropdown();
       }
       handlePress(e) {
+          const isOpen = this.trigger.classList.contains('is-open');
           const { key } = e;
           switch (key) {
+              // case 'Space':
+              // this.toggleDropdown();
               case 'Enter':
-                  // case 'Space':
-                  debugger;
+              case 'Space':
+                  console.log('Enter/Space', e);
+                  // debugger;
                   e.stopPropagation();
                   e.preventDefault();
-                  if (this.trigger.classList.contains('is-open')) {
+                  if (isOpen) {
                       // Hide the dropdown and submit if open
                       this.hideDropdown();
                       // TODO: move all of the keyboard handling to dropdownlist so that this can make use of the same onchange logic.
@@ -1228,7 +1241,7 @@
                   // Show the dropdown and move
                   e.stopPropagation();
                   e.preventDefault();
-                  if (this.trigger.classList.contains('is-open')) {
+                  if (isOpen) {
                       this.dropdown.nextItem(e, -1);
                   }
                   else {
@@ -1241,7 +1254,7 @@
                   // Show the dropdown and move
                   e.stopPropagation();
                   e.preventDefault();
-                  if (this.trigger.classList.contains('is-open')) {
+                  if (isOpen) {
                       this.dropdown.nextItem(e, 1);
                   }
                   else {
@@ -1249,7 +1262,7 @@
                   }
                   break;
               case 'Escape':
-                  if (this.button.getAttribute('aria-expanded') == 'true') {
+                  if (isOpen) {
                       e.stopPropagation();
                       e.preventDefault();
                       this.hideDropdown();
@@ -1257,7 +1270,9 @@
                   }
                   break;
               default:
-                  this.searchOptions(e);
+                  if (isOpen) {
+                      this.searchOptions(e);
+                  }
                   break;
           }
       }
@@ -1385,9 +1400,9 @@
   }, {});
   customElements.define('sudoku-controls', Controls);
 
-  var css = ":host {\n  --main-board: 478px;\n  --board-gap: 8px;\n  --highlight-color: hsl(196deg 76% 45% / 80%);\n}\n\n.main-board {\n  --public-board-size: var(--main-board);\n}\n\n.secondary-board {\n  --public-board-size: 154px;\n  --board-cell-gap: 1px;\n  --board-group-gap: 2px;\n}\n\n#viz {\n  display: flex;\n  column-gap: 16px;\n  padding: 16px;\n  margin-left: auto;\n  margin-right: auto;\n}\n\n#viewer {\n  display: grid;\n  grid-template-rows: 1fr 1fr 1fr;\n  grid-template-columns: 1fr 1fr 1fr;\n  grid-template-areas:\n    'c00 c01 c02'\n    'c10 c11 c12'\n    'c20 c21 c22';\n  height: var(--main-board);\n  width: var(--main-board);\n  row-gap: var(--board-gap);\n  column-gap: var(--board-gap);\n  line-height: 0;\n}\n\n#loops {\n  display: grid;\n  grid-template-rows: 1fr 1fr 1fr;\n  grid-template-columns: 1fr;\n  grid-template-areas:\n    'c0'\n    'c1'\n    'c2';\n  height: var(--main-board);\n  width: auto;\n  row-gap: var(--board-gap);\n  line-height: 0;\n}\n\nh2 {\n  color: white;\n  font-size: 1rem;\n}\n\n.hidden {\n  display: none;\n}\n";
+  var css = ":host {\n  --main-board: 478px;\n  --board-gap: 8px;\n  --highlight-color: hsl(196deg 76% 45% / 80%);\n}\n\n.main-board {\n  --public-board-size: var(--main-board);\n}\n\n.secondary-board {\n  --public-board-size: 154px;\n  --board-cell-gap: 1px;\n  --board-group-gap: 2px;\n}\n\n#viz {\n  display: flex;\n  column-gap: 16px;\n  padding: 16px;\n  margin-left: auto;\n  margin-right: auto;\n}\n\n#viewer {\n  display: grid;\n  grid-template-rows: 1fr 1fr 1fr;\n  grid-template-columns: 1fr 1fr 1fr;\n  grid-template-areas:\n    'c00 c01 c02'\n    'c10 c11 c12'\n    'c20 c21 c22';\n  height: var(--main-board);\n  width: var(--main-board);\n  row-gap: var(--board-gap);\n  column-gap: var(--board-gap);\n  line-height: 0;\n}\n\n#loops-container {\n  margin-left: var(--l);\n}\n\n#loops {\n  display: grid;\n  grid-template-rows: 1fr 1fr 1fr;\n  grid-template-columns: 1fr;\n  grid-template-areas:\n    'c0'\n    'c1'\n    'c2';\n  height: var(--main-board);\n  width: auto;\n  row-gap: var(--board-gap);\n  line-height: 0;\n}\n\nh2 {\n  color: white;\n  font-size: 1rem;\n}\n\n.hidden {\n  display: none;\n}\n";
 
-  var loopCss = ":host {\n  position: relative;\n}\n\nh3 {\n  position: absolute;\n  /* rotate: 90deg; */\n  color: var(--g-a-13);\n  margin: 0;\n  padding: 0;\n  font-size: small;\n  transform: rotate(90deg);\n  transform-origin: bottom left;\n  left: calc(var(--board-size) + var(--l));\n}\n";
+  var loopCss = ":host {\n  position: relative;\n  --font-size: var(--l);\n}\n\nh3 {\n  color: var(--g-a-13);\n  margin: 0;\n  padding: 0;\n  font-size: var(--font-size);\n  line-height: 1;\n}\n\n.rotate {\n  position: absolute;\n}\n\n.rotate-right {\n  transform: rotate(90deg);\n  transform-origin: bottom left;\n  left: calc(var(--board-size) + var(--s));\n  top: calc(0px - var(--font-size));\n}\n\n.rotate-left {\n  transform: rotate(-90deg);\n  transform-origin: bottom left;\n  left: calc(0px - var(--s));\n  top: calc(0px - var(--font-size));\n  width: 0;\n  display: flex;\n  justify-content: end;\n}\n";
 
   /**
    * Cell element that implements the dispatch pattern.
@@ -1546,7 +1561,7 @@
           this.board.append(...this.cells);
           const label = document.createElement('h3');
           label.textContent = labels[this.type];
-          label.classList.add('rotate');
+          label.classList.add('rotate', 'rotate-left');
           shadowRoot.prepend(label);
       }
   }

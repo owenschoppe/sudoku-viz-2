@@ -37,6 +37,10 @@
   line-height: 0;
 }
 
+#loops-container {
+  margin-left: var(--l);
+}
+
 #loops {
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;

@@ -57,7 +57,7 @@ export class BoardLoops extends ReactiveMixin(HTMLElement) {
 
     const label = document.createElement('h3');
     label.textContent = labels[this.type];
-    label.classList.add('rotate');
+    label.classList.add('rotate', 'rotate-left');
     shadowRoot.prepend(label);
   }
 }
