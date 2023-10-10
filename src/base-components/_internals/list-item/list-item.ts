@@ -49,11 +49,7 @@ export class ListItem {
 
     this.update();
 
-    this.element.addEventListener(
-      'mousedown',
-      this.handleClick.bind(this),
-      true,
-    );
+    this.element.addEventListener('click', this.handleClick.bind(this), true);
     this.element.addEventListener(
       'mouseover',
       this.handleHover.bind(this),
