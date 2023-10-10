@@ -1114,6 +1114,7 @@
               this.dropdown.updateCurrent(index);
               this.showDropdown();
           });
+          // TODO: something is odd because shift tabbing through the button opens the menu when it shouldn't
           this.trigger.addEventListener('keydown', this.handlePress.bind(this), true);
           this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
           this.button.addEventListener('click', this.toggleDropdown.bind(this), true); // TODO: doesn't work
@@ -1134,6 +1135,7 @@
           this.dropdown.updateOptions(options);
       }
       showDropdown() {
+          console.log('show', this.trigger.classList, this.trigger);
           // const { scrollHeight, scrollWidth } = document.body;
           this.trigger.classList.add('is-open');
           this.button.setAttribute('aria-expanded', 'true');
@@ -1141,6 +1143,7 @@
           // this.dropdown.positionDropdown({ scrollHeight, scrollWidth });
       }
       hideDropdown() {
+          console.log('hide', this.trigger.classList, this.trigger);
           // const { scrollHeight, scrollWidth } = document.body;
           this.trigger.classList.remove('is-open');
           this.button.setAttribute('aria-expanded', 'false');
@@ -1149,10 +1152,13 @@
           // this.dropdown.positionDropdown({ scrollHeight, scrollWidth });
       }
       toggleDropdown() {
+          // debugger;
           if (this.trigger.classList.contains('is-open')) {
+              console.log('toggle open=>closed', this.trigger.classList, this.trigger);
               this.hideDropdown();
           }
           else {
+              console.log('toggle closed=>open', this.trigger.classList, this.trigger);
               this.showDropdown();
           }
       }
@@ -1163,8 +1169,11 @@
       handleNavigate(id, _option) {
           this.button.setAttribute('aria-activedescendant', id);
       }
-      handleBlur(_e) {
-          if (!this.trigger.contains(document.activeElement)) {
+      handleBlur(e) {
+          // e.preventDefault();
+          // e.stopPropagation();
+          console.log('handleBlur', e.target, document.activeElement, !this.trigger.contains(this.shadowRoot.activeElement));
+          if (!this.trigger.contains(this.shadowRoot.activeElement)) {
               this.hideDropdown();
           }
       }

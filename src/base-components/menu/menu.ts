@@ -129,7 +129,7 @@ export class Menu extends HTMLElement {
   }
 
   handleBlur(_e?: FocusEvent) {
-    if (!this.trigger.contains(document.activeElement)) {
+    if (!this.trigger.contains(this.shadowRoot.activeElement)) {
       this.hideDropdown();
     }
   }
