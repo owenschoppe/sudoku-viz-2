@@ -83,7 +83,6 @@ export class ListItem {
   }
 
   handleKey(e: KeyboardEvent) {
-    console.log('key', e);
     switch (e.key) {
       case ' ':
         e.stopPropagation();

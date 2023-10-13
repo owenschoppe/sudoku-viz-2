@@ -927,7 +927,6 @@
           this.onHover(e, this);
       }
       handleKey(e) {
-          console.log('key', e);
           switch (e.key) {
               case ' ':
                   e.stopPropagation();
@@ -1005,20 +1004,6 @@
       render() {
           return this.element;
       }
-      // // doesn't work
-      // positionDropdown({ scrollHeight, scrollWidth }) {
-      //   const { x, y, width, height } = this.dropdown.getBoundingClientRect();
-      //   if (x + width > scrollWidth) {
-      //     this.dropdown.classList.add('dropdown_left');
-      //   } else {
-      //     this.dropdown.classList.remove('dropdown_left');
-      //   }
-      //   if (y + height > scrollHeight) {
-      //     this.dropdown.classList.add('dropdown_top');
-      //   } else {
-      //     this.dropdown.classList.remove('dropdown_top');
-      //   }
-      // }
       updateCurrent(index) {
           if (index === -1) {
               return;
@@ -1026,7 +1011,7 @@
           index = index || 0;
           this.items.forEach((item, i) => {
               if (i == index) {
-                  // Todo: abstract this into a setter on the item class.
+                  // TODO: abstract this into a setter on the item class.
                   item.element.setAttribute('aria-selected', 'true');
                   item.element.scrollIntoView({
                       block: 'nearest',
@@ -1046,12 +1031,6 @@
       updateOptions(options) {
           this._options = options;
           const items = this.options.map(this.addItem.bind(this));
-          // // remove unused items
-          // this.items.forEach((item) => {
-          //   if (!items.find((i) => i === item)) {
-          //     item.element.remove();
-          //   }
-          // });
           this.items = items;
           return this.items.map((item) => item.element);
       }
@@ -1064,7 +1043,6 @@
           else {
               const newItem = new ListItem(option, this.selectItem.bind(this), this.hoverItem.bind(this), this.type);
               newItem.id = `${option.id}`;
-              console.log('append', newItem);
               this.element.append(newItem.element);
               return newItem;
           }
@@ -1182,36 +1160,26 @@
           this.dropdown.updateOptions(options);
       }
       showDropdown() {
-          console.log('show', this.trigger.classList, this.trigger);
-          // const { scrollHeight, scrollWidth } = document.body;
           this.trigger.classList.add('is-open');
           this.button.setAttribute('aria-expanded', 'true');
           this.button.setAttribute('aria-activedescendant', this.dropdown.currentItem?.id);
-          // this.dropdown.positionDropdown({ scrollHeight, scrollWidth });
       }
       hideDropdown() {
-          console.log('hide', this.trigger.classList, this.trigger);
-          // const { scrollHeight, scrollWidth } = document.body;
           this.trigger.classList.remove('is-open');
           this.button.setAttribute('aria-expanded', 'false');
           this.button.removeAttribute('aria-activedescendant');
           this.dropdown.updateCurrent(0);
-          // this.dropdown.positionDropdown({ scrollHeight, scrollWidth });
       }
       toggleDropdown() {
-          // debugger;
           if (this.trigger.classList.contains('is-open')) {
-              console.log('toggle open=>closed', this.trigger.classList, this.trigger);
               this.hideDropdown();
           }
           else {
-              console.log('toggle closed=>open', this.trigger.classList, this.trigger);
               this.showDropdown();
           }
       }
       private;
       handleChange(options) {
-          console.log('handleChange', options);
           this.onChange(options);
           if (this.type === DropdownListTypes.menuitem ||
               this.type === DropdownListTypes.option) {
@@ -1225,34 +1193,6 @@
       handleNavigate(id, _option) {
           this.button.setAttribute('aria-activedescendant', id);
       }
-      // handleBlur(e?: FocusEvent) {
-      //   // e.preventDefault();
-      //   // e.stopPropagation();
-      //   // console.log(
-      //   //   'handleBlur',
-      //   //   e.target,
-      //   //   this.shadowRoot.activeElement,
-      //   //   !this.trigger.contains(this.shadowRoot.activeElement),
-      //   //   !this.trigger.contains(e.target as Node),
-      //   // );
-      //   if (e.target instanceof Element) {
-      //     if (!this.trigger.contains(e.target)) {
-      //       this.hideDropdown();
-      //     }
-      //   }
-      // }
-      // handleClick(e: MouseEvent) {
-      //   console.log(
-      //     'handleClick',
-      //     e.target,
-      //     !this.shadowRoot.querySelector('[role=menu]').contains(e.target as Node),
-      //   );
-      //   if (e.target instanceof Element) {
-      //     if (!this.shadowRoot.querySelector('[role=menu]').contains(e.target)) {
-      //       this.hideDropdown();
-      //     }
-      //   }
-      // }
       handleBlur(e) {
           if (e.relatedTarget instanceof Element &&
               !this.trigger.contains(e.relatedTarget)) {
@@ -1262,18 +1202,13 @@
               this.hideDropdown();
           }
       }
-      // handleFocus(_e: FocusEvent) {
-      //   this.showDropdown();
-      // }
       handleKey(e) {
           const isOpen = this.trigger.classList.contains('is-open');
-          const { key } = e;
-          switch (key) {
+          switch (e.key) {
               case ' ':
                   e.stopPropagation();
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  // this.toggleDropdown();
                   if (isOpen) {
                       if (e.target === this.button) {
                           this.hideDropdown();
@@ -1284,32 +1219,13 @@
                   }
                   break;
               case 'Enter':
-                  // case ' ':
-                  console.log('Enter/Space', e);
-                  // debugger;
                   e.stopPropagation();
                   e.preventDefault();
                   if (isOpen) {
-                      // Hide the dropdown and submit if open
-                      // if (
-                      //   this.type === DropdownListTypes.menuitem ||
-                      //   this.type === DropdownListTypes.option
-                      // ) {
                       this.hideDropdown();
                       this.button.focus();
-                      // }
-                      // TODO: move all of the keyboard handling to dropdownlist so that this can make use of the same onchange logic.
-                      // this.onChange([this.dropdown.currentItem.option]);
-                      // this.onChange(
-                      //   getReturnValue(
-                      //     this.type,
-                      //     this.dropdown.items,
-                      //     this.dropdown.currentItem,
-                      //   ),
-                      // );
                   }
                   else {
-                      // Show the dropdown if closed
                       this.showDropdown();
                   }
                   break;

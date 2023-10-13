@@ -96,36 +96,25 @@ export class Menu extends HTMLElement {
   }
 
   showDropdown() {
-    console.log('show', this.trigger.classList, this.trigger);
-
-    // const { scrollHeight, scrollWidth } = document.body;
     this.trigger.classList.add('is-open');
     this.button.setAttribute('aria-expanded', 'true');
     this.button.setAttribute(
       'aria-activedescendant',
       this.dropdown.currentItem?.id,
     );
-    // this.dropdown.positionDropdown({ scrollHeight, scrollWidth });
   }
 
   hideDropdown() {
-    console.log('hide', this.trigger.classList, this.trigger);
-
-    // const { scrollHeight, scrollWidth } = document.body;
     this.trigger.classList.remove('is-open');
     this.button.setAttribute('aria-expanded', 'false');
     this.button.removeAttribute('aria-activedescendant');
     this.dropdown.updateCurrent(0);
-    // this.dropdown.positionDropdown({ scrollHeight, scrollWidth });
   }
 
   toggleDropdown() {
-    // debugger;
     if (this.trigger.classList.contains('is-open')) {
-      console.log('toggle open=>closed', this.trigger.classList, this.trigger);
       this.hideDropdown();
     } else {
-      console.log('toggle closed=>open', this.trigger.classList, this.trigger);
       this.showDropdown();
     }
   }
@@ -133,7 +122,6 @@ export class Menu extends HTMLElement {
   private;
 
   handleChange(options: DropdownOption[]) {
-    console.log('handleChange', options);
     this.onChange(options);
     if (
       this.type === DropdownListTypes.menuitem ||
@@ -150,36 +138,6 @@ export class Menu extends HTMLElement {
     this.button.setAttribute('aria-activedescendant', id);
   }
 
-  // handleBlur(e?: FocusEvent) {
-  //   // e.preventDefault();
-  //   // e.stopPropagation();
-  //   // console.log(
-  //   //   'handleBlur',
-  //   //   e.target,
-  //   //   this.shadowRoot.activeElement,
-  //   //   !this.trigger.contains(this.shadowRoot.activeElement),
-  //   //   !this.trigger.contains(e.target as Node),
-  //   // );
-  //   if (e.target instanceof Element) {
-  //     if (!this.trigger.contains(e.target)) {
-  //       this.hideDropdown();
-  //     }
-  //   }
-  // }
-
-  // handleClick(e: MouseEvent) {
-  //   console.log(
-  //     'handleClick',
-  //     e.target,
-  //     !this.shadowRoot.querySelector('[role=menu]').contains(e.target as Node),
-  //   );
-  //   if (e.target instanceof Element) {
-  //     if (!this.shadowRoot.querySelector('[role=menu]').contains(e.target)) {
-  //       this.hideDropdown();
-  //     }
-  //   }
-  // }
-
   handleBlur(e: FocusEvent) {
     if (
       e.relatedTarget instanceof Element &&
@@ -191,19 +149,13 @@ export class Menu extends HTMLElement {
     }
   }
 
-  // handleFocus(_e: FocusEvent) {
-  //   this.showDropdown();
-  // }
-
   handleKey(e: KeyboardEvent) {
     const isOpen = this.trigger.classList.contains('is-open');
-    const { key } = e;
-    switch (key) {
+    switch (e.key) {
       case ' ':
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.preventDefault();
-        // this.toggleDropdown();
 
         if (isOpen) {
           if (e.target === this.button) {
@@ -214,32 +166,12 @@ export class Menu extends HTMLElement {
         }
         break;
       case 'Enter':
-        // case ' ':
-        console.log('Enter/Space', e);
-        // debugger;
         e.stopPropagation();
         e.preventDefault();
         if (isOpen) {
-          // Hide the dropdown and submit if open
-          // if (
-          //   this.type === DropdownListTypes.menuitem ||
-          //   this.type === DropdownListTypes.option
-          // ) {
           this.hideDropdown();
           this.button.focus();
-          // }
-
-          // TODO: move all of the keyboard handling to dropdownlist so that this can make use of the same onchange logic.
-          // this.onChange([this.dropdown.currentItem.option]);
-          // this.onChange(
-          //   getReturnValue(
-          //     this.type,
-          //     this.dropdown.items,
-          //     this.dropdown.currentItem,
-          //   ),
-          // );
         } else {
-          // Show the dropdown if closed
           this.showDropdown();
         }
         break;

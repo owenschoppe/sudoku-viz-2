@@ -71,23 +71,6 @@ export class DropdownListbox extends ListMixin(Array) {
     return this.element;
   }
 
-  // // doesn't work
-  // positionDropdown({ scrollHeight, scrollWidth }) {
-  //   const { x, y, width, height } = this.dropdown.getBoundingClientRect();
-
-  //   if (x + width > scrollWidth) {
-  //     this.dropdown.classList.add('dropdown_left');
-  //   } else {
-  //     this.dropdown.classList.remove('dropdown_left');
-  //   }
-
-  //   if (y + height > scrollHeight) {
-  //     this.dropdown.classList.add('dropdown_top');
-  //   } else {
-  //     this.dropdown.classList.remove('dropdown_top');
-  //   }
-  // }
-
   updateCurrent(index?: number) {
     if (index === -1) {
       return;
@@ -95,7 +78,7 @@ export class DropdownListbox extends ListMixin(Array) {
     index = index || 0;
     this.items.forEach((item: ListItem, i) => {
       if (i == index) {
-        // Todo: abstract this into a setter on the item class.
+        // TODO: abstract this into a setter on the item class.
         item.element.setAttribute('aria-selected', 'true');
         item.element.scrollIntoView({
           block: 'nearest',
@@ -116,13 +99,6 @@ export class DropdownListbox extends ListMixin(Array) {
     this._options = options;
     const items: ListItem[] = this.options.map(this.addItem.bind(this));
 
-    // // remove unused items
-    // this.items.forEach((item) => {
-    //   if (!items.find((i) => i === item)) {
-    //     item.element.remove();
-    //   }
-    // });
-
     this.items = items;
 
     return this.items.map((item: ListItem) => item.element);
@@ -141,7 +117,6 @@ export class DropdownListbox extends ListMixin(Array) {
         this.type,
       );
       newItem.id = `${option.id}`;
-      console.log('append', newItem);
       this.element.append(newItem.element);
       return newItem;
     }
