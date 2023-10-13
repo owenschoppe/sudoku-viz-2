@@ -88,7 +88,7 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
     } else if (
       possibilityCount === 1 &&
       possibilities[this.lens] &&
-      this.state.settings.highlight.value
+      this.state.settings?.highlight?.value
     ) {
       this.button.classList.add('only');
     } else if (possibilities[this.lens]) {
@@ -103,7 +103,7 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
     if (
       possibilityCount === 1 &&
       isValidInput(this.lens, possibilities) &&
-      this.state.settings.highlight.value
+      this.state.settings.highlight?.value
     ) {
       this.value = this.dispatch({
         type: 'update',

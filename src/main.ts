@@ -50,8 +50,8 @@ const reducer = (state: State, action: Action) => {
       break;
     case 'new':
       const { difficulty } = action.data;
-      const board = difficulty === 'blank' ? null : generateBoard(difficulty);
-      updatedState = initialState(state, board);
+      state.board = difficulty === 'blank' ? null : generateBoard(difficulty);
+      updatedState = initialState(state);
       break;
     case 'move':
       state.location = action.data.location;
@@ -89,8 +89,8 @@ const reducer = (state: State, action: Action) => {
 
 const initialBoard = NNArray(9, 0);
 
-const initialState = (priorState?: State, savedBoard?: Board): State => {
-  const board = savedBoard || cloneDeep(initialBoard);
+const initialState = (priorState?: State): State => {
+  const board = priorState?.board || cloneDeep(initialBoard);
   const possibilities = possibilitiesForBoard(board);
   return {
     board: board,
@@ -107,7 +107,7 @@ const initialState = (priorState?: State, savedBoard?: Board): State => {
     settings: priorState?.settings || {
       possibilities: { label: 'Show Possibilities', value: true },
       connections: { label: 'Show Connections', value: true },
-      highlight: { label: 'Highlight Only Possibility', value: true },
+      highlight: { label: 'Highlight Only Possibility', value: false },
     },
   };
 };
@@ -115,7 +115,11 @@ const initialState = (priorState?: State, savedBoard?: Board): State => {
 (() => {
   const storedState = JSON.parse(window.localStorage.getItem('state'));
 
-  initializeSubscriptions(storedState, reducer);
+  const state = initialState(storedState);
+
+  initializeSubscriptions(state, reducer);
+
+  window.localStorage.setItem('state', JSON.stringify(state));
 
   document.body.innerHTML = `
     <div id="app" class="dark">

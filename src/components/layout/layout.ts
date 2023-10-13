@@ -49,7 +49,7 @@ export class Layout extends ReactiveMixin(HTMLElement) {
   }
 
   render(state: State) {
-    if (state.settings.possibilities.value) {
+    if (state.settings?.possibilities?.value) {
       this.shadowRoot
         .querySelector('#viewer-container')
         .classList.remove('hidden');
@@ -59,7 +59,7 @@ export class Layout extends ReactiveMixin(HTMLElement) {
         .classList.add('hidden');
     }
 
-    if (state.settings.connections.value) {
+    if (state.settings?.connections?.value) {
       this.shadowRoot
         .querySelector('#loops-container')
         .classList.remove('hidden');

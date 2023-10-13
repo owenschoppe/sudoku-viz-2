@@ -72,10 +72,22 @@ export class ListItem {
         this.element.setAttribute('aria-checked', 'false');
       }
     }
+
+    if (this._option.disabled) {
+      this.element.setAttribute('aria-disabled', 'true');
+    } else {
+      this.element.setAttribute('aria-disabled', 'false');
+    }
+  }
+
+  handleSelect(e: MouseEvent | KeyboardEvent) {
+    if (!this._option.disabled) {
+      this.onSelect(e, this);
+    }
   }
 
   handleClick(e: MouseEvent) {
-    this.onSelect(e, this);
+    this.handleSelect(e);
   }
 
   handleHover(e: MouseEvent) {
@@ -88,10 +100,10 @@ export class ListItem {
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.preventDefault();
-        this.onSelect(e, this);
+        this.handleSelect(e);
         break;
       case 'Enter':
-        this.onSelect(e, this);
+        this.handleSelect(e);
         break;
       default:
     }

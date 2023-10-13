@@ -71,7 +71,9 @@ export class Controls extends ReactiveMixin(HTMLElement) {
       onChange: (values) => {
         this.dispatch({
           type: 'settings',
-          data: { settings: optionsToSettings(values) },
+          data: {
+            settings: handleConditionalSettings(optionsToSettings(values)),
+          },
         });
       },
       type: DropdownListTypes.menuitemcheckbox,
@@ -86,12 +88,17 @@ export class Controls extends ReactiveMixin(HTMLElement) {
   }
 }
 
+const handleConditionalSettings = (settings: Settings) => {
+  settings.highlight.disabled = !settings.possibilities.value;
+  return settings;
+};
+
 const settingsToOptions = (settings: Settings): DropdownOption[] =>
   Object.entries(settings || {}).map(([id, option]) => ({ ...option, id }));
 
 const optionsToSettings = (options: DropdownOption[]): Settings =>
-  options?.reduce((settings, { id, label, value }) => {
-    settings[id] = { label, value };
+  options?.reduce((settings, { id, ...rest }) => {
+    settings[id] = rest;
     return settings;
   }, {} as Settings);
 

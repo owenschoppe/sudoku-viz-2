@@ -97,17 +97,17 @@ export class DropdownListbox extends ListMixin(Array) {
 
   updateOptions(options: DropdownOption[]) {
     this._options = options;
-    const items: ListItem[] = this.options.map(this.addItem.bind(this));
-
+    const items: ListItem[] = this.options.map(this.addOrUpdateItem.bind(this));
+    const unused = this.items.splice(items.length);
+    unused.forEach((item) => item.element.remove());
     this.items = items;
-
-    return this.items.map((item: ListItem) => item.element);
   }
 
-  addItem(option: DropdownOption): ListItem {
-    const item = this.items.find(({ id }) => id === option.id); // just iterate over index...
+  addOrUpdateItem(option: DropdownOption, i: number): ListItem {
+    const item = this.items[i];
     if (item) {
-      item.option = option; // updates option in the item
+      // Updates option in the item
+      item.option = option;
       return item as ListItem;
     } else {
       const newItem = new ListItem(

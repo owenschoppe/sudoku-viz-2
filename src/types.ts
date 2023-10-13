@@ -46,6 +46,7 @@ export type Settings = {
 export type Setting = {
   label: string;
   value: boolean;
+  disabled?: boolean;
 };
 
 export type Action = {

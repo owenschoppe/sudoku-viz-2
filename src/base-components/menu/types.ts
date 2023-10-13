@@ -17,6 +17,7 @@ export type DropdownOption = {
   id: string;
   label: string;
   value: string | boolean;
+  disabled?: boolean;
 };
 
 export type ChangeCallback = (option: DropdownOption[]) => void;
