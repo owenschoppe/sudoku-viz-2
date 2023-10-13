@@ -7,80 +7,6 @@
 
   var html$8 = "<div id=\"board\" class=\"grid\"></div>\n";
 
-  const subscribers = new Set();
-  /**
-   * Subscriber function for the module singleton.
-   * TODO: add dependency array param and update state to use `new Proxy` and only call render when dependency changes.
-   * This will be useful when using arrow keys to navigate the board. Updates state but doesn't require rerendering.
-   *
-   * @param render Render function that will be called with State with every change to state.
-   * @returns { dispatch, unsubscribe } Dispatch can be called with an Action to update state and call subscribed render fns. Unsubscribe has the subscriber bound to it and will unsubscribe the function.
-   */
-  const subscribe = (render) => {
-      subscribers.add(render);
-      // render(getState<State>()); // ???? Depends on whether we call this from the connectedCallback or from the constructor. Better to let the component decide?
-      const unsubscribe = (render) => () => {
-          return subscribers.delete(render);
-      };
-      const dispatch = (action) => {
-          setState(reducer$1(getState(), action));
-          subscribers.forEach((renderFn) => renderFn(getState()));
-          return getState();
-      };
-      return { dispatch, state, unsubscribe: unsubscribe(render) };
-  };
-  const initializeSubscriptions = (initialState, reduce) => {
-      setState(initialState);
-      if (reduce) {
-          (reducer$1) = reduce;
-      }
-  };
-  // let state: State = {
-  //   board: Array(9)
-  //     .fill(null)
-  //     .map(() => Array(9).fill(null)),
-  // };
-  let state = {};
-  const getState = () => state;
-  const setState = (s) => (state = s);
-  let reducer$1 = (state, action) => {
-      console.log(state, action);
-      switch (action?.type) {
-          // case 'update':
-          //   const { i, j, value, color } = action.data;
-          //   state.board[i][j] = value;
-          //   state.color = color;
-          //   console.log(i, j, value, state);
-          //   return state;
-          default:
-              return state;
-      }
-  };
-
-  // // Generic Contructor with constraints
-  // type GConstructor<T = {}> = new (...args: any[]) => T;
-  // // Define properties that the extended class must have.
-  // type Renderable = GConstructor<{ render: (state: State) => void }>
-  const ReactiveMixin = (Base) => class Reactive extends Base {
-      state;
-      dispatch;
-      unsubscribe;
-      constructor(...args) {
-          super(...args);
-          const { unsubscribe, dispatch, state } = subscribe(this.render.bind(this));
-          this.state = state;
-          this.dispatch = dispatch;
-          this.unsubscribe = unsubscribe;
-      }
-      connectedCallback() {
-          this.render(this.state);
-      }
-      disconnectedCallback() {
-          this.unsubscribe();
-      }
-      render(_state) { }
-  };
-
   const cellValues = {
       1: true,
       2: true,
@@ -176,6 +102,80 @@
   memoize.Cache = Map;
 
   const unique = (arr) => [...new Set(arr)];
+
+  const subscribers = new Set();
+  /**
+   * Subscriber function for the module singleton.
+   * TODO: add dependency array param and update state to use `new Proxy` and only call render when dependency changes.
+   * This will be useful when using arrow keys to navigate the board. Updates state but doesn't require rerendering.
+   *
+   * @param render Render function that will be called with State with every change to state.
+   * @returns { dispatch, unsubscribe } Dispatch can be called with an Action to update state and call subscribed render fns. Unsubscribe has the subscriber bound to it and will unsubscribe the function.
+   */
+  const subscribe = (render) => {
+      subscribers.add(render);
+      // render(getState<State>()); // ???? Depends on whether we call this from the connectedCallback or from the constructor. Better to let the component decide?
+      const unsubscribe = (render) => () => {
+          return subscribers.delete(render);
+      };
+      const dispatch = (action) => {
+          setState(reducer$1(getState(), action));
+          subscribers.forEach((renderFn) => renderFn(getState()));
+          return getState();
+      };
+      return { dispatch, state, unsubscribe: unsubscribe(render) };
+  };
+  const initializeSubscriptions = (initialState, reduce) => {
+      setState(initialState);
+      if (reduce) {
+          (reducer$1) = reduce;
+      }
+  };
+  // let state: State = {
+  //   board: Array(9)
+  //     .fill(null)
+  //     .map(() => Array(9).fill(null)),
+  // };
+  let state = {};
+  const getState = () => state;
+  const setState = (s) => (state = s);
+  let reducer$1 = (state, action) => {
+      console.log(state, action);
+      switch (action?.type) {
+          // case 'update':
+          //   const { i, j, value, color } = action.data;
+          //   state.board[i][j] = value;
+          //   state.color = color;
+          //   console.log(i, j, value, state);
+          //   return state;
+          default:
+              return state;
+      }
+  };
+
+  // // Generic Contructor with constraints
+  // type GConstructor<T = {}> = new (...args: any[]) => T;
+  // // Define properties that the extended class must have.
+  // type Renderable = GConstructor<{ render: (state: State) => void }>
+  const ReactiveMixin = (Base) => class Reactive extends Base {
+      state;
+      dispatch;
+      unsubscribe;
+      constructor(...args) {
+          super(...args);
+          const { unsubscribe, dispatch, state } = subscribe(this.render.bind(this));
+          this.state = cloneDeep(state);
+          this.dispatch = dispatch;
+          this.unsubscribe = unsubscribe;
+      }
+      connectedCallback() {
+          this.render(this.state);
+      }
+      disconnectedCallback() {
+          this.unsubscribe();
+      }
+      render(_state) { }
+  };
 
   // Old app the board data structure was [i][j][k]
   // where k[0] is the cell value where 0 is empty
@@ -379,17 +379,16 @@
       render(state) {
           const value = state.board[this.i][this.j];
           this.isEditable = state.original[this.i][this.j] === 0;
-          if (value !== this.value) {
-              this.state = state;
-              this.value = value;
-              const displayValue = isCellValue(this.value) ? String(this.value) : '';
-              this.input.value = displayValue;
-          }
           const { i, j } = state.location;
           if (this.i === i && this.j === j) {
               this.input.classList.add('current');
               this.input.setAttribute('tabindex', '0');
-              this.input.focus();
+              const { i: previousI, j: previousJ } = this.state.location;
+              const locationMoved = i !== previousI || j !== previousJ;
+              const isUndo = state.moves.length < this.state.moves.length;
+              if (locationMoved && !isUndo) {
+                  this.input.focus();
+              }
           }
           else {
               this.input.classList.remove('current');
@@ -401,6 +400,12 @@
           else {
               this.input.classList.remove('locked');
           }
+          if (value !== this.value) {
+              this.value = value;
+              const displayValue = isCellValue(this.value) ? String(this.value) : '';
+              this.input.value = displayValue;
+          }
+          this.state = cloneDeep(state);
       }
       handleClick() {
           this.dispatch({
@@ -926,6 +931,9 @@
           switch (e.key) {
               case ' ':
               case 'Enter':
+                  e.stopPropagation();
+                  e.stopImmediatePropagation();
+                  e.preventDefault();
                   this.onSelect(e, this);
                   break;
           }
@@ -1141,7 +1149,7 @@
               this.showDropdown();
           });
           // TODO: something is odd because shift tabbing through the button opens the menu when it shouldn't
-          this.trigger.addEventListener('keydown', this.handlePress.bind(this), true);
+          this.trigger.addEventListener('keydown', this.handlePress.bind(this), false);
           this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
           this.button.addEventListener('click', this.toggleDropdown.bind(this), true); // TODO: doesn't work
           document.body.addEventListener('focus', this.handleBlur.bind(this), true);
@@ -1190,7 +1198,15 @@
       }
       private;
       handleChange(options) {
+          console.log('handleChange', options);
           this.onChange(options);
+          // if (
+          //   this.type === DropdownListTypes.menuitem ||
+          //   this.type === DropdownListTypes.option
+          // ) {
+          // TODO: or if key was enter
+          this.button.focus();
+          // }
       }
       handleNavigate(id, _option) {
           this.button.setAttribute('aria-activedescendant', id);
@@ -1220,10 +1236,22 @@
                   e.preventDefault();
                   if (isOpen) {
                       // Hide the dropdown and submit if open
+                      // if (
+                      //   this.type === DropdownListTypes.menuitem ||
+                      //   this.type === DropdownListTypes.option
+                      // ) {
                       this.hideDropdown();
+                      this.button.focus();
+                      // }
                       // TODO: move all of the keyboard handling to dropdownlist so that this can make use of the same onchange logic.
                       // this.onChange([this.dropdown.currentItem.option]);
-                      this.onChange(getReturnValue(this.type, this.dropdown.items, this.dropdown.currentItem));
+                      // this.onChange(
+                      //   getReturnValue(
+                      //     this.type,
+                      //     this.dropdown.items,
+                      //     this.dropdown.currentItem,
+                      //   ),
+                      // );
                   }
                   else {
                       // Show the dropdown if closed
@@ -1250,7 +1278,14 @@
                   e.stopPropagation();
                   e.preventDefault();
                   if (isOpen) {
-                      this.dropdown.nextItem(e, 1);
+                      if (this.shadowRoot
+                          .querySelector('#listbox')
+                          .contains(this.shadowRoot.activeElement)) {
+                          this.dropdown.nextItem(e, 1);
+                      }
+                      else {
+                          this.dropdown.updateCurrent(0);
+                      }
                   }
                   else {
                       this.showDropdown();

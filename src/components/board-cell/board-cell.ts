@@ -1,7 +1,7 @@
 import { CellValue, State } from '../../types.js';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 import { isValidInput } from '../../utils/sudoku.js';
-import { isCellValue } from '../../utils/index.js';
+import { cloneDeep, isCellValue } from '../../utils/index.js';
 
 /**
  * Cell element that implements the dispatch pattern.
@@ -56,18 +56,17 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
   render(state: State) {
     const value = state.board[this.i][this.j];
     this.isEditable = state.original[this.i][this.j] === 0;
-
-    if (value !== this.value) {
-      this.state = state;
-      this.value = value;
-      const displayValue = isCellValue(this.value) ? String(this.value) : '';
-      this.input.value = displayValue;
-    }
     const { i, j } = state.location;
     if (this.i === i && this.j === j) {
       this.input.classList.add('current');
       this.input.setAttribute('tabindex', '0');
-      this.input.focus();
+
+      const { i: previousI, j: previousJ } = this.state.location;
+      const locationMoved = i !== previousI || j !== previousJ;
+      const isUndo = state.moves.length < this.state.moves.length;
+      if (locationMoved && !isUndo) {
+        this.input.focus();
+      }
     } else {
       this.input.classList.remove('current');
       this.input.setAttribute('tabindex', '-1');
@@ -77,6 +76,12 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     } else {
       this.input.classList.remove('locked');
     }
+    if (value !== this.value) {
+      this.value = value;
+      const displayValue = isCellValue(this.value) ? String(this.value) : '';
+      this.input.value = displayValue;
+    }
+    this.state = cloneDeep(state);
   }
 
   handleClick() {

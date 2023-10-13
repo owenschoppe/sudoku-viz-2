@@ -1,4 +1,5 @@
 import { State } from '../types';
+import { cloneDeep } from '../utils';
 import { Dispatch, Unsubscribe, subscribe } from '../utils/subscribe';
 
 type Constructor = new (...args: any[]) => {};
@@ -20,7 +21,7 @@ export const ReactiveMixin = <T extends Constructor>(Base: T) =>
       const { unsubscribe, dispatch, state } = subscribe(
         this.render.bind(this),
       );
-      this.state = state as State;
+      this.state = cloneDeep(state) as State;
       this.dispatch = dispatch;
       this.unsubscribe = unsubscribe;
     }
