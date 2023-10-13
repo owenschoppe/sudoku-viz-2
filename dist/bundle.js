@@ -961,7 +961,7 @@
   const html$4 = String.raw;
 
   class DropdownListbox extends ListMixin(Array) {
-      dropdown;
+      element;
       currentItem;
       _options;
       onChange;
@@ -972,9 +972,9 @@
           this.onChange = onChange;
           this.onNavigate = onNavigate;
           this.type = type;
-          this.dropdown = document.createElement('ul');
-          this.dropdown.setAttribute('role', 'presentation');
-          this.dropdown.classList.add('listbox', 'listbox_vertical');
+          this.element = document.createElement('ul');
+          this.element.setAttribute('role', 'presentation');
+          this.element.classList.add('listbox', 'listbox_vertical');
           this.updateOptions(options);
           this.updateCurrent();
       }
@@ -1003,7 +1003,7 @@
           this.updateCurrent(index);
       }
       render() {
-          return this.dropdown;
+          return this.element;
       }
       // // doesn't work
       // positionDropdown({ scrollHeight, scrollWidth }) {
@@ -1046,28 +1046,26 @@
       updateOptions(options) {
           this._options = options;
           const items = this.options.map(this.addItem.bind(this));
-          // remove unused items
-          this.items.forEach((item) => {
-              if (!items.find((i) => i === item)) {
-                  item.element.remove();
-              }
-          });
+          // // remove unused items
+          // this.items.forEach((item) => {
+          //   if (!items.find((i) => i === item)) {
+          //     item.element.remove();
+          //   }
+          // });
           this.items = items;
-          // rerender items
-          this.items.forEach((item) => {
-              this.dropdown.appendChild(item.element);
-          });
+          return this.items.map((item) => item.element);
       }
-      // Convert to createOrUpdateItem?
       addItem(option) {
-          const item = this.items.find(({ id }) => id === option.id);
+          const item = this.items.find(({ id }) => id === option.id); // just iterate over index...
           if (item) {
-              item.option = option;
+              item.option = option; // updates option in the item
               return item;
           }
           else {
               const newItem = new ListItem(option, this.selectItem.bind(this), this.hoverItem.bind(this), this.type);
               newItem.id = `${option.id}`;
+              console.log('append', newItem);
+              this.element.append(newItem.element);
               return newItem;
           }
       }
@@ -1142,7 +1140,7 @@
       _options;
       onChange;
       type;
-      searchOptions;
+      handleSearch;
       constructor({ label, options, onChange, type = DropdownListTypes.menuitem, }) {
           super();
           this.attachShadow({ mode: 'open' });
@@ -1161,24 +1159,20 @@
           this.trigger = shadowRoot.querySelector('.dropdown-trigger');
           this.dropdown = new DropdownListbox(this.options, this.handleChange.bind(this), this.handleNavigate.bind(this), this.type);
           shadowRoot.querySelector('[role=menu]').append(this.dropdown.render());
-          this.searchOptions = debouncedSearch(this.dropdown.options.map((option) => option.label), (index) => {
+          this.handleSearch = debouncedSearch(this.dropdown.options.map((option) => option.label), (index) => {
               this.dropdown.updateCurrent(index);
               this.showDropdown();
           });
-          // TODO: close menu when tabbing out of button
-          this.trigger.addEventListener('keydown', this.handlePress.bind(this), false);
-          this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
-          // this.trigger.addEventListener('focusout', this.handleBlur.bind(this), true);
-          this.trigger.addEventListener('focusout', this.handleBlurDropdown.bind(this), true);
+          this.trigger.addEventListener('keydown', this.handleKey.bind(this), false);
+          this.trigger.addEventListener('input', this.handleSearch.bind(this), true);
+          this.trigger.addEventListener('focusout', this.handleBlur.bind(this), true);
           this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
-          // document.body.addEventListener('focus', this.handleBlur.bind(this), true);
-          document.body.addEventListener('click', this.handleClick.bind(this), true); // Would remove this ideally
       }
       disconnectedCallback() {
-          this.trigger.removeEventListener('keydown', this.handlePress.bind(this), true);
-          this.trigger.removeEventListener('input', this.searchOptions.bind(this));
+          this.trigger.removeEventListener('keydown', this.handleKey.bind(this), true);
+          this.trigger.removeEventListener('input', this.handleSearch.bind(this));
+          this.trigger.removeEventListener('focusout', this.handleBlur.bind(this));
           this.button.removeEventListener('click', this.toggleDropdown.bind(this));
-          document.body.removeEventListener('focus', this.handleBlur.bind(this));
       }
       get options() {
           return this._options;
@@ -1231,47 +1225,47 @@
       handleNavigate(id, _option) {
           this.button.setAttribute('aria-activedescendant', id);
       }
+      // handleBlur(e?: FocusEvent) {
+      //   // e.preventDefault();
+      //   // e.stopPropagation();
+      //   // console.log(
+      //   //   'handleBlur',
+      //   //   e.target,
+      //   //   this.shadowRoot.activeElement,
+      //   //   !this.trigger.contains(this.shadowRoot.activeElement),
+      //   //   !this.trigger.contains(e.target as Node),
+      //   // );
+      //   if (e.target instanceof Element) {
+      //     if (!this.trigger.contains(e.target)) {
+      //       this.hideDropdown();
+      //     }
+      //   }
+      // }
+      // handleClick(e: MouseEvent) {
+      //   console.log(
+      //     'handleClick',
+      //     e.target,
+      //     !this.shadowRoot.querySelector('[role=menu]').contains(e.target as Node),
+      //   );
+      //   if (e.target instanceof Element) {
+      //     if (!this.shadowRoot.querySelector('[role=menu]').contains(e.target)) {
+      //       this.hideDropdown();
+      //     }
+      //   }
+      // }
       handleBlur(e) {
-          // e.preventDefault();
-          // e.stopPropagation();
-          // console.log(
-          //   'handleBlur',
-          //   e.target,
-          //   this.shadowRoot.activeElement,
-          //   !this.trigger.contains(this.shadowRoot.activeElement),
-          //   !this.trigger.contains(e.target as Node),
-          // );
-          if (e.target instanceof Element) {
-              if (!this.trigger.contains(e.target)) {
-                  this.hideDropdown();
-              }
+          if (e.relatedTarget instanceof Element &&
+              !this.trigger.contains(e.relatedTarget)) {
+              this.hideDropdown();
+          }
+          else if (e.relatedTarget === null) {
+              this.hideDropdown();
           }
       }
-      handleClick(e) {
-          console.log('handleClick', e.target, !this.shadowRoot.querySelector('[role=menu]').contains(e.target));
-          if (e.target instanceof Element) {
-              if (!this.shadowRoot.querySelector('[role=menu]').contains(e.target)) {
-                  this.hideDropdown();
-              }
-          }
-      }
-      handleBlurDropdown(e) {
-          console.log('handleBlurDropdown', e.target, e.relatedTarget);
-          if (e.relatedTarget instanceof Element) {
-              if (!this.shadowRoot.querySelector('[role=menu]').contains(e.relatedTarget)) {
-                  this.hideDropdown();
-              }
-          }
-          // Basically I still have the same issue that because the dom nodes get remade focus moves to the window thereby closing the menu
-          //  else if (e.relatedTarget === null) {
-          //   console.log('hide in blur');
-          //   this.hideDropdown();
-          // }
-      }
-      handleFocus(_e) {
-          this.showDropdown();
-      }
-      handlePress(e) {
+      // handleFocus(_e: FocusEvent) {
+      //   this.showDropdown();
+      // }
+      handleKey(e) {
           const isOpen = this.trigger.classList.contains('is-open');
           const { key } = e;
           switch (key) {
@@ -1364,7 +1358,7 @@
                   break;
               default:
                   if (isOpen) {
-                      this.searchOptions(e);
+                      this.handleSearch(e);
                   }
                   break;
           }
@@ -1476,7 +1470,7 @@
           });
           this.settings.classList.add('bumpRight');
           this.shadowRoot.querySelector('#controls').append(this.settings);
-          this.settings.dropdown.dropdown.classList.add('dropdown_left');
+          this.settings.dropdown.element.classList.add('dropdown_left');
       }
       render(state) {
           this.settings.options = settingsToOptions(state.settings);

@@ -78,7 +78,7 @@ export class Controls extends ReactiveMixin(HTMLElement) {
     });
     this.settings.classList.add('bumpRight');
     this.shadowRoot.querySelector('#controls').append(this.settings);
-    this.settings.dropdown.dropdown.classList.add('dropdown_left');
+    this.settings.dropdown.element.classList.add('dropdown_left');
   }
 
   render(state: State) {

@@ -24,7 +24,7 @@ export class Menu extends HTMLElement {
 
   type: DropdownListTypes;
 
-  searchOptions: (e: KeyboardEvent) => void;
+  handleSearch: (e: KeyboardEvent) => void;
 
   constructor({
     label,
@@ -61,7 +61,7 @@ export class Menu extends HTMLElement {
     );
     shadowRoot.querySelector('[role=menu]').append(this.dropdown.render());
 
-    this.searchOptions = debouncedSearch(
+    this.handleSearch = debouncedSearch(
       this.dropdown.options.map((option) => option.label),
       (index: number) => {
         this.dropdown.updateCurrent(index);
@@ -69,33 +69,21 @@ export class Menu extends HTMLElement {
       },
     );
 
-    // TODO: close menu when tabbing out of button
-    this.trigger.addEventListener(
-      'keydown',
-      this.handlePress.bind(this),
-      false,
-    );
-    this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
-    // this.trigger.addEventListener('focusout', this.handleBlur.bind(this), true);
-    this.trigger.addEventListener(
-      'focusout',
-      this.handleBlurDropdown.bind(this),
-      true,
-    );
+    this.trigger.addEventListener('keydown', this.handleKey.bind(this), false);
+    this.trigger.addEventListener('input', this.handleSearch.bind(this), true);
+    this.trigger.addEventListener('focusout', this.handleBlur.bind(this), true);
     this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
-    // document.body.addEventListener('focus', this.handleBlur.bind(this), true);
-    document.body.addEventListener('click', this.handleClick.bind(this), true); // Would remove this ideally
   }
 
   disconnectedCallback() {
     this.trigger.removeEventListener(
       'keydown',
-      this.handlePress.bind(this),
+      this.handleKey.bind(this),
       true,
     );
-    this.trigger.removeEventListener('input', this.searchOptions.bind(this));
+    this.trigger.removeEventListener('input', this.handleSearch.bind(this));
+    this.trigger.removeEventListener('focusout', this.handleBlur.bind(this));
     this.button.removeEventListener('click', this.toggleDropdown.bind(this));
-    document.body.removeEventListener('focus', this.handleBlur.bind(this));
   }
 
   get options() {
@@ -162,57 +150,52 @@ export class Menu extends HTMLElement {
     this.button.setAttribute('aria-activedescendant', id);
   }
 
-  handleBlur(e?: FocusEvent) {
-    // e.preventDefault();
-    // e.stopPropagation();
-    // console.log(
-    //   'handleBlur',
-    //   e.target,
-    //   this.shadowRoot.activeElement,
-    //   !this.trigger.contains(this.shadowRoot.activeElement),
-    //   !this.trigger.contains(e.target as Node),
-    // );
-    if (e.target instanceof Element) {
-      if (!this.trigger.contains(e.target)) {
-        this.hideDropdown();
-      }
+  // handleBlur(e?: FocusEvent) {
+  //   // e.preventDefault();
+  //   // e.stopPropagation();
+  //   // console.log(
+  //   //   'handleBlur',
+  //   //   e.target,
+  //   //   this.shadowRoot.activeElement,
+  //   //   !this.trigger.contains(this.shadowRoot.activeElement),
+  //   //   !this.trigger.contains(e.target as Node),
+  //   // );
+  //   if (e.target instanceof Element) {
+  //     if (!this.trigger.contains(e.target)) {
+  //       this.hideDropdown();
+  //     }
+  //   }
+  // }
+
+  // handleClick(e: MouseEvent) {
+  //   console.log(
+  //     'handleClick',
+  //     e.target,
+  //     !this.shadowRoot.querySelector('[role=menu]').contains(e.target as Node),
+  //   );
+  //   if (e.target instanceof Element) {
+  //     if (!this.shadowRoot.querySelector('[role=menu]').contains(e.target)) {
+  //       this.hideDropdown();
+  //     }
+  //   }
+  // }
+
+  handleBlur(e: FocusEvent) {
+    if (
+      e.relatedTarget instanceof Element &&
+      !this.trigger.contains(e.relatedTarget)
+    ) {
+      this.hideDropdown();
+    } else if (e.relatedTarget === null) {
+      this.hideDropdown();
     }
   }
 
-  handleClick(e: MouseEvent) {
-    console.log(
-      'handleClick',
-      e.target,
-      !this.shadowRoot.querySelector('[role=menu]').contains(e.target as Node),
-    );
-    if (e.target instanceof Element) {
-      if (!this.shadowRoot.querySelector('[role=menu]').contains(e.target)) {
-        this.hideDropdown();
-      }
-    }
-  }
+  // handleFocus(_e: FocusEvent) {
+  //   this.showDropdown();
+  // }
 
-  handleBlurDropdown(e: FocusEvent) {
-    console.log('handleBlurDropdown', e.target, e.relatedTarget);
-    if (e.relatedTarget instanceof Element) {
-      if (
-        !this.shadowRoot.querySelector('[role=menu]').contains(e.relatedTarget)
-      ) {
-        this.hideDropdown();
-      }
-    }
-    // Basically I still have the same issue that because the dom nodes get remade focus moves to the window thereby closing the menu
-    //  else if (e.relatedTarget === null) {
-    //   console.log('hide in blur');
-    //   this.hideDropdown();
-    // }
-  }
-
-  handleFocus(_e: FocusEvent) {
-    this.showDropdown();
-  }
-
-  handlePress(e: KeyboardEvent) {
+  handleKey(e: KeyboardEvent) {
     const isOpen = this.trigger.classList.contains('is-open');
     const { key } = e;
     switch (key) {
@@ -304,7 +287,7 @@ export class Menu extends HTMLElement {
         break;
       default:
         if (isOpen) {
-          this.searchOptions(e);
+          this.handleSearch(e);
         }
         break;
     }

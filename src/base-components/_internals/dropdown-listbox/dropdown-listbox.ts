@@ -5,7 +5,7 @@ import { ListItem } from '../list-item';
 import { DropdownListTypes } from '../types';
 
 export class DropdownListbox extends ListMixin(Array) {
-  dropdown: HTMLUListElement;
+  element: HTMLUListElement;
 
   currentItem: ListItem;
 
@@ -29,9 +29,9 @@ export class DropdownListbox extends ListMixin(Array) {
 
     this.type = type;
 
-    this.dropdown = document.createElement('ul');
-    this.dropdown.setAttribute('role', 'presentation');
-    this.dropdown.classList.add('listbox', 'listbox_vertical');
+    this.element = document.createElement('ul');
+    this.element.setAttribute('role', 'presentation');
+    this.element.classList.add('listbox', 'listbox_vertical');
 
     this.updateOptions(options);
 
@@ -68,7 +68,7 @@ export class DropdownListbox extends ListMixin(Array) {
   }
 
   render() {
-    return this.dropdown;
+    return this.element;
   }
 
   // // doesn't work
@@ -114,29 +114,25 @@ export class DropdownListbox extends ListMixin(Array) {
 
   updateOptions(options: DropdownOption[]) {
     this._options = options;
-    const items = this.options.map(this.addItem.bind(this));
+    const items: ListItem[] = this.options.map(this.addItem.bind(this));
 
-    // remove unused items
-    this.items.forEach((item) => {
-      if (!items.find((i) => i === item)) {
-        item.element.remove();
-      }
-    });
+    // // remove unused items
+    // this.items.forEach((item) => {
+    //   if (!items.find((i) => i === item)) {
+    //     item.element.remove();
+    //   }
+    // });
 
     this.items = items;
 
-    // rerender items
-    this.items.forEach((item) => {
-      this.dropdown.appendChild(item.element);
-    });
+    return this.items.map((item: ListItem) => item.element);
   }
 
-  // Convert to createOrUpdateItem?
-  addItem(option: DropdownOption) {
-    const item = this.items.find(({ id }) => id === option.id);
+  addItem(option: DropdownOption): ListItem {
+    const item = this.items.find(({ id }) => id === option.id); // just iterate over index...
     if (item) {
-      item.option = option;
-      return item;
+      item.option = option; // updates option in the item
+      return item as ListItem;
     } else {
       const newItem = new ListItem(
         option,
@@ -145,6 +141,8 @@ export class DropdownListbox extends ListMixin(Array) {
         this.type,
       );
       newItem.id = `${option.id}`;
+      console.log('append', newItem);
+      this.element.append(newItem.element);
       return newItem;
     }
   }
