@@ -124,6 +124,13 @@ export class Menu extends HTMLElement {
 
   handleChange(options: DropdownOption[]) {
     this.onChange(options);
+    if (
+      this.type === DropdownListTypes.menuitem ||
+      this.type === DropdownListTypes.option
+    ) {
+      this.button.focus();
+      this.hideDropdown();
+    }
   }
 
   handleNavigate(id: string, _option: DropdownOption) {
@@ -144,13 +151,18 @@ export class Menu extends HTMLElement {
     const isOpen = this.trigger.classList.contains('is-open');
     const { key } = e;
     switch (key) {
-      case 'Enter':
       case ' ':
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        break;
+      case 'Enter':
         e.stopPropagation();
         e.preventDefault();
         if (isOpen) {
           // Hide the dropdown and submit if open
           this.hideDropdown();
+          this.button.focus();
 
           // TODO: move all of the keyboard handling to dropdownlist so that this can make use of the same onchange logic.
           // this.onChange([this.dropdown.currentItem.option]);
@@ -176,6 +188,7 @@ export class Menu extends HTMLElement {
           this.dropdown.nextItem(e, -1);
         } else {
           this.showDropdown();
+          this.dropdown.nextItem(e, -1);
         }
         break;
       case 'ArrowRight':
@@ -185,9 +198,18 @@ export class Menu extends HTMLElement {
         e.stopPropagation();
         e.preventDefault();
         if (isOpen) {
-          this.dropdown.nextItem(e, 1);
+          if (
+            this.shadowRoot
+              .querySelector('#listbox')
+              .contains(this.shadowRoot.activeElement)
+          ) {
+            this.dropdown.nextItem(e, 1);
+          } else {
+            this.dropdown.updateCurrent(0);
+          }
         } else {
           this.showDropdown();
+          this.dropdown.updateCurrent(0);
         }
         break;
       case 'Escape':

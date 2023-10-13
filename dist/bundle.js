@@ -931,9 +931,9 @@
           switch (e.key) {
               case ' ':
               case 'Enter':
-                  e.stopPropagation();
-                  e.stopImmediatePropagation();
-                  e.preventDefault();
+                  // e.stopPropagation();
+                  // e.stopImmediatePropagation();
+                  // e.preventDefault();
                   this.onSelect(e, this);
                   break;
           }
@@ -1151,7 +1151,7 @@
           // TODO: something is odd because shift tabbing through the button opens the menu when it shouldn't
           this.trigger.addEventListener('keydown', this.handlePress.bind(this), false);
           this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
-          this.button.addEventListener('click', this.toggleDropdown.bind(this), true); // TODO: doesn't work
+          this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
           document.body.addEventListener('focus', this.handleBlur.bind(this), true);
           document.body.addEventListener('click', this.handleBlur.bind(this), true);
       }
@@ -1200,13 +1200,11 @@
       handleChange(options) {
           console.log('handleChange', options);
           this.onChange(options);
-          // if (
-          //   this.type === DropdownListTypes.menuitem ||
-          //   this.type === DropdownListTypes.option
-          // ) {
-          // TODO: or if key was enter
-          this.button.focus();
-          // }
+          if (this.type === DropdownListTypes.menuitem ||
+              this.type === DropdownListTypes.option) {
+              this.button.focus();
+              this.hideDropdown();
+          }
       }
       handleNavigate(id, _option) {
           this.button.setAttribute('aria-activedescendant', id);
@@ -1226,10 +1224,14 @@
           const isOpen = this.trigger.classList.contains('is-open');
           const { key } = e;
           switch (key) {
-              // case 'Space':
-              // this.toggleDropdown();
-              case 'Enter':
               case ' ':
+                  e.stopPropagation();
+                  e.stopImmediatePropagation();
+                  e.preventDefault();
+                  // this.toggleDropdown();
+                  break;
+              case 'Enter':
+                  // case ' ':
                   console.log('Enter/Space', e);
                   // debugger;
                   e.stopPropagation();
@@ -1269,6 +1271,7 @@
                   }
                   else {
                       this.showDropdown();
+                      this.dropdown.nextItem(e, -1);
                   }
                   break;
               case 'ArrowRight':
@@ -1289,6 +1292,7 @@
                   }
                   else {
                       this.showDropdown();
+                      this.dropdown.updateCurrent(0);
                   }
                   break;
               case 'Escape':
