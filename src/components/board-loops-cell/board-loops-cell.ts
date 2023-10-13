@@ -136,15 +136,15 @@ export class BoardLoopsCell extends ReactiveMixin(HTMLElement) {
 }
 
 const hue = {
-  1: 40,
-  2: 80,
-  3: 120,
-  4: 160,
-  5: 200,
-  6: 240,
-  7: 280,
-  8: 320,
-  9: 360,
+  0: 40,
+  1: 80,
+  2: 120,
+  3: 160,
+  4: 200,
+  5: 240,
+  6: 280,
+  7: 320,
+  8: 360,
 };
 const saturation = 90;
 const brightness = 75;
