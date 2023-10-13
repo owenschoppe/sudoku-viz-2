@@ -1,7 +1,10 @@
 import { DropdownOption } from '../../menu/types';
 import { DropdownListTypes } from '../types';
 
-type SelectCallback = (event: MouseEvent, item: ListItem) => void;
+type SelectCallback = (
+  event: MouseEvent | KeyboardEvent,
+  item: ListItem,
+) => void;
 
 type HoverCallback = (event: MouseEvent, item: ListItem) => void;
 
@@ -50,6 +53,7 @@ export class ListItem {
     this.update();
 
     this.element.addEventListener('click', this.handleClick.bind(this), true);
+    this.element.addEventListener('keydown', this.handleKey.bind(this), true);
     this.element.addEventListener(
       'mouseover',
       this.handleHover.bind(this),
@@ -76,6 +80,22 @@ export class ListItem {
 
   handleHover(e: MouseEvent) {
     this.onHover(e, this);
+  }
+
+  handleKey(e: KeyboardEvent) {
+    console.log('key', e);
+    switch (e.key) {
+      case ' ':
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        this.onSelect(e, this);
+        break;
+      case 'Enter':
+        this.onSelect(e, this);
+        break;
+      default:
+    }
   }
 
   get id() {

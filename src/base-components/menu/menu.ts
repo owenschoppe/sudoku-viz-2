@@ -3,7 +3,7 @@ import css from './menu.css';
 
 import {
   DropdownListbox,
-  getReturnValue,
+  // getReturnValue,
 } from '../_internals/dropdown-listbox/index.js';
 import { ChangeCallback, DropdownOption, MenuParams } from './types.js';
 import { DropdownListTypes } from '../_internals/types.js';
@@ -69,7 +69,13 @@ export class Menu extends HTMLElement {
       },
     );
 
-    this.trigger.addEventListener('keydown', this.handlePress.bind(this), true);
+    // TODO: something is odd because shift tabbing through the button opens the menu when it shouldn't
+
+    this.trigger.addEventListener(
+      'keydown',
+      this.handlePress.bind(this),
+      false,
+    );
     this.trigger.addEventListener('input', this.searchOptions.bind(this), true);
     this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
     document.body.addEventListener('focus', this.handleBlur.bind(this), true);
@@ -97,25 +103,36 @@ export class Menu extends HTMLElement {
   }
 
   showDropdown() {
+    console.log('show', this.trigger.classList, this.trigger);
+
+    // const { scrollHeight, scrollWidth } = document.body;
     this.trigger.classList.add('is-open');
     this.button.setAttribute('aria-expanded', 'true');
     this.button.setAttribute(
       'aria-activedescendant',
       this.dropdown.currentItem?.id,
     );
+    // this.dropdown.positionDropdown({ scrollHeight, scrollWidth });
   }
 
   hideDropdown() {
+    console.log('hide', this.trigger.classList, this.trigger);
+
+    // const { scrollHeight, scrollWidth } = document.body;
     this.trigger.classList.remove('is-open');
     this.button.setAttribute('aria-expanded', 'false');
     this.button.removeAttribute('aria-activedescendant');
     this.dropdown.updateCurrent(0);
+    // this.dropdown.positionDropdown({ scrollHeight, scrollWidth });
   }
 
   toggleDropdown() {
+    // debugger;
     if (this.trigger.classList.contains('is-open')) {
+      console.log('toggle open=>closed', this.trigger.classList, this.trigger);
       this.hideDropdown();
     } else {
+      console.log('toggle closed=>open', this.trigger.classList, this.trigger);
       this.showDropdown();
     }
   }
@@ -123,6 +140,7 @@ export class Menu extends HTMLElement {
   private;
 
   handleChange(options: DropdownOption[]) {
+    console.log('handleChange', options);
     this.onChange(options);
     if (
       this.type === DropdownListTypes.menuitem ||
@@ -130,6 +148,8 @@ export class Menu extends HTMLElement {
     ) {
       this.button.focus();
       this.hideDropdown();
+    } else {
+      this.dropdown.currentItem.element.focus();
     }
   }
 
@@ -137,7 +157,15 @@ export class Menu extends HTMLElement {
     this.button.setAttribute('aria-activedescendant', id);
   }
 
-  handleBlur(_e?: FocusEvent) {
+  handleBlur(e?: FocusEvent) {
+    // e.preventDefault();
+    // e.stopPropagation();
+    console.log(
+      'handleBlur',
+      e.target,
+      this.shadowRoot.activeElement,
+      !this.trigger.contains(this.shadowRoot.activeElement),
+    );
     if (!this.trigger.contains(this.shadowRoot.activeElement)) {
       this.hideDropdown();
     }
@@ -155,24 +183,41 @@ export class Menu extends HTMLElement {
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.preventDefault();
+        // this.toggleDropdown();
+
+        if (isOpen) {
+          if (e.target === this.button) {
+            this.hideDropdown();
+          }
+        } else {
+          this.showDropdown();
+        }
         break;
       case 'Enter':
+        // case ' ':
+        console.log('Enter/Space', e);
+        // debugger;
         e.stopPropagation();
         e.preventDefault();
         if (isOpen) {
           // Hide the dropdown and submit if open
+          // if (
+          //   this.type === DropdownListTypes.menuitem ||
+          //   this.type === DropdownListTypes.option
+          // ) {
           this.hideDropdown();
           this.button.focus();
+          // }
 
           // TODO: move all of the keyboard handling to dropdownlist so that this can make use of the same onchange logic.
           // this.onChange([this.dropdown.currentItem.option]);
-          this.onChange(
-            getReturnValue(
-              this.type,
-              this.dropdown.items,
-              this.dropdown.currentItem,
-            ),
-          );
+          // this.onChange(
+          //   getReturnValue(
+          //     this.type,
+          //     this.dropdown.items,
+          //     this.dropdown.currentItem,
+          //   ),
+          // );
         } else {
           // Show the dropdown if closed
           this.showDropdown();

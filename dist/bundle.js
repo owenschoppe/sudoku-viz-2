@@ -930,10 +930,12 @@
           console.log('key', e);
           switch (e.key) {
               case ' ':
+                  e.stopPropagation();
+                  e.stopImmediatePropagation();
+                  e.preventDefault();
+                  this.onSelect(e, this);
+                  break;
               case 'Enter':
-                  // e.stopPropagation();
-                  // e.stopImmediatePropagation();
-                  // e.preventDefault();
                   this.onSelect(e, this);
                   break;
           }
@@ -1017,12 +1019,6 @@
       //     this.dropdown.classList.remove('dropdown_top');
       //   }
       // }
-      updateOptions(options) {
-          this._options = options;
-          this.dropdown.innerHTML = ''; //
-          this.items = [];
-          this.options.forEach(this.addItem.bind(this));
-      }
       updateCurrent(index) {
           if (index === -1) {
               return;
@@ -1047,12 +1043,33 @@
               }
           });
       }
+      updateOptions(options) {
+          this._options = options;
+          const items = this.options.map(this.addItem.bind(this));
+          // remove unused items
+          this.items.forEach((item) => {
+              if (!items.find((i) => i === item)) {
+                  item.element.remove();
+              }
+          });
+          this.items = items;
+          // rerender items
+          this.items.forEach((item) => {
+              this.dropdown.appendChild(item.element);
+          });
+      }
       // Convert to createOrUpdateItem?
-      addItem(option, i) {
-          var item = new ListItem(option, this.selectItem.bind(this), this.hoverItem.bind(this), this.type);
-          item.id = `option-${i}`;
-          this.items.push(item);
-          this.dropdown.appendChild(item.element);
+      addItem(option) {
+          const item = this.items.find(({ id }) => id === option.id);
+          if (item) {
+              item.option = option;
+              return item;
+          }
+          else {
+              const newItem = new ListItem(option, this.selectItem.bind(this), this.hoverItem.bind(this), this.type);
+              newItem.id = `${option.id}`;
+              return newItem;
+          }
       }
   }
   const getReturnValue = (type, items, currentItem) => {
@@ -1205,6 +1222,9 @@
               this.button.focus();
               this.hideDropdown();
           }
+          else {
+              this.dropdown.currentItem.element.focus();
+          }
       }
       handleNavigate(id, _option) {
           this.button.setAttribute('aria-activedescendant', id);
@@ -1229,6 +1249,14 @@
                   e.stopImmediatePropagation();
                   e.preventDefault();
                   // this.toggleDropdown();
+                  if (isOpen) {
+                      if (e.target === this.button) {
+                          this.hideDropdown();
+                      }
+                  }
+                  else {
+                      this.showDropdown();
+                  }
                   break;
               case 'Enter':
                   // case ' ':

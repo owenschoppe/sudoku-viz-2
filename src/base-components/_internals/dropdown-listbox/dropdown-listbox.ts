@@ -71,12 +71,22 @@ export class DropdownListbox extends ListMixin(Array) {
     return this.dropdown;
   }
 
-  updateOptions(options: DropdownOption[]) {
-    this._options = options;
-    this.dropdown.innerHTML = ''; //
-    this.items = [];
-    this.options.forEach(this.addItem.bind(this));
-  }
+  // // doesn't work
+  // positionDropdown({ scrollHeight, scrollWidth }) {
+  //   const { x, y, width, height } = this.dropdown.getBoundingClientRect();
+
+  //   if (x + width > scrollWidth) {
+  //     this.dropdown.classList.add('dropdown_left');
+  //   } else {
+  //     this.dropdown.classList.remove('dropdown_left');
+  //   }
+
+  //   if (y + height > scrollHeight) {
+  //     this.dropdown.classList.add('dropdown_top');
+  //   } else {
+  //     this.dropdown.classList.remove('dropdown_top');
+  //   }
+  // }
 
   updateCurrent(index?: number) {
     if (index === -1) {
@@ -102,17 +112,41 @@ export class DropdownListbox extends ListMixin(Array) {
     });
   }
 
+  updateOptions(options: DropdownOption[]) {
+    this._options = options;
+    const items = this.options.map(this.addItem.bind(this));
+
+    // remove unused items
+    this.items.forEach((item) => {
+      if (!items.find((i) => i === item)) {
+        item.element.remove();
+      }
+    });
+
+    this.items = items;
+
+    // rerender items
+    this.items.forEach((item) => {
+      this.dropdown.appendChild(item.element);
+    });
+  }
+
   // Convert to createOrUpdateItem?
-  addItem(option: DropdownOption, i: number) {
-    var item = new ListItem(
-      option,
-      this.selectItem.bind(this),
-      this.hoverItem.bind(this),
-      this.type,
-    );
-    item.id = `option-${i}`;
-    this.items.push(item);
-    this.dropdown.appendChild(item.element);
+  addItem(option: DropdownOption) {
+    const item = this.items.find(({ id }) => id === option.id);
+    if (item) {
+      item.option = option;
+      return item;
+    } else {
+      const newItem = new ListItem(
+        option,
+        this.selectItem.bind(this),
+        this.hoverItem.bind(this),
+        this.type,
+      );
+      newItem.id = `${option.id}`;
+      return newItem;
+    }
   }
 }
 
