@@ -1,6 +1,5 @@
 import { CellValue, State } from '../../types.js';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
-// import { isValidInput } from '../../utils/sudoku.js';
 import { LoopType } from '../../utils/sudoku-loops.js';
 
 /**
@@ -119,9 +118,6 @@ export class BoardLoopsCell extends ReactiveMixin(HTMLElement) {
       }
       button.only {
         background: white;
-      }
-      button.possibility {
-        background: var(--cell-background-possibility-color, #f3f3f3);
       }
       button.current {
         box-shadow: 0 0 0 1px white;

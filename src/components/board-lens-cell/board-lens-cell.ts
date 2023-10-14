@@ -156,6 +156,8 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
       }
       button.possibility {
         background: var(--cell-background-possibility-color, #f3f3f3);
+        color: white;
+        font-weight: 100;
         border-radius: 50%;
         /* opacity: 0.5; */
       }
