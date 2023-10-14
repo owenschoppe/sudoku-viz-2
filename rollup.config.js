@@ -1,7 +1,8 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
-import html from '@rollup/plugin-html';
+// import html from '@rollup/plugin-html';
+import html2 from 'rollup-plugin-html2';
 import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 import { string } from 'rollup-plugin-string';
@@ -32,16 +33,19 @@ export default {
     }),
     commonjs(), // converts date-fns to ES modules
     typescript(),
-    html({
-      title: 'Sudoku Viz',
-      publicPath: './',
-      fileName: 'index.html',
-      attributes: { html: { lang: 'en' } },
-      meta: [
-        { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width' },
-      ],
+    html2({
+      template: './index.html',
     }),
+    // html({
+    //   title: 'Sudoku Viz',
+    //   publicPath: './',
+    //   fileName: 'index.html',
+    //   attributes: { html: { lang: 'en' }, link: {} },
+    //   meta: [
+    //     { charset: 'utf-8' },
+    //     { name: 'viewport', content: 'width=device-width' },
+    //   ],
+    // }),
     production && terser(), // minify, but only in production
     !production &&
       serve({
