@@ -689,6 +689,8 @@
       }
       button.possibility {
         background: var(--cell-background-possibility-color, #f3f3f3);
+        color: white;
+        font-weight: 100;
         border-radius: 50%;
         /* opacity: 0.5; */
       }
@@ -1514,9 +1516,6 @@
       button.only {
         background: white;
       }
-      button.possibility {
-        background: var(--cell-background-possibility-color, #f3f3f3);
-      }
       button.current {
         box-shadow: 0 0 0 1px white;
       }
@@ -1866,7 +1865,10 @@
               break;
           case 'new':
               const { difficulty } = action.data;
-              state.board = difficulty === 'blank' ? null : generateBoard(difficulty);
+              state.board =
+                  difficulty === 'blank'
+                      ? cloneDeep(blankBoard)
+                      : generateBoard(difficulty);
               updatedState = initialState(state);
               break;
           case 'move':
@@ -1901,9 +1903,9 @@
       }
       return updatedState;
   };
-  const initialBoard = NNArray(9, 0);
+  const blankBoard = NNArray(9, 0);
   const initialState = (priorState) => {
-      const board = priorState?.board || cloneDeep(initialBoard);
+      const board = priorState?.board || cloneDeep(generateBoard(difficultyLevel.HARD));
       const possibilities = possibilitiesForBoard(board);
       return {
           board: board,

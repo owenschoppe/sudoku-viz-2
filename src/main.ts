@@ -3,10 +3,10 @@ import './base-components/global.css';
 import './components';
 
 import { Action, initializeSubscriptions } from './utils/subscribe.js';
-import { Board, State } from './types.js';
+import { State } from './types.js';
 import { NNArray, cloneDeep } from './utils';
 import { possibilitiesForBoard } from './utils/sudoku';
-import { generateBoard } from './utils/sudoku-solver';
+import { difficultyLevel, generateBoard } from './utils/sudoku-solver';
 import { down, left, right, up } from './utils/move';
 import { getLoopsForBoardByType } from './utils/sudoku-loops';
 
@@ -50,7 +50,10 @@ const reducer = (state: State, action: Action) => {
       break;
     case 'new':
       const { difficulty } = action.data;
-      state.board = difficulty === 'blank' ? null : generateBoard(difficulty);
+      state.board =
+        difficulty === 'blank'
+          ? cloneDeep(blankBoard)
+          : generateBoard(difficulty);
       updatedState = initialState(state);
       break;
     case 'move':
@@ -87,10 +90,11 @@ const reducer = (state: State, action: Action) => {
   return updatedState;
 };
 
-const initialBoard = NNArray(9, 0);
+const blankBoard = NNArray(9, 0);
 
 const initialState = (priorState?: State): State => {
-  const board = priorState?.board || cloneDeep(initialBoard);
+  const board =
+    priorState?.board || cloneDeep(generateBoard(difficultyLevel.HARD));
   const possibilities = possibilitiesForBoard(board);
   return {
     board: board,
