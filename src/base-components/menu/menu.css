@@ -5,6 +5,7 @@
   --button-font-size: 0.825rem;
   --button-height: var(--xxl);
   --button-padding: 0 8px;
+  --highlight-color: var(--g-9);
 }
 
 /* Combobox Container */
@@ -32,7 +33,7 @@
 
 .button:focus {
   outline: none;
-  box-shadow: 0 0 0 4px inset hsl(196deg 76% 45% / 80%);
+  box-shadow: 0 0 0 4px inset var(--o-highlight-color, var(--highlight-color));
 }
 
 /* Dropdown */
@@ -93,7 +94,7 @@
 
 .listbox__option:focus {
   outline: none;
-  box-shadow: 4px 0 0 0 inset hsl(196deg 76% 45% / 80%);
+  box-shadow: 4px 0 0 0 inset var(--o-highlight-color, var(--highlight-color));
 }
 
 .dropdown .listbox__option {

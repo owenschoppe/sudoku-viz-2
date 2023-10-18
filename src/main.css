@@ -7,10 +7,14 @@ body,
 }
 
 body {
+  --main-board: 478px;
+  --board-gap: 8px;
+  --highlight-color: hsl(196deg 76% 45% / 80%);
+  --o-highlight-color: var(--highlight-color);
+
   font-family: system-ui;
   font-size: 16px;
 
-  --highlight-color: hsl(196deg 76% 45% / 80%);
   margin: 0;
   padding: 0;
   overflow: hidden;

@@ -6,14 +6,22 @@ import html2 from 'rollup-plugin-html2';
 import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 import { string } from 'rollup-plugin-string';
-import livereload from 'rollup-plugin-livereload';
-import serve from 'rollup-plugin-serve';
 
 import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 import postcssPresetEnv from 'postcss-preset-env';
 
 const production = !process.env.ROLLUP_WATCH;
+
+const livereloadScript = production
+  ? []
+  : [
+      {
+        tag: 'script',
+        text: `document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +
+  ':5001/livereload.js?snipver=1"></' + 'script>')`,
+      },
+    ];
 
 export default {
   input: 'src/main.ts',
@@ -23,7 +31,7 @@ export default {
     sourcemap: true,
   },
   plugins: [
-    resolve(), // tells Rollup how to find date-fns in node_modules
+    resolve(), // tells Rollup how to find node_modules
     postcss({
       extract: true,
       include: ['src/*.css', 'src/base-components/*.css'],
@@ -38,20 +46,17 @@ export default {
     string({
       include: '**/*.html',
     }),
-    commonjs(), // converts date-fns to ES modules
+    commonjs(), // converts to ES modules
     typescript(),
     html2({
       template: './src/index.html',
+      externals: {
+        after: [...livereloadScript],
+      },
     }),
     copy({
       targets: [{ src: 'assets/**/*', dest: 'dist/public' }],
     }),
-    production && terser(), // minify, but only in production
-    !production &&
-      serve({
-        contentBase: ['dist'],
-        open: true,
-      }),
-    !production && livereload({ watch: 'dist' }),
+    production && terser(), // minify in production
   ],
 };
