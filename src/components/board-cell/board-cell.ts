@@ -189,12 +189,25 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
         color: #666;
         background-color: #f3f3f3;
       }
+      .visuallyhidden {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+      }
             ${this.css}
     </style>
-    <input
-      value="${isCellValue(this.value) ? String(this.value) : ''}"
-      type="number"
-    />
+    <label>
+      <span class="visuallyhidden">Cell ${this.i} ${this.j}</span>
+      <input
+        value="${isCellValue(this.value) ? String(this.value) : ''}"
+        type="number"
+      />
+    </label>
   `;
 }
 

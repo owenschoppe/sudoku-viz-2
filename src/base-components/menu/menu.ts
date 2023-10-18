@@ -233,7 +233,10 @@ export class Menu extends HTMLElement {
         id="button"
         part="button"
         class="button"
+        role="button"
         aria-haspopup="true"
+        aria-expanded="false"
+        aria-controls="listbox"
         title="${label}"
       >
         <span>${label}</span>
@@ -243,6 +246,7 @@ export class Menu extends HTMLElement {
         part="dropdown"
         class="dropdown dropdown-small"
         role="menu"
+        aria-labeledby="button"
       >
         <!-- ListBox -->
       </div>

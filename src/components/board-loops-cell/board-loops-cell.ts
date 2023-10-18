@@ -127,7 +127,9 @@ export class BoardLoopsCell extends ReactiveMixin(HTMLElement) {
       }
       ${this.css}
     </style>
-    <button part="button" tabindex="-1">${this.value ?? ``}</button>
+    <button part="button" tabindex="-1" title="Cell ${this.i} ${this.j}">
+      ${this.value ?? ``}
+    </button>
   `;
 }
 

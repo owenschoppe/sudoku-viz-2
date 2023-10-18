@@ -18,7 +18,7 @@
 /* Trigger */
 
 .button {
-  width: 100%;
+  /* width: 100%; */
   cursor: pointer;
   height: var(--o-button-height, var(--button-height));
   line-height: var(--o-button-height, var(--button-height));
