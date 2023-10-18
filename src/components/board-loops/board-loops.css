@@ -29,5 +29,5 @@ h3 {
   top: calc(0px - var(--font-size));
   width: 0;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }

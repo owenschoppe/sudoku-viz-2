@@ -163,6 +163,8 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
         -ms-user-select: none;
         user-select: none;
         box-shadow: 0 0 0 1px var(--g-13);
+        -webkit-appearance: none;
+        border-radius: 0;
       }
       /* Hide numeric input buttons */
       /* Chrome, Safari, Edge, Opera */

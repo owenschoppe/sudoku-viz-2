@@ -1,5 +1,4 @@
 :host {
-  /* --my-button-color-public: var(--my-button-color-public, blue); */
   --board-size: var(--public-board-size, 240px);
   --board-cell-gap: var(--public-board-gap, 2px);
   --board-group-gap: var(--public-board-gap, 4px);

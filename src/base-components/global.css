@@ -1,4 +1,4 @@
-/* import into bundle.css in bundler config */
+html,
 :root {
   /* spacing */
   --xs: 0.125rem;

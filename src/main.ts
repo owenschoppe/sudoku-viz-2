@@ -1,5 +1,5 @@
-import './main.css';
 import './base-components/global.css';
+import './main.css';
 import './components';
 
 import { Action, initializeSubscriptions } from './utils/subscribe.js';

@@ -1,5 +1,10 @@
 :host {
+  --button-background: white;
+  --button-border: none;
+  --button-border-radius: 0;
+  --button-font-size: 0.825rem;
   --button-height: var(--xxl);
+  --button-padding: 0 8px;
 }
 
 /* Combobox Container */
@@ -14,14 +19,14 @@
 .button {
   width: 100%;
   cursor: pointer;
-  height: var(--button-height);
-  line-height: var(--button-height);
-  padding: 0 8px;
-  border-radius: 0;
-  border: none;
+  height: var(--o-button-height, var(--button-height));
+  line-height: var(--o-button-height, var(--button-height));
+  padding: var(--o-button-padding, var(--button-padding));
+  border-radius: var(--o-button-border-radius, var(--button-border-radius));
+  border: var(--o-button-border, var(--button-border));
   display: block;
-  background: white;
-  font-size: 14px;
+  background: var(--o-button-background, var(--button-background));
+  font-size: var(--o-button-font-size, var(--button-font-size));
   user-select: none;
 }
 
@@ -32,10 +37,11 @@
 
 /* Dropdown */
 
-.dropdown {
+[part='dropdown'] {
   position: relative;
   display: none;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .dropdown-small .listbox_vertical {

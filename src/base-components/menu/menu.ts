@@ -1,5 +1,7 @@
 //@ts-ignore
 import css from './menu.css';
+//@ts-ignore
+import gcss from '../global.css';
 
 import {
   DropdownListbox,
@@ -227,10 +229,21 @@ export class Menu extends HTMLElement {
 
   template = (label: string) => html`
     <div class="dropdown-trigger dropdown-trigger_click">
-      <button id="button" class="button" aria-haspopup="true" title="${label}">
+      <button
+        id="button"
+        part="button"
+        class="button"
+        aria-haspopup="true"
+        title="${label}"
+      >
         <span>${label}</span>
       </button>
-      <div id="listbox" class="dropdown dropdown-small" role="menu">
+      <div
+        id="listbox"
+        part="dropdown"
+        class="dropdown dropdown-small"
+        role="menu"
+      >
         <!-- ListBox -->
       </div>
     </div>

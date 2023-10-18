@@ -18,6 +18,7 @@
   padding: var(--o-button-padding, var(--p));
   display: flex;
   gap: var(--o-button-gap, var(--gap));
+  font-size: var(--o-button-font-size, 0.825rem);
 }
 
 .button:hover {
