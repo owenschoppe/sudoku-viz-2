@@ -31,7 +31,6 @@ export const subscribe: Subscribe = <State extends any>(
   render: Render<State>,
 ) => {
   subscribers.add(render);
-  // render(getState<State>()); // ???? Depends on whether we call this from the connectedCallback or from the constructor. Better to let the component decide?
 
   const unsubscribe =
     (render: Render<State>): Unsubscribe =>
@@ -58,12 +57,6 @@ export const initializeSubscriptions = <State>(
   }
 };
 
-// let state: State = {
-//   board: Array(9)
-//     .fill(null)
-//     .map(() => Array(9).fill(null)),
-// };
-
 let state: any = {};
 
 const getState = <State>() => state as State;
@@ -71,14 +64,7 @@ const getState = <State>() => state as State;
 const setState = <State>(s: State) => (state = s);
 
 let reducer = <State>(state: State, action?: Action) => {
-  console.log(state, action);
   switch (action?.type) {
-    // case 'update':
-    //   const { i, j, value, color } = action.data;
-    //   state.board[i][j] = value;
-    //   state.color = color;
-    //   console.log(i, j, value, state);
-    //   return state;
     default:
       return state;
   }
