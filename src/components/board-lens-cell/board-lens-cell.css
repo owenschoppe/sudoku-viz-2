@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+button {
+  color: var(--cell-text-color, black);
+  cursor: pointer;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: var(--cell-font-weight, bold);
+  font-size: var(--cell-text-size, 10px);
+  height: var(--cell-height, 100%);
+  margin: 0;
+  padding: 0;
+  width: var(--cell-width, 100%);
+}
+button.selected {
+  background: var(--cell-background-color, #f3f3f3);
+}
+button.only {
+  background: white;
+  border-radius: 25%;
+}
+button.possibility {
+  background: var(--cell-background-possibility-color, #f3f3f3);
+  color: white;
+  font-weight: 100;
+  border-radius: 50%;
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+}
+
+button.current {
+  box-shadow: 0 0 0 1px white;
+}
+button.current.only {
+  border-radius: 0;
+  box-shadow: 0 0 0 2px var(--cell-focus-color, white);
+}

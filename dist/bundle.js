@@ -1,120 +1,1481 @@
-function t(t,e){void 0===e&&(e={});var i=e.insertAt;if(t&&"undefined"!=typeof document){var o=document.head||document.getElementsByTagName("head")[0],s=document.createElement("style");s.type="text/css","top"===i&&o.firstChild?o.insertBefore(s,o.firstChild):o.appendChild(s),s.styleSheet?s.styleSheet.cssText=t:s.appendChild(document.createTextNode(t))}}var e=':host{--board-size:var(--public-board-size,240px);--board-cell-gap:var(--public-board-gap,2px);--board-group-gap:var(--public-board-gap,4px)}.grid{grid-row-gap:var(--board-cell-gap);grid-column-gap:var(--board-cell-gap);-moz-column-gap:var(--board-cell-gap);column-gap:var(--board-cell-gap);display:grid;grid-template-areas:"c00 c01 c02 . c03 c04 c05 . c06 c07 c08" "c10 c11 c12 . c13 c14 c15 . c16 c17 c18" "c20 c21 c22 . c23 c24 c25 . c26 c27 c28" "... ... ... . ... ... ... . ... ... ..." "c30 c31 c32 . c33 c34 c35 . c36 c37 c38" "c40 c41 c42 . c43 c44 c45 . c46 c47 c48" "c50 c51 c52 . c53 c54 c55 . c56 c57 c58" "... ... ... . ... ... ... . ... ... ..." "c60 c61 c62 . c63 c64 c65 . c66 c67 c68" "c70 c71 c72 . c73 c74 c75 . c76 c77 c78" "c80 c81 c82 . c83 c84 c85 . c86 c87 c88";grid-template-columns:1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr;height:var(--board-size);line-height:0;row-gap:var(--board-cell-gap);width:var(--board-size)}';t(e);var i='<div id="board" class="grid"></div>\n';const o={1:!0,2:!0,3:!0,4:!0,5:!0,6:!0,7:!0,8:!0,9:!0},s=t=>!!o[t],n=t=>Math.floor(Math.random()*t),r=(t,e)=>Array(t).fill(null).map((()=>Array(t).fill(null).map((()=>l(e))))),a=t=>({i:~~(t/9),j:t%9}),l=t=>Array.isArray(t)?t.map(l):"object"==typeof t&&null!==t?Object.entries(t).reduce(((t,[e,i])=>(t[e]=l(i),t)),{}):t,c=t=>t.reduce(((t,e)=>{const i=n(t.length);return t.splice(i,0,e),t}),[]),d=(t,e)=>{if("function"!=typeof t||null!=e&&"function"!=typeof e)throw new TypeError("Arguments are not of correct type");const i=(...o)=>{const s=i.cache,n=e?e(o):o[0],r=s.get(n);if(void 0!==r)return r;const a=t(...o);return s.set(n,a),a};return i.cache=new(d.Cache||Map),i};d.Cache=Map;const h=new Set,u=t=>{h.add(t);return{dispatch:t=>(g(m(b(),t)),h.forEach((t=>t(b()))),b()),state:p,unsubscribe:(t=>()=>h.delete(t))(t)}};let p={};const b=()=>p,g=t=>p=t;let m=(t,e)=>(console.log(t,e),t);const v=t=>class extends t{state;dispatch;unsubscribe;constructor(...t){super(...t);const{unsubscribe:e,dispatch:i,state:o}=u(this.render.bind(this));this.state=l(o),this.dispatch=i,this.unsubscribe=e}connectedCallback(){this.render(this.state)}disconnectedCallback(){this.unsubscribe()}render(t){}},w=t=>t.map(((e,i)=>e.map(((e,o)=>f(t,i,o))))),f=(t,e,i)=>{const o={1:1,2:1,3:1,4:1,5:1,6:1,7:1,8:1,9:1},s=t[e][i],n=Object.keys(o).reduce(((t,e)=>(t[e]=Number(e)===s?1:0,t)),{}),r=y(t,e,i),a=r.reduce(((t,e)=>(t[e]=0,t)),o);return{possibilities:s&&a[s]?n:a,possibilityCount:9-r.length,value:t[e][i]}},y=(t,e,i)=>{return(t=>t.filter(s))((o=[k,x,C].flatMap((o=>o(t,e,i))),[...new Set(o)]));var o},k=(t,e,i)=>{const o=L(t,e);return o.splice(i,1),o},x=(t,e,i)=>{const o=E(t,i);return o.splice(e,1),o},C=(t,e,i)=>{const o=S(t,j[e][i]),s=A[e][i];return o.splice(s,1),o},L=(t,e)=>t[e].slice(),E=(t,e)=>t.map((t=>t[e])),S=(t,e)=>{const[i,o]=_[e];return((t,e,i,o,s)=>t.slice(e,o).map((t=>t.slice(i,s))))(t,i,o,i+3,o+3).flat()},j=[[0,0,0,1,1,1,2,2,2],[0,0,0,1,1,1,2,2,2],[0,0,0,1,1,1,2,2,2],[3,3,3,4,4,4,5,5,5],[3,3,3,4,4,4,5,5,5],[3,3,3,4,4,4,5,5,5],[6,6,6,7,7,7,8,8,8],[6,6,6,7,7,7,8,8,8],[6,6,6,7,7,7,8,8,8]],A=[[0,1,2,0,1,2,0,1,2],[3,4,5,3,4,5,3,4,5],[6,7,8,6,7,8,6,7,8],[0,1,2,0,1,2,0,1,2],[3,4,5,3,4,5,3,4,5],[6,7,8,6,7,8,6,7,8],[0,1,2,0,1,2,0,1,2],[3,4,5,3,4,5,3,4,5],[6,7,8,6,7,8,6,7,8]],T=(t,e)=>({i:e,j:t}),D=(t,e)=>({i:t,j:e}),_=[[0,0],[0,3],[0,6],[3,0],[3,3],[3,6],[6,0],[6,3],[6,6]],H=(t,e)=>!!e[Number(t)]??!1;class M extends(v(HTMLElement)){i;j;value;css;input;isEditable;constructor({i:t,j:e,css:i}){super(),this.attachShadow({mode:"open"}),this.i=t,this.j=e,this.css=i}connectedCallback(){this.init(),super.connectedCallback()}disconnectedCallback(){super.disconnectedCallback(),this.input.removeEventListener("keydown",this.handleChange)}init(){const{shadowRoot:t}=this;t.innerHTML=this.template(),this.input=t.querySelector("input"),this.input.addEventListener("keydown",this.handleChange.bind(this)),this.input.addEventListener("click",this.handleClick.bind(this))}render(t){const e=t.board[this.i][this.j];this.isEditable=0===t.original[this.i][this.j];const{i:i,j:o}=t.location;if(this.i===i&&this.j===o){this.input.classList.add("current"),this.input.setAttribute("tabindex","0");const{i:e,j:s}=this.state.location,n=i!==e||o!==s,r=t.moves.length<this.state.moves.length;n&&!r&&this.input.focus()}else this.input.classList.remove("current"),this.input.setAttribute("tabindex","-1");if(this.isEditable?this.input.classList.remove("locked"):this.input.classList.add("locked"),e!==this.value){this.value=e;const t=s(this.value)?String(this.value):"";this.input.value=t}this.state=l(t)}handleClick(){this.dispatch({type:"move",data:{location:{i:this.i,j:this.j}}})}handleChange(t){"Tab"!==t.key&&("ArrowUp"!==t.key&&"ArrowDown"!==t.key&&"ArrowLeft"!==t.key&&"ArrowRight"!==t.key?H(t.key,this.state.possibilities[this.i][this.j].possibilities)&&Number(t.key)!==this.value&&this.isEditable?(t.preventDefault(),this.value=this.dispatch({type:"update",data:{i:this.i,j:this.j,value:Number(t.key)}}).board[this.i][this.j]):"Backspace"===t.key&&this.isEditable&&(t.preventDefault(),this.value=this.dispatch({type:"update",data:{i:this.i,j:this.j,value:0}}).board[this.i][this.j]):t.preventDefault())}template=()=>z`
+function styleInject(css, ref) {
+  if ( ref === void 0 ) ref = {};
+  var insertAt = ref.insertAt;
+
+  if (!css || typeof document === 'undefined') { return; }
+
+  var head = document.head || document.getElementsByTagName('head')[0];
+  var style = document.createElement('style');
+  style.type = 'text/css';
+
+  if (insertAt === 'top') {
+    if (head.firstChild) {
+      head.insertBefore(style, head.firstChild);
+    } else {
+      head.appendChild(style);
+    }
+  } else {
+    head.appendChild(style);
+  }
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+var css_248z$8 = ":host{--board-size:var(--public-board-size,240px);--board-cell-gap:var(--public-board-gap,2px);--board-group-gap:var(--public-board-gap,4px)}.grid{grid-row-gap:var(--board-cell-gap);grid-column-gap:var(--board-cell-gap);-moz-column-gap:var(--board-cell-gap);column-gap:var(--board-cell-gap);display:grid;grid-template-areas:\"c00 c01 c02 . c03 c04 c05 . c06 c07 c08\" \"c10 c11 c12 . c13 c14 c15 . c16 c17 c18\" \"c20 c21 c22 . c23 c24 c25 . c26 c27 c28\" \"... ... ... . ... ... ... . ... ... ...\" \"c30 c31 c32 . c33 c34 c35 . c36 c37 c38\" \"c40 c41 c42 . c43 c44 c45 . c46 c47 c48\" \"c50 c51 c52 . c53 c54 c55 . c56 c57 c58\" \"... ... ... . ... ... ... . ... ... ...\" \"c60 c61 c62 . c63 c64 c65 . c66 c67 c68\" \"c70 c71 c72 . c73 c74 c75 . c76 c77 c78\" \"c80 c81 c82 . c83 c84 c85 . c86 c87 c88\";grid-template-columns:1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr var(--board-group-gap) 1fr 1fr 1fr;height:var(--board-size);line-height:0;row-gap:var(--board-cell-gap);width:var(--board-size)}";
+styleInject(css_248z$8);
+
+var html$8 = "<div id=\"board\" class=\"grid\"></div>\n";
+
+const cellValues = {
+    1: true,
+    2: true,
+    3: true,
+    4: true,
+    5: true,
+    6: true,
+    7: true,
+    8: true,
+    9: true,
+};
+const isCellValue = (value) => !!cellValues[value];
+const justCellValues = (arr) => arr.filter(isCellValue);
+const randomInt = (max) => Math.floor(Math.random() * max);
+
+const slice2d = (arr, rowStart, colStart, rowEnd, colEnd) => arr.slice(rowStart, rowEnd).map((row) => row.slice(colStart, colEnd));
+const NNArray = (n, fill) => Array(n)
+    .fill(null)
+    .map(() => Array(n)
+    .fill(null)
+    .map(() => cloneDeep(fill)));
+/**
+ * Convert index to coordinates
+ * @param index 0-80 indexed number of a cell in 9x9 grid
+ * @returns 0 indexed row, col coordinates
+ */
+const indexToCoord = (index) => {
+    const i = ~~(index / 9);
+    const j = index % 9;
+    return { i, j };
+};
+const possibilitiesObjectToArray = (possibilities) => Object.entries(possibilities).reduce((acc, [value, possible]) => {
+    if (possible) {
+        acc.push(Number(value));
+    }
+    return acc;
+}, []);
+/**
+ * Clone arbitarily nested objects and arrays and primitive values.
+ * Does not support more complex classes like Map and Set
+ * Consider using Object.getPrototypeOf(map) === Map.prototype to expand support
+ * @param obj any[] | {}
+ * @returns any[] | {}
+ */
+const cloneDeep = (obj) => {
+    if (Array.isArray(obj)) {
+        return obj.map(cloneDeep);
+    }
+    else if (typeof obj === 'object' && obj !== null) {
+        return Object.entries(obj).reduce((acc, [key, value]) => {
+            acc[key] = cloneDeep(value);
+            return acc;
+        }, {});
+    }
+    else {
+        return obj;
+    }
+};
+const shuffle = (arr) => arr.reduce((acc, cur) => {
+    const index = randomInt(acc.length);
+    acc.splice(index, 0, cur);
+    return acc;
+}, []);
+
+/**
+ * Memoizes the output of a function to improve performance.
+ * @param fn Function to memoize
+ * @param resolver Custom function that returns a key for the args. By default the first arg is used. arg[0]
+ * @returns memoized function
+ *
+ * Customize the cache by updating `memoize.Cache` to be Map or WeakMap.
+ * WeakMap is preferred for object and array args because it allows old data to be garbage collected.
+ */
+const memoize = (fn, resolver) => {
+    if (typeof fn != 'function' ||
+        (resolver != null && typeof resolver != 'function')) {
+        throw new TypeError('Arguments are not of correct type');
+    }
+    const memoized = (...args) => {
+        const cache = memoized.cache;
+        const key = resolver ? resolver(args) : args[0];
+        const cached = cache.get(key);
+        if (cached !== undefined) {
+            return cached;
+        }
+        const result = fn(...args);
+        cache.set(key, result);
+        return result;
+    };
+    memoized.cache = new (memoize.Cache || Map)();
+    return memoized;
+};
+memoize.Cache = Map;
+
+const unique = (arr) => [...new Set(arr)];
+
+const subscribers = new Set();
+/**
+ * Subscriber function for the module singleton.
+ * TODO: add dependency array param and update state to use `new Proxy` and only call render when dependency changes.
+ * This will be useful when using arrow keys to navigate the board. Updates state but doesn't require rerendering.
+ *
+ * @param render Render function that will be called with State with every change to state.
+ * @returns { dispatch, unsubscribe } Dispatch can be called with an Action to update state and call subscribed render fns. Unsubscribe has the subscriber bound to it and will unsubscribe the function.
+ */
+const subscribe = (render) => {
+    subscribers.add(render);
+    // render(getState<State>()); // ???? Depends on whether we call this from the connectedCallback or from the constructor. Better to let the component decide?
+    const unsubscribe = (render) => () => {
+        return subscribers.delete(render);
+    };
+    const dispatch = (action) => {
+        setState(reducer$1(getState(), action));
+        subscribers.forEach((renderFn) => renderFn(getState()));
+        return getState();
+    };
+    return { dispatch, state, unsubscribe: unsubscribe(render) };
+};
+const initializeSubscriptions = (initialState, reduce) => {
+    setState(initialState);
+    if (reduce) {
+        (reducer$1) = reduce;
+    }
+};
+// let state: State = {
+//   board: Array(9)
+//     .fill(null)
+//     .map(() => Array(9).fill(null)),
+// };
+let state = {};
+const getState = () => state;
+const setState = (s) => (state = s);
+let reducer$1 = (state, action) => {
+    console.log(state, action);
+    switch (action?.type) {
+        // case 'update':
+        //   const { i, j, value, color } = action.data;
+        //   state.board[i][j] = value;
+        //   state.color = color;
+        //   console.log(i, j, value, state);
+        //   return state;
+        default:
+            return state;
+    }
+};
+
+// // Generic Contructor with constraints
+// type GConstructor<T = {}> = new (...args: any[]) => T;
+// // Define properties that the extended class must have.
+// type Renderable = GConstructor<{ render: (state: State) => void }>
+const ReactiveMixin = (Base) => class Reactive extends Base {
+    state;
+    dispatch;
+    unsubscribe;
+    constructor(...args) {
+        super(...args);
+        const { unsubscribe, dispatch, state } = subscribe(this.render.bind(this));
+        this.state = cloneDeep(state);
+        this.dispatch = dispatch;
+        this.unsubscribe = unsubscribe;
+    }
+    connectedCallback() {
+        this.render(this.state);
+    }
+    disconnectedCallback() {
+        this.unsubscribe();
+    }
+    render(_state) { }
+};
+
+var css_248z$7 = ".cell-container{position:relative}.cell{align-items:center;-webkit-appearance:none;-moz-appearance:none;appearance:none;background:#fff;background:var(--cell-background-color,#fff);border:none;border-radius:0;box-shadow:0 0 0 1px var(--g-13);caret-color:transparent;color:#000;color:var(--cell-text-color,#000);cursor:pointer;display:flex;font-size:10px;font-size:var(--cell-text-size,10px);font-weight:700;font-weight:var(--cell-font-weight,bold);height:100%;height:var(--cell-height,100%);justify-content:center;line-height:1;margin:0;padding:0;text-align:center;-webkit-user-select:none;-moz-user-select:none;user-select:none;width:100%;width:var(--cell-width,100%)}.cell::-webkit-inner-spin-button,.cell::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.cell[type=number]{-moz-appearance:textfield}.cell.current{box-shadow:0 0 0 2px inset var(--public-board-cell-focus,var(--highlight-color));outline:none}.cell:focus,label:focus-within .cell{box-shadow:0 0 0 4px inset var(--public-board-cell-focus,var(--highlight-color));outline:none}.cell.locked{background-color:#f3f3f3;color:#666}.visually-hidden{clip:rect(0 0 0 0);border:0;height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}";
+styleInject(css_248z$7);
+
+// Old app the board data structure was [i][j][k]
+// where k[0] is the cell value where 0 is empty
+// and k[1-9] is the binary probability of that number being in that cell
+// value of 0 means it can't be that value, value of 1 means it can be.
+// boards: 201 one of the main challenges is undoing a board move. just because we remove a value from a cell doesn't mean it then becomes legal for all related cells
+/**
+ * Compute all the possible moves on the current state of the sudoku board
+ * @param board
+ * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: 0 | CellValue }[][] Where 0 means the cell can't be that value and 1 means it can be
+ */
+const possibilitiesForBoard = (board) => {
+    return board.map((row, i) => row.map((_, j) => possibilitiesForCell(board, i, j)));
+};
+/**
+ * Get an object representing all the possibilities for a cell
+ * TODO: catch the case when the possibility of a value is 0 for all other cells in row, col, or group. Chain of length 1?
+ * @param board Sudoku board {1-9}[][]
+ * @param i Row index
+ * @param j Column index
+ * @returns { possibilities: { [1-9]: 0 || 1 }, possibilityCount: number, value: 0 | CellValue } Where 0 means the cell can't be that value and 1 means it can be
+ */
+const possibilitiesForCell = (board, i, j) => {
+    const basePossibilities = {
+        1: 1,
+        2: 1,
+        3: 1,
+        4: 1,
+        5: 1,
+        6: 1,
+        7: 1,
+        8: 1,
+        9: 1,
+    };
+    const value = board[i][j];
+    const singlePossibility = Object.keys(basePossibilities).reduce((possibilities, current) => {
+        possibilities[current] = Number(current) === value ? 1 : 0;
+        return possibilities;
+    }, {});
+    const taken = allValuesExcludingCell(board, i, j);
+    const possibilities = taken.reduce((current, value) => {
+        current[value] = 0;
+        return current;
+    }, basePossibilities);
+    return {
+        possibilities: value && possibilities[value] ? singlePossibility : possibilities,
+        possibilityCount: 9 - taken.length,
+        value: board[i][j],
+    };
+};
+/**
+ * Efficient computation of which values are taken, excluding the current cell's value
+ * @param board
+ * @param i
+ * @param j
+ * @returns
+ */
+const allValuesExcludingCell = (board, i, j) => {
+    return justCellValues(unique([rowValExcluding, colValExcluding, grpValExcluding].flatMap((fn) => fn(board, i, j))));
+};
+// Do we need to filter null?
+// Should null be 0?
+const rowValExcluding = (board, i, j) => {
+    const values = rowValues(board, i);
+    values.splice(j, 1);
+    return values;
+};
+const colValExcluding = (board, i, j) => {
+    const values = colValues(board, j);
+    values.splice(i, 1);
+    return values;
+};
+const grpValExcluding = (board, i, j) => {
+    const values = grpValues(board, cellToGroupIndex[i][j]);
+    const index = cellToGroupMemberIndex[i][j];
+    values.splice(index, 1);
+    return values;
+};
+const rowValues = (board, i) => board[i].slice();
+const colValues = (board, j) => board.map((row) => row[j]);
+/**
+ * should this take g or i,j?
+ * @param board
+ * @param g
+ * @returns
+ */
+const grpValues = (board, g) => {
+    const [rowStart, colStart] = groupStartCoords[g];
+    return slice2d(board, rowStart, colStart, rowStart + 3, colStart + 3).flat();
+};
+const cellToGroupIndex = [
+    [0, 0, 0, 1, 1, 1, 2, 2, 2],
+    [0, 0, 0, 1, 1, 1, 2, 2, 2],
+    [0, 0, 0, 1, 1, 1, 2, 2, 2],
+    [3, 3, 3, 4, 4, 4, 5, 5, 5],
+    [3, 3, 3, 4, 4, 4, 5, 5, 5],
+    [3, 3, 3, 4, 4, 4, 5, 5, 5],
+    [6, 6, 6, 7, 7, 7, 8, 8, 8],
+    [6, 6, 6, 7, 7, 7, 8, 8, 8],
+    [6, 6, 6, 7, 7, 7, 8, 8, 8],
+];
+const cellToGroupMemberIndex = [
+    [0, 1, 2, 0, 1, 2, 0, 1, 2],
+    [3, 4, 5, 3, 4, 5, 3, 4, 5],
+    [6, 7, 8, 6, 7, 8, 6, 7, 8],
+    [0, 1, 2, 0, 1, 2, 0, 1, 2],
+    [3, 4, 5, 3, 4, 5, 3, 4, 5],
+    [6, 7, 8, 6, 7, 8, 6, 7, 8],
+    [0, 1, 2, 0, 1, 2, 0, 1, 2],
+    [3, 4, 5, 3, 4, 5, 3, 4, 5],
+    [6, 7, 8, 6, 7, 8, 6, 7, 8],
+];
+const groupMemberIndexToCell = () => {
+    const result = NNArray(9, null);
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            const groupIndex = cellToGroupIndex[i][j];
+            const memberIndex = cellToGroupMemberIndex[i][j];
+            result[groupIndex][memberIndex] = { i, j };
+        }
+    }
+    return (groupIndex, memberIndex) => result[groupIndex][memberIndex];
+};
+const colMemberIndexToCell = (j, i) => ({
+    i,
+    j,
+});
+const rowMemberIndexToCell = (i, j) => ({
+    i,
+    j,
+});
+const addressToGroupMember = ({ i, j }) => ({
+    slice: cellToGroupIndex[i][j],
+    member: cellToGroupMemberIndex[i][j],
+});
+const addressToColumnMember = ({ i, j }) => ({
+    slice: j,
+    member: i,
+});
+const addressToRowMember = ({ i, j }) => ({
+    slice: i,
+    member: j,
+});
+const groupStartCoords = [
+    [0, 0],
+    [0, 3],
+    [0, 6],
+    [3, 0],
+    [3, 3],
+    [3, 6],
+    [6, 0],
+    [6, 3],
+    [6, 6],
+];
+const isValidInput = (input, possibilities) => {
+    return !!possibilities[Number(input)] ?? false;
+};
+
+// Loops/Chains (Groups of cells with possibilities that are linked together)
+// Two (N) cells in a row/col/group that share the same two (N) possibilities
+// ex: [0,0]:[1,2]=>[0,3]:[1:2] end (two cells, two values)
+// 1:[[0,0],[0,3]] 2:[[0,0],[0,3]] simple case, cell lists are the same.
+// ex: [0,0]:[1,2]=>[0,3]:[1:3]=>[0,4]:[2,3] end (three values, three cells) but only 2 for each value.
+// 1:[[0,0],[0,3]] 2:[[0,0],[0,4]] 3:[[0,3],[0,4]]
+// 4 or more? cells that are linked by row/col/group possibilities
+// ex: [0,0]:[1,2]=>[0,3]:[2:4]=>[1,5]:[4:5]=>[1,0]:[1:5] end (4 cells, 4 values)
+// Let's solve the simpler cases first and see how we can generalize.
+// For row, for values 1-9, collect possible cells. Sort by cell list length.
+// For for each cell in list for value, if possible value > cell list length then abort.??
+// Otherwise, run the loop. cell 0 of value 1 has two options; 1 and 2.
+// We're on 1, so take 2. Recursively call function on value 2.
+// What do we return?
+// How do we exit?
+// Pass in the chain of cells and values, if found start (or any subpart?), return steps. else walk possibilities. else return false deadend.
+// if if found start OR if all cells are contained in the current cell chain array?
+const cellString = (cell) => `${cell.i}-${cell.j}`;
+/**
+ * Get connected cells for the current cell.
+ * Must be repeated for every unsearched cell in the row.
+ * @param cell Current cell
+ * @param possibilities
+ * @param cellsPerValue
+ * @param cellSteps Cells processed so far
+ * @param valueSteps Values processed so far
+ * @returns Will always only be a single array with 0-9 cells.
+ */
+const getConnectedCells = (cell, possibilities, cellsPerValue, cellSteps = {}, // order doesn't matter
+valueSteps = {}) => {
+    const { possibilities: possibleValues, value, possibilityCount, } = possibilities[cell.i][cell.j];
+    const values = Object.keys(possibleValues);
+    const unmatchedValues = values.filter((value) => possibleValues[value] && !valueSteps[possibleValues[value]]);
+    const unmatchedValue = unmatchedValues.slice(-1)[0]; // why does this only work when selecting the last element?
+    return unmatchedValue && !value && possibilityCount > 1 // end cycle for cells that contain a value
+        ? getConnectedValues(unmatchedValue, possibilities, cellsPerValue, cellSteps, { ...valueSteps, [unmatchedValue]: true })
+        : Object.values(cellSteps);
+};
+/**
+ *
+ * @param value Current value
+ * @param possibilities
+ * @param cellsPerValue
+ * @param cellSteps
+ * @param valueSteps
+ * @returns
+ */
+const getConnectedValues = (value, possibilities, cellsPerValue, cellSteps = {}, // order doesn't matter
+valueSteps = {}) => {
+    const unmatchedCells = cellsPerValue[value].filter((cell) => !cellSteps[cellString(cell)]);
+    const unmatchedCell = unmatchedCells.slice(-1)[0]; // ?
+    // const { possibilityCount } = possibilities[unmatchedCell.i][unmatchedCell.j];
+    return unmatchedCell
+        ? getConnectedCells(unmatchedCell, possibilities, cellsPerValue, { ...cellSteps, [cellString(unmatchedCell)]: unmatchedCell }, valueSteps)
+        : Object.values(cellSteps);
+};
+const cellsPerValueInRows = (boardPossibilities) => cellsPerValue(rowValues, rowMemberIndexToCell, boardPossibilities);
+const cellsPerValueInCols = (boardPossibilities) => cellsPerValue(colValues, colMemberIndexToCell, boardPossibilities);
+const cellsPerValueInGroups = (boardPossibilities) => cellsPerValue(grpValues, groupMemberIndexToCell(), boardPossibilities);
+const cellsPerValue = (valuesFn, addressFn, boardPossibilities) => {
+    return Array(9)
+        .fill(0)
+        .map((_, index) => {
+        const possibilities = valuesFn(boardPossibilities, index);
+        return possibilities.reduce((values, cellPossibilities, member) => {
+            const address = addressFn(index, member);
+            return Object.entries(cellPossibilities.possibilities).reduce((acc, [value, possible]) => {
+                if (possible)
+                    acc[value].push(address);
+                return acc;
+            }, values);
+        }, cloneDeep(baseCellsPerValue));
+    });
+};
+const baseCellsPerValue = {
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: [],
+    6: [],
+    7: [],
+    8: [],
+    9: [],
+};
+const loopFns = {
+    row: {
+        addressToSliceFn: addressToRowMember,
+        cellsPerValueFn: cellsPerValueInRows,
+    },
+    column: {
+        addressToSliceFn: addressToColumnMember,
+        cellsPerValueFn: cellsPerValueInCols,
+    },
+    group: {
+        addressToSliceFn: addressToGroupMember,
+        cellsPerValueFn: cellsPerValueInGroups,
+    },
+};
+/**
+ * Get all loops for the board by row, column, or group.
+ * Uses the board as a cache to avoid rework and to allow easy visualization.
+ * How might we link these loops together?
+ * Would it be better to get a flat array of loops and then generate a board with loop ids?
+ * @param boardP
+ * @param addressToSliceFn
+ * @param cellsPerValueFn
+ * @returns
+ */
+const getLoopsForBoardByType = (boardP, type) => {
+    const getLoopId = nextId();
+    const { addressToSliceFn, cellsPerValueFn } = loopFns[type];
+    const memoizedCPV = memoize(cellsPerValueFn);
+    return boardP.reduce((cache, row, i) => {
+        row.forEach((_, j) => {
+            if (!cache[i][j]) {
+                const { slice } = addressToSliceFn({ i, j });
+                const cPV = memoizedCPV(boardP)[slice];
+                const loop = getConnectedCells({ i, j }, boardP, cPV);
+                if (loop.length > 1) {
+                    const id = getLoopId();
+                    loop.forEach(({ i: m, j: n }) => {
+                        // add color, index, or name of loop?
+                        cache[m][n] = { loop, id };
+                    });
+                }
+            }
+        });
+        return cache;
+    }, NNArray(9, null));
+};
+const nextId = (init = 0) => {
+    let next = init;
+    return () => {
+        return intToLetters(next++);
+    };
+};
+const intToLetters = (int, str = '', place = 1) => {
+    const letter = String.fromCharCode((int % 26) + 65) + str;
+    if (int < 26 * place) {
+        return letter;
+    }
+    else {
+        return intToLetters(int - 26 * place, letter, place * 26);
+    }
+};
+
+const cellToLabel = ({ i, j }) => {
+    return `Cell ${intToLetters(i)}${j + 1}`;
+};
+
+// @ts-ignore
+/**
+ * Cell element that implements the dispatch pattern.
+ * Each WC class is responsible for tracking the child elements it creates
+ * and updating their properties or calling their render methods during render.
+ *
+ * CSS Custom Properties
+ * @property --cell-text-color black
+ * @property --cell-background-color #f3f3f3
+ * @param i
+ * @param j
+ * @param value
+ */
+class BoardCell extends ReactiveMixin(HTMLElement) {
+    i;
+    j;
+    value;
+    css;
+    input;
+    cell;
+    isEditable;
+    constructor({ i, j, css }) {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.i = i;
+        this.j = j;
+        this.css = css;
+        // this.value = this.state.board[i][j];
+    }
+    connectedCallback() {
+        this.init();
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.input.removeEventListener('keydown', this.handleChange);
+    }
+    init() {
+        const { shadowRoot } = this;
+        console.log(isCellValue(this.value), String(this.value));
+        shadowRoot.innerHTML = this.template();
+        this.cell = shadowRoot.querySelector('#cell');
+        this.input = shadowRoot.querySelector('input');
+        this.input.addEventListener('keydown', this.handleChange.bind(this), true);
+        this.input.addEventListener('click', this.handleClick.bind(this));
+    }
+    render(state) {
+        const value = state.board[this.i][this.j];
+        this.isEditable = state.original[this.i][this.j] === 0;
+        const { i, j } = state.location;
+        if (this.i === i && this.j === j) {
+            this.cell.classList.add('current');
+            this.input.setAttribute('tabindex', '0');
+            const { i: previousI, j: previousJ } = this.state.location;
+            const locationMoved = i !== previousI || j !== previousJ;
+            const isUndo = state.moves.length < this.state.moves.length;
+            if (locationMoved && !isUndo) {
+                this.input.focus();
+            }
+        }
+        else {
+            this.cell.classList.remove('current');
+            this.input.setAttribute('tabindex', '-1');
+        }
+        if (!this.isEditable) {
+            this.cell.classList.add('locked');
+        }
+        else {
+            this.cell.classList.remove('locked');
+        }
+        if (value !== this.value) {
+            this.value = value;
+            const displayValue = isCellValue(this.value) ? String(this.value) : '';
+            this.input.value = displayValue;
+            this.cell.textContent = displayValue;
+        }
+        this.state = cloneDeep(state);
+    }
+    handleClick() {
+        this.dispatch({
+            type: 'move',
+            data: { location: { i: this.i, j: this.j } },
+        });
+    }
+    handleChange(event) {
+        switch (event.key) {
+            case 'Tab':
+                break;
+            case 'ArrowUp':
+            case 'ArrowUp':
+            case 'ArrowUp':
+            case 'ArrowUp':
+                event.preventDefault();
+                break;
+            case 'Backspace':
+                event.preventDefault();
+                if (this.isEditable) {
+                    this.value = this.dispatch({
+                        type: 'update',
+                        data: {
+                            i: this.i,
+                            j: this.j,
+                            value: 0,
+                        },
+                    }).board[this.i][this.j];
+                }
+                break;
+            default:
+                event.preventDefault();
+                if (isValidInput(event.key, this.state.possibilities[this.i][this.j].possibilities) &&
+                    Number(event.key) !== this.value &&
+                    this.isEditable) {
+                    this.value = this.dispatch({
+                        type: 'update',
+                        data: {
+                            i: this.i,
+                            j: this.j,
+                            value: Number(event.key),
+                        },
+                    }).board[this.i][this.j];
+                }
+        }
+    }
+    template = () => html$7 `
     <!DOCTYPE html>
     <style>
-      input {
-        caret-color: transparent;
-        color: var(--cell-text-color, black);
-        cursor: pointer;
-        border: none;
-        background: var(--cell-background-color, white);
-        font-weight: var(--cell-font-weight, bold);
-        font-size: var(--cell-text-size, 10px);
-        height: var(--cell-height, 100%);
-        margin: 0;
-        padding: 0;
-        text-align: center;
-        width: var(--cell-width, 100%);
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        box-shadow: 0 0 0 1px var(--g-13);
-        -webkit-appearance: none;
-        border-radius: 0;
-      }
-      /* Hide numeric input buttons */
-      /* Chrome, Safari, Edge, Opera */
-      input::-webkit-outer-spin-button,
-      input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      /* Firefox */
-      input[type=number] {
-        -moz-appearance: textfield;
-      }
-      input.current {
-        outline: none;
-        box-shadow: 0 0 0 2px inset var(--public-board-cell-focus, var(--highlight-color));
-      }
-      input:focus {
-        outline: none;
-        box-shadow: 0 0 0 4px inset var(--public-board-cell-focus, var(--highlight-color));
-      }
-      input.locked {
-        color: #666;
-        background-color: #f3f3f3;
-      }
-      .visuallyhidden {
-        border: 0;
-        clip: rect(0 0 0 0);
-        height: 1px;
-        margin: -1px;
-        overflow: hidden;
-        padding: 0;
-        position: absolute;
-        width: 1px;
-      }
-            ${this.css}
-    </style>
-    <label>
-      <span class="visuallyhidden">Cell ${this.i} ${this.j}</span>
-      <input
-        value="${s(this.value)?String(this.value):""}"
-        type="number"
-      />
-    </label>
-  `}const z=String.raw;customElements.define("board-cell",M);class R extends(v(HTMLElement)){cells=[];board;constructor(){super(),this.attachShadow({mode:"open"})}connectedCallback(){this.init(),super.connectedCallback()}disconnectedCallback(){super.disconnectedCallback()}init(){const{shadowRoot:t}=this;t.innerHTML=i;const o=document.createElement("style");o.innerHTML=e,t.prepend(o),this.cells=this.state.board.map(((t,e)=>t.map(((t,i)=>new M({i:e,j:i,css:`:host { grid-area: c${e}${i}; }`}))))).flat(),this.board=t.querySelector("#board"),this.board.append(...this.cells),this.board.setAttribute("style","--cell-text-size: 24px;"),this.board.addEventListener("keydown",this.handleKey.bind(this))}handleKey(t){switch(t.key){case"ArrowUp":case"ArrowDown":case"ArrowLeft":case"ArrowRight":this.dispatch({type:"arrow",data:t})}}render(t){}}customElements.define("sudoku-board",R);class $ extends(v(HTMLElement)){i;j;lens;value=0;css;button;constructor({i:t,j:e,css:i,lens:o}){super(),this.attachShadow({mode:"open"}),this.i=t,this.j=e,this.css=i,this.lens=o}connectedCallback(){this.init(),super.connectedCallback()}disconnectedCallback(){super.disconnectedCallback(),this.shadowRoot.querySelector("button").removeEventListener("click",this.handleClick)}init(){const{shadowRoot:t}=this;t.innerHTML=this.template(),this.button=t.querySelector("button"),this.button.addEventListener("click",this.handleClick.bind(this))}render(t){this.state=t,this.value=t.board[this.i][this.j];const e=t.possibilities[this.i][this.j].possibilities[this.lens],i=this.value===this.lens||e?this.lens:null;this.button.textContent=String(i||""),this.updateClass();const{i:o,j:s}=t.location;this.i===o&&this.j===s?this.button.classList.add("current"):this.button.classList.remove("current")}updateClass(){const{possibilities:t,possibilityCount:e}=this.state.possibilities[this.i][this.j];this.button.classList.remove("selected","only","possibility"),this.value===this.lens?this.button.classList.add("selected"):1===e&&t[this.lens]&&this.state.settings?.highlight?.value?this.button.classList.add("only"):t[this.lens]&&this.button.classList.add("possibility")}handleClick(t){const{possibilities:e,possibilityCount:i}=this.state.possibilities[this.i][this.j];1===i&&H(this.lens,e)&&this.state.settings.highlight?.value&&(this.value=this.dispatch({type:"update",data:{i:this.i,j:this.j,value:this.lens}}).board[this.i][this.j]),this.dispatch({type:"move",data:{location:{i:this.i,j:this.j}}})}template=()=>q`
-    <!DOCTYPE html>
-    <style>
-      button {
-        color: var(--cell-text-color, black);
-        cursor: pointer;
-        border: none;
-        /* background: var(--cell-background-color, #f3f3f3); */
-        background: rgba(255, 255, 255, 0.1);
-        font-weight: var(--cell-font-weight, bold);
-        font-size: var(--cell-text-size, 10px);
-        height: var(--cell-height, 100%);
-        margin: 0;
-        /* opacity: 0.1; */
-        padding: 0;
-        width: var(--cell-width, 100%);
-      }
-      button.selected {
-        background: var(--cell-background-color, #f3f3f3);
-        /* opacity: 1; */
-      }
-      button.only {
-        background: white;
-        border-radius: 25%;
-        /* opacity: 1; */
-      }
-      button.possibility {
-        background: var(--cell-background-possibility-color, #f3f3f3);
-        color: white;
-        font-weight: 100;
-        border-radius: 50%;
-        /* opacity: 0.5; */
-      }
-      button.current {
-        box-shadow: 0 0 0 1px white;
-      }
-      button.current.only {
-        border-radius: 0;
-        box-shadow: 0 0 0 2px var(--cell-focus-color, white)
-      }
-      :host{
-        display: block;
-      }
+      ${css_248z$7}
       ${this.css}
     </style>
-    <button part="button" tabindex="-1" title="Cell ${this.i} ${this.j}">
-      ${this.value??""}
+    <label class="cell-container">
+      <span class="visually-hidden">${cellToLabel(this)}</span>
+      <div id="cell" class="cell" title="${cellToLabel(this)}">
+        <!-- cell value -->
+      </div>
+      <input
+        class="visually-hidden"
+        value="${isCellValue(this.value) ? String(this.value) : ''}"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        max="9"
+        pattern="[0-9]*"
+      />
+    </label>
+  `;
+}
+const html$7 = String.raw;
+customElements.define('board-cell', BoardCell);
+
+//@ts-ignore
+class Board extends ReactiveMixin(HTMLElement) {
+    cells = [];
+    board;
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+    connectedCallback() {
+        this.init();
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+    }
+    init() {
+        const { shadowRoot } = this;
+        shadowRoot.innerHTML = html$8;
+        const style = document.createElement('style');
+        style.innerHTML = css_248z$8;
+        shadowRoot.prepend(style);
+        this.cells = this.state.board
+            .map((row, i) => row.map((_value, j) => new BoardCell({
+            i,
+            j,
+            css: `:host { grid-area: c${i}${j}; }`,
+        })))
+            .flat();
+        this.board = shadowRoot.querySelector('#board');
+        this.board.append(...this.cells);
+        this.board.setAttribute('style', `--cell-text-size: 24px;`);
+        this.board.addEventListener('keydown', this.handleKey.bind(this));
+    }
+    handleKey(event) {
+        switch (event.key) {
+            case 'ArrowUp':
+            case 'ArrowDown':
+            case 'ArrowLeft':
+            case 'ArrowRight':
+                this.dispatch({
+                    type: 'arrow',
+                    data: event,
+                });
+                break;
+        }
+    }
+    render(_state) { }
+}
+customElements.define('sudoku-board', Board);
+
+var css_248z$6 = ":host{display:block}button{background:hsla(0,0%,100%,.1);border:none;color:#000;color:var(--cell-text-color,#000);cursor:pointer;font-size:10px;font-size:var(--cell-text-size,10px);font-weight:700;font-weight:var(--cell-font-weight,bold);height:100%;height:var(--cell-height,100%);margin:0;padding:0;width:100%;width:var(--cell-width,100%)}button.selected{background:#f3f3f3;background:var(--cell-background-color,#f3f3f3)}button.only{background:#fff;border-radius:25%}button.possibility{background:#f3f3f3;background:var(--cell-background-possibility-color,#f3f3f3);border-radius:50%;color:#fff;font-weight:100}button:focus,button:focus-visible{outline:none}button.current{box-shadow:0 0 0 1px #fff}button.current.only{border-radius:0;box-shadow:0 0 0 2px #fff;box-shadow:0 0 0 2px var(--cell-focus-color,#fff)}";
+styleInject(css_248z$6);
+
+//@ts-ignore
+// import { HandleInputMixin } from '../../mixins/handle-input-mixin';
+/**
+ * Cell element that implements the dispatch pattern.
+ * Each WC class is responsible for tracking the child elements it creates
+ * and updating their properties or calling their render methods during render.
+ *
+ * CSS Custom Properties
+ * @property --cell-text-color black
+ * @property --cell-background-color #f3f3f3
+ * @param i
+ * @param j
+ * @param value
+ */
+class BoardLensCell extends ReactiveMixin(HTMLElement) {
+    button;
+    i;
+    j;
+    lens;
+    value = 0;
+    css;
+    isEditable;
+    constructor({ i, j, css, lens, }) {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.i = i;
+        this.j = j;
+        this.css = css;
+        this.lens = lens;
+    }
+    connectedCallback() {
+        this.init();
+        // this.button?.addEventListener(
+        //   'keydown',
+        //   this.handleChange.bind(this),
+        //   true,
+        // );
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.shadowRoot
+            .querySelector('button')
+            .removeEventListener('click', this.handleClick);
+        // this.button?.removeEventListener(
+        //   'keydown',
+        //   this.handleChange.bind(this),
+        //   true,
+        // );
+    }
+    init() {
+        const { shadowRoot } = this;
+        shadowRoot.innerHTML = this.template();
+        this.button = shadowRoot.querySelector('button');
+        this.button.addEventListener('click', this.handleClick.bind(this));
+    }
+    render(state) {
+        this.state = state;
+        this.value = state.board[this.i][this.j];
+        this.isEditable = state.original[this.i][this.j] === 0;
+        const possibility = state.possibilities[this.i][this.j].possibilities[this.lens];
+        const selected = this.value === this.lens;
+        const displayValue = selected || possibility ? this.lens : null;
+        this.button.textContent = String(displayValue || '');
+        this.updateClass();
+        const { i, j } = state.location;
+        if (this.i === i && this.j === j) {
+            this.button.classList.add('current');
+        }
+        else {
+            this.button.classList.remove('current');
+        }
+    }
+    updateClass() {
+        const { possibilities, possibilityCount } = this.state.possibilities[this.i][this.j];
+        this.button.classList.remove('selected', 'only', 'possibility');
+        if (this.value === this.lens) {
+            this.button.classList.add('selected');
+        }
+        else if (possibilityCount === 1 &&
+            possibilities[this.lens] &&
+            this.state.settings?.highlight?.value) {
+            this.button.classList.add('only');
+        }
+        else if (possibilities[this.lens]) {
+            this.button.classList.add('possibility');
+        }
+    }
+    handleClick(_event) {
+        const { possibilities, possibilityCount } = this.state.possibilities[this.i][this.j];
+        if (possibilityCount === 1 &&
+            isValidInput(this.lens, possibilities) &&
+            this.state.settings.highlight?.value) {
+            this.value = this.dispatch({
+                type: 'update',
+                data: {
+                    i: this.i,
+                    j: this.j,
+                    value: this.lens,
+                },
+            }).board[this.i][this.j];
+        }
+        this.dispatch({
+            type: 'move',
+            data: { location: { i: this.i, j: this.j } },
+        });
+    }
+    // handleChange(event: KeyboardEvent) {
+    //   switch (event.key) {
+    //     case 'ArrowUp':
+    //     case 'ArrowDown':
+    //     case 'ArrowLeft':
+    //     case 'ArrowRight':
+    //       event.preventDefault();
+    //       this.dispatch({
+    //         type: 'arrow',
+    //         data: event,
+    //       });
+    //       break;
+    //     case 'Backspace':
+    //       event.preventDefault();
+    //       if (this.isEditable) {
+    //         this.value = this.dispatch({
+    //           type: 'update',
+    //           data: {
+    //             i: this.i,
+    //             j: this.j,
+    //             value: 0,
+    //           },
+    //         }).board[this.i][this.j];
+    //       }
+    //       break;
+    //     default:
+    //       console.log(
+    //         'handle keys',
+    //         isValidInput(
+    //           event.key,
+    //           this.state.possibilities[this.i][this.j].possibilities,
+    //         ),
+    //         Number(event.key) !== this.value,
+    //         this.isEditable,
+    //       );
+    //       event.preventDefault();
+    //       if (
+    //         isValidInput(
+    //           event.key,
+    //           this.state.possibilities[this.i][this.j].possibilities,
+    //         ) &&
+    //         Number(event.key) !== this.value &&
+    //         this.isEditable
+    //       ) {
+    //         this.value = this.dispatch({
+    //           type: 'update',
+    //           data: {
+    //             i: this.i,
+    //             j: this.j,
+    //             value: Number(event.key),
+    //           },
+    //         }).board[this.i][this.j];
+    //       }
+    //   }
+    // }
+    template = () => html$6 `
+    <!DOCTYPE html>
+    <style>
+      ${css_248z$6}
+      ${this.css}
+    </style>
+    <button part="button" tabindex="-1" title="${cellToLabel(this)}">
+      ${this.value ?? ``}
     </button>
-  `}const q=String.raw;customElements.define("board-lens-cell",$);class O extends(v(HTMLElement)){cells=[];board;lens=null;constructor(t){super(),this.attachShadow({mode:"open"}),this.lens=t}connectedCallback(){this.init(),super.connectedCallback()}disconnectedCallback(){super.disconnectedCallback()}init(){const{shadowRoot:t}=this;t.innerHTML=i;const o=document.createElement("style");o.innerHTML=e,t.prepend(o),this.cells=this.state.board.map(((t,e)=>t.map(((t,i)=>new $({i:e,j:i,css:`:host { grid-area: c${e}${i}; }`,lens:this.lens}))))).flat(),this.board=t.querySelector("#board"),this.board.append(...this.cells);const s=`${I[this.lens]} ${P}% ${N}%`,n=`hsl(${s})`,r=`hsl(${s} / 50%)`;this.board.setAttribute("style",`--cell-text-color: black; --cell-background-color: ${n}; --cell-background-possibility-color: ${r};`)}}const I={1:40,2:80,3:120,4:160,5:200,6:240,7:280,8:320,9:360},P=90,N=75;customElements.define("sudoku-board-lens",O);var B="#wrapper{margin:0;padding:0;width:100%}.flex{display:flex}.flex-row{flex-direction:row}#controls{align-content:center;gap:8px;height:32px;justify-content:flex-start;margin:0;padding:var(--xl);width:100%}.secondary{--o-button-background:transparent;--o-button-color:var(--g-a-13);--o-button-border:0;--o-button-shadow:0 0 0 3px inset var(--g-a-13)}.primary{--o-button-background:var(--g-a-13);--o-button-color:var(--g-a-1);--o-button-border:0;--o-button-shadow:0 0 0 3px inset var(--highlight-color)}.bumpRight{margin-left:auto}";t(B);var F;!function(t){t.HARD="hard",t.MED="med",t.EASY="easy"}(F||(F={}));const U={[F.HARD]:[38,39,40,41,42],[F.MED]:[33,34,35,36,37],[F.EASY]:[28,29,30,31,32]},V=(t=F.EASY)=>Y(J(K(),9),U[t][n(5)]),K=()=>[c([1,2,3,4,5,6,7,8,9]),...r(9,0).slice(1)],Y=(t,e)=>{for(;e;){const i=n(9),o=n(9);t[i][o]&&(t[i][o]=0,e-=1)}return t},J=(t,e=0)=>{const{i:i,j:o}=a(e),s=f(t,i,o),n=(t=>Object.entries(t).reduce(((t,[e,i])=>(i&&t.push(Number(e)),t)),[]))(s.possibilities);let r=!1;return 80==e?(t[i][o]=s.value||n[0],r=t):e<80&&s.value?r=J(t,e+1):s.value||(r=W(J,G,(t=>!!t),c(n),t,e)),r},G=(t,e,i)=>{const{i:o,j:s}=a(i),n=l(e);return n[o][s]=t,[n,i+1]},W=(t,e,i,o,...s)=>{for(const n of o){const o=t(...e(n,...s));if(i(o))return o}return!1};var Q=":host{--button-background:#fff;--button-border:none;--button-border-radius:0;--button-font-size:0.825rem;--button-height:var(--xxl);--button-padding:0 8px;--highlight-color:var(--g-9)}.tag-input{flex:1 1 100%;font-size:12px;font-size:var(--font-xsmall,12px);grid-area:tags}.button{background:var(--o-button-background,var(--button-background));border:var(--o-button-border,var(--button-border));border-radius:var(--o-button-border-radius,var(--button-border-radius));cursor:pointer;display:block;font-size:var(--o-button-font-size,var(--button-font-size));height:var(--o-button-height,var(--button-height));line-height:var(--o-button-height,var(--button-height));padding:var(--o-button-padding,var(--button-padding));-webkit-user-select:none;-moz-user-select:none;user-select:none}.button:focus{box-shadow:0 0 0 4px inset var(--o-highlight-color,var(--highlight-color));outline:none}[part=dropdown]{display:none;position:relative;-moz-user-select:none;user-select:none;-webkit-user-select:none}.dropdown-small .listbox_vertical{width:240px}.is-open .dropdown{display:block;opacity:1;visibility:visible}.listbox_vertical.dropdown_left{right:0}.listbox_vertical.dropdown_top{bottom:var(--button-height)}.listbox_vertical.fixed_width{width:100%}.listbox_vertical{background:#fff;background:var(--color-background,#fff);box-shadow:0 2px 8px rgba(0,0,0,.25);box-shadow:0 2px 8px var(--color-shadow,rgba(0,0,0,.25));display:flex;flex-direction:column;margin:4px 0;margin:var(--space-xxsmall,4px) 0;max-height:216px;overflow:hidden;overflow-y:auto;padding:0;position:absolute;z-index:999}.hidden{display:none}.listbox__option[aria-selected=true]{background:#f2f2f2;background:var(--color-background--select-hover,#f2f2f2)}.listbox__option:focus{box-shadow:4px 0 0 0 inset var(--o-highlight-color,var(--highlight-color));outline:none}.dropdown .listbox__option{align-items:center;display:flex;flex-direction:row;gap:4px;padding:8px;padding:var(--space-xsmall,8px)}.listbox.listbox_horizontal{display:flex;flex-wrap:wrap;margin:2px -2px;margin:var(--space-xxxsmall,2px) calc(var(--space-xxxsmall, 2px)*-1);padding:0;width:100%}.listbox-item{cursor:pointer;list-style:none}.visuallyhidden{clip:rect(0 0 0 0);border:0;height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.check{background-color:transparent;border-radius:50%;flex:none;height:8px;width:8px}[aria-checked=true] .check{background-color:#000}[aria-disabled=true]{opacity:.5}";t(Q);const X=t=>class extends t{items=[];constructor(...t){super(...t)}nextIndex(t,e,i){return i?(t+e+this.items.length)%this.items.length:Math.max(Math.min(t+e,this.items.length-1),0)}};var Z;!function(t){t.menuitem="menuitem",t.menuitemcheckbox="menuitemcheckbox",t.menuitemradio="menuitemradio",t.option="option"}(Z||(Z={}));class tt{element;check;type;onSelect;onHover;_option;_id;constructor(t,e,i,o){this.onSelect=e,this.onHover=i,this._option=t,this.type=o,this.element=document.createElement("li"),this.element.classList.add("listbox-item","listbox__option"),this.element.setAttribute("role",o),this.element.innerHTML=this.template(),this.type!==Z.menuitemcheckbox&&this.type!==Z.menuitemradio||(this.check=document.createElement("div"),this.check.classList.add("check"),this.element.prepend(this.check)),this.update(),this.element.addEventListener("click",this.handleClick.bind(this),!0),this.element.addEventListener("keydown",this.handleKey.bind(this),!0),this.element.addEventListener("mouseover",this.handleHover.bind(this),!0)}update(){this.element.querySelector(".listbox__option-text").textContent=this._option.label,this.check&&(this._option.value?this.element.setAttribute("aria-checked","true"):this.element.setAttribute("aria-checked","false")),this._option.disabled?this.element.setAttribute("aria-disabled","true"):this.element.setAttribute("aria-disabled","false")}handleSelect(t){this._option.disabled||this.onSelect(t,this)}handleClick(t){this.handleSelect(t)}handleHover(t){this.onHover(t,this)}handleKey(t){switch(t.key){case" ":t.stopPropagation(),t.stopImmediatePropagation(),t.preventDefault(),this.handleSelect(t);break;case"Enter":this.handleSelect(t)}}get id(){return this._id}set id(t){this._id=t,this.element.setAttribute("id",t)}get option(){return this._option}set option(t){this._option=t,this.update()}template=()=>et` <span
+  `;
+}
+const html$6 = String.raw;
+customElements.define('board-lens-cell', BoardLensCell);
+
+//@ts-ignore
+class BoardLens extends ReactiveMixin(HTMLElement) {
+    cells = [];
+    board;
+    lens = null;
+    constructor(lens) {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.lens = lens;
+    }
+    connectedCallback() {
+        this.init();
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+    }
+    init() {
+        const { shadowRoot } = this;
+        shadowRoot.innerHTML = html$8;
+        const style = document.createElement('style');
+        style.innerHTML = css_248z$8;
+        shadowRoot.prepend(style);
+        this.cells = this.state.board
+            .map((row, i) => row.map((_value, j) => new BoardLensCell({
+            i,
+            j,
+            css: `:host { grid-area: c${i}${j}; }`,
+            lens: this.lens,
+        })))
+            .flat();
+        this.board = shadowRoot.querySelector('#board');
+        this.board.append(...this.cells);
+        const color = `${hue$1[this.lens]} ${saturation$1}% ${brightness$1}%`;
+        const background = `hsl(${color})`;
+        const possibility = `hsl(${color} / 50%)`;
+        this.board.setAttribute('style', `--cell-text-color: black; 
+      --cell-background-color: ${background}; 
+      --cell-background-possibility-color: ${possibility};`);
+    }
+}
+const hue$1 = {
+    1: 40,
+    2: 80,
+    3: 120,
+    4: 160,
+    5: 200,
+    6: 240,
+    7: 280,
+    8: 320,
+    9: 360,
+};
+const saturation$1 = 90;
+const brightness$1 = 75;
+customElements.define('sudoku-board-lens', BoardLens);
+
+var css_248z$5 = "#wrapper{margin:0;padding:0;width:100%}.flex{display:flex}.flex-row{flex-direction:row}#controls{align-content:center;gap:8px;height:32px;justify-content:flex-start;margin:0;padding:var(--xl);width:100%}.secondary{--o-button-background:transparent;--o-button-color:var(--g-a-13);--o-button-border:0;--o-button-shadow:0 0 0 3px inset var(--g-a-13)}.primary{--o-button-background:var(--g-a-13);--o-button-color:var(--g-a-1);--o-button-border:0;--o-button-shadow:0 0 0 3px inset var(--highlight-color)}.bumpRight{margin-left:auto}";
+styleInject(css_248z$5);
+
+var html$5 = "<div id=\"wrapper\" class=\"flex flex-row\">\n  <div id=\"controls\" class=\"flex flex-row\"></div>\n</div>\n";
+
+var difficultyLevel;
+(function (difficultyLevel) {
+    difficultyLevel["HARD"] = "hard";
+    difficultyLevel["MED"] = "med";
+    difficultyLevel["EASY"] = "easy";
+})(difficultyLevel || (difficultyLevel = {}));
+/**
+ * Evidently boards with more blank values are easier to solve than boards with fewer.
+ * Perhaps this is due to the increasing number of possible solutions.
+ */
+const difficultyLevelValues = {
+    [difficultyLevel.HARD]: [38, 39, 40, 41, 42],
+    [difficultyLevel.MED]: [33, 34, 35, 36, 37],
+    [difficultyLevel.EASY]: [28, 29, 30, 31, 32],
+};
+/**
+ * Generate a board for the given difficulty level
+ * @param difficulty difficultyLevel.EASY, difficultyLevel.MED, difficultyLevel.HARD
+ * @returns
+ */
+const generateBoard = (difficulty = difficultyLevel.EASY) => removeValues(solve(generateSeed(), 9), difficultyLevelValues[difficulty][randomInt(5)]);
+const generateSeed = () => [
+    shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]),
+    ...NNArray(9, 0).slice(1),
+];
+const removeValues = (board, values) => {
+    while (values) {
+        const i = randomInt(9);
+        const j = randomInt(9);
+        if (board[i][j]) {
+            board[i][j] = 0;
+            values -= 1;
+        }
+    }
+    return board;
+};
+/**
+ * Uses depth first search to solve the board starting from index
+ * @param board Partial sudoku board to solve
+ * @param index Optional starting index 0-80. Will be converted to i,j coordinates.
+ * @returns Solved sudoku board
+ */
+const solve = (board, index = 0) => {
+    const { i, j } = indexToCoord(index);
+    const possibilities = possibilitiesForCell(board, i, j);
+    const possibleValues = possibilitiesObjectToArray(possibilities.possibilities);
+    let result = false;
+    if (index == 80) {
+        // last cell, solved?
+        board[i][j] = possibilities.value || possibleValues[0];
+        result = board;
+    }
+    else if (index < 80 && possibilities.value) {
+        // skip this cell
+        result = solve(board, index + 1);
+    }
+    else if (!possibilities.value) {
+        // select an option and explore that path
+        result = exploreOptions(solve, updateBoardTemp, (result) => !!result, shuffle(possibleValues), board, index);
+    }
+    return result;
+};
+const updateBoardTemp = (option, board, index) => {
+    const { i, j } = indexToCoord(index);
+    const newBoard = cloneDeep(board);
+    newBoard[i][j] = option;
+    return [newBoard, index + 1];
+};
+/**
+ * Depth First Search utility function
+ * @param exploreFn Recursive function that uses this util
+ * @param exploreParams Function to generate the params for the explore function based on the selected option
+ * @param successFn Function to determine if the returned result is a success
+ * @param options Array of options to explore at this level/node
+ * @param args Any additional arguments that need to be passed to the exploreParams function
+ * @returns Successful result or False
+ */
+const exploreOptions = (exploreFn, exploreParams, successFn, options, ...args) => {
+    for (const option of options) {
+        const result = exploreFn(...exploreParams(option, ...args));
+        if (successFn(result)) {
+            return result;
+        }
+    }
+    return false;
+};
+
+var css_248z$4 = ":host{--button-color:var(--g-13);--button-background:var(--g-1);--button-border:none;--button-border-radius:0;--button-font-size:0.825rem;--button-height:var(--xxl);--button-padding:0 8px;--highlight-color:var(--g-9)}.tag-input{flex:1 1 100%;font-size:12px;font-size:var(--font-xsmall,12px);grid-area:tags}.button{background:var(--o-button-background,var(--button-background));border:var(--o-button-border,var(--button-border));border-radius:var(--o-button-border-radius,var(--button-border-radius));color:var(--o-button-color,var(--button-color));cursor:pointer;display:block;font-size:var(--o-button-font-size,var(--button-font-size));height:var(--o-button-height,var(--button-height));line-height:var(--o-button-height,var(--button-height));padding:var(--o-button-padding,var(--button-padding));-webkit-user-select:none;-moz-user-select:none;user-select:none}.button:focus{box-shadow:0 0 0 4px inset var(--o-highlight-color,var(--highlight-color));outline:none}[part=dropdown]{display:none;position:relative;-moz-user-select:none;user-select:none;-webkit-user-select:none}.dropdown-small .listbox_vertical{width:240px}.is-open .dropdown{display:block;opacity:1;visibility:visible}.listbox_vertical.dropdown_left{right:0}.listbox_vertical.dropdown_top{bottom:var(--button-height)}.listbox_vertical.fixed_width{width:100%}.listbox_vertical{background:#fff;background:var(--color-background,#fff);box-shadow:0 2px 8px rgba(0,0,0,.25);box-shadow:0 2px 8px var(--color-shadow,rgba(0,0,0,.25));display:flex;flex-direction:column;margin:4px 0;margin:var(--space-xxsmall,4px) 0;max-height:216px;overflow:hidden;overflow-y:auto;padding:0;position:absolute;z-index:999}.hidden{display:none}.listbox__option[aria-selected=true]{background:#f2f2f2;background:var(--color-background--select-hover,#f2f2f2)}.listbox__option:focus{box-shadow:4px 0 0 0 inset var(--o-highlight-color,var(--highlight-color));outline:none}.dropdown .listbox__option{align-items:center;display:flex;flex-direction:row;gap:4px;padding:8px;padding:var(--space-xsmall,8px)}.listbox.listbox_horizontal{display:flex;flex-wrap:wrap;margin:2px -2px;margin:var(--space-xxxsmall,2px) calc(var(--space-xxxsmall, 2px)*-1);padding:0;width:100%}.listbox-item{cursor:pointer;list-style:none}.visuallyhidden{clip:rect(0 0 0 0);border:0;height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.check{background-color:transparent;border-radius:50%;flex:none;height:8px;width:8px}[aria-checked=true] .check{background-color:#000}[aria-disabled=true]{opacity:.5}";
+styleInject(css_248z$4);
+
+const ListMixin = (Base) => class List extends Base {
+    items = [];
+    constructor(...args) {
+        super(...args);
+    }
+    nextIndex(index, dir, loop) {
+        if (loop) {
+            return (index + dir + this.items.length) % this.items.length;
+        }
+        else {
+            return Math.max(Math.min(index + dir, this.items.length - 1), 0);
+        }
+    }
+};
+
+var DropdownListTypes;
+(function (DropdownListTypes) {
+    DropdownListTypes["menuitem"] = "menuitem";
+    DropdownListTypes["menuitemcheckbox"] = "menuitemcheckbox";
+    DropdownListTypes["menuitemradio"] = "menuitemradio";
+    DropdownListTypes["option"] = "option";
+})(DropdownListTypes || (DropdownListTypes = {}));
+
+class ListItem {
+    element;
+    check;
+    type;
+    onSelect;
+    onHover;
+    _option;
+    _id;
+    constructor(option, onSelect, onHover, type) {
+        this.onSelect = onSelect;
+        this.onHover = onHover;
+        this._option = option;
+        this.type = type;
+        this.element = document.createElement('li');
+        this.element.classList.add('listbox-item', 'listbox__option');
+        this.element.setAttribute('role', type);
+        this.element.innerHTML = this.template();
+        if (this.type === DropdownListTypes.menuitemcheckbox ||
+            this.type === DropdownListTypes.menuitemradio) {
+            this.check = document.createElement('div');
+            this.check.classList.add('check');
+            this.element.prepend(this.check);
+        }
+        this.update();
+        this.element.addEventListener('click', this.handleClick.bind(this), true);
+        this.element.addEventListener('keydown', this.handleKey.bind(this), true);
+        this.element.addEventListener('mouseover', this.handleHover.bind(this), true);
+    }
+    update() {
+        this.element.querySelector('.listbox__option-text').textContent =
+            this._option.label;
+        if (this.check) {
+            if (this._option.value) {
+                this.element.setAttribute('aria-checked', 'true');
+            }
+            else {
+                this.element.setAttribute('aria-checked', 'false');
+            }
+        }
+        if (this._option.disabled) {
+            this.element.setAttribute('aria-disabled', 'true');
+        }
+        else {
+            this.element.setAttribute('aria-disabled', 'false');
+        }
+    }
+    handleSelect(e) {
+        if (!this._option.disabled) {
+            this.onSelect(e, this);
+        }
+    }
+    handleClick(e) {
+        this.handleSelect(e);
+    }
+    handleHover(e) {
+        this.onHover(e, this);
+    }
+    handleKey(e) {
+        switch (e.key) {
+            case ' ':
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                this.handleSelect(e);
+                break;
+            case 'Enter':
+                this.handleSelect(e);
+                break;
+        }
+    }
+    get id() {
+        return this._id;
+    }
+    set id(_id) {
+        this._id = _id;
+        this.element.setAttribute('id', _id);
+    }
+    get option() {
+        return this._option;
+    }
+    set option(_option) {
+        this._option = _option;
+        this.update();
+    }
+    template = () => html$4 ` <span
     class="listbox__option-text listbox__option-text_entity"
-  ></span>`}const et=String.raw;class it extends(X(Array)){element;currentItem;_options;onChange;onNavigate;type;constructor(t,e,i,o){super(),this.onChange=e,this.onNavigate=i,this.type=o,this.element=document.createElement("ul"),this.element.setAttribute("role","presentation"),this.element.classList.add("listbox","listbox_vertical"),this.updateOptions(t),this.updateCurrent()}get options(){return this._options}set options(t){this.updateOptions(t)}selectItem(t,e){t.preventDefault(),e&&this.onChange&&this.onChange(ot(this.type,this.items,e))}nextItem(t,e){t.preventDefault();var i=this.items.indexOf(this.currentItem),o=this.nextIndex(i,e,!0);this.updateCurrent(o)}hoverItem(t,e){t.preventDefault(),this.currentItem=e;var i=this.items.indexOf(this.currentItem);this.updateCurrent(i)}render(){return this.element}updateCurrent(t){-1!==t&&(t=t||0,this.items.forEach(((e,i)=>{i==t?(e.element.setAttribute("aria-selected","true"),e.element.scrollIntoView({block:"nearest",inline:"nearest"}),e.element.setAttribute("tabindex","0"),e.element.focus(),this.currentItem=e,this.onNavigate?.(e.id,e.option)):(e.element.setAttribute("aria-selected","false"),e.element.setAttribute("tabindex","-1"))})))}updateOptions(t){this._options=t;const e=this.options.map(this.addOrUpdateItem.bind(this));this.items.splice(e.length).forEach((t=>t.element.remove())),this.items=e}addOrUpdateItem(t,e){const i=this.items[e];if(i)return i.option=t,i;{const e=new tt(t,this.selectItem.bind(this),this.hoverItem.bind(this),this.type);return e.id=`${t.id}`,this.element.append(e.element),e}}}const ot=(t,e,i)=>{switch(t){case Z.menuitemcheckbox:return[...e.map((t=>(t===i&&(i.option={...i.option,value:!i.option.value}),t.option)))];case Z.menuitem:case Z.menuitemradio:case Z.option:default:return[i.option]}},st=(t,e)=>{let i="";const o=((t,e)=>{let i=null;return(...o)=>{clearTimeout(i),i=setTimeout((()=>t(...o)),e)}})((()=>{i=""}),500);return s=>{nt[s.key]||(i+=s.key,o(),e(t.reduceRight(((t,e,o)=>(e.toLowerCase().startsWith(`${i}`.toLowerCase())&&(t=o),t)),-1)))}},nt={Alt:!0,Shift:!0,Meta:!0,Control:!0,Tab:!0,Backspace:!0,Enter:!0,ArrowLeft:!0,ArrowRight:!0,ArrowUp:!0,ArrowDown:!0};class rt extends HTMLElement{button;trigger;dropdown;label;_options;onChange;type;handleSearch;constructor({label:t,options:e,onChange:i,type:o=Z.menuitem}){super(),this.attachShadow({mode:"open"}),this.label=t,this._options=e,this.onChange=i,this.type=o}connectedCallback(){const{shadowRoot:t}=this;t.innerHTML=this.template(this.label);const e=document.createElement("style");e.innerHTML=Q,t.prepend(e),this.button=t.querySelector("#button"),this.trigger=t.querySelector(".dropdown-trigger"),this.dropdown=new it(this.options,this.handleChange.bind(this),this.handleNavigate.bind(this),this.type),t.querySelector("[role=menu]").append(this.dropdown.render()),this.handleSearch=st(this.dropdown.options.map((t=>t.label)),(t=>{this.dropdown.updateCurrent(t),this.showDropdown()})),this.trigger.addEventListener("keydown",this.handleKey.bind(this),!1),this.trigger.addEventListener("input",this.handleSearch.bind(this),!0),this.trigger.addEventListener("focusout",this.handleBlur.bind(this),!0),this.button.addEventListener("click",this.toggleDropdown.bind(this),!0)}disconnectedCallback(){this.trigger.removeEventListener("keydown",this.handleKey.bind(this),!0),this.trigger.removeEventListener("input",this.handleSearch.bind(this)),this.trigger.removeEventListener("focusout",this.handleBlur.bind(this)),this.button.removeEventListener("click",this.toggleDropdown.bind(this))}get options(){return this._options}set options(t){this._options=t,this.dropdown.updateOptions(t)}showDropdown(){this.trigger.classList.add("is-open"),this.button.setAttribute("aria-expanded","true"),this.button.setAttribute("aria-activedescendant",this.dropdown.currentItem?.id)}hideDropdown(){this.trigger.classList.remove("is-open"),this.button.setAttribute("aria-expanded","false"),this.button.removeAttribute("aria-activedescendant"),this.dropdown.updateCurrent(0)}toggleDropdown(){this.trigger.classList.contains("is-open")?this.hideDropdown():this.showDropdown()}private;handleChange(t){this.onChange(t),this.type===Z.menuitem||this.type===Z.option?(this.button.focus(),this.hideDropdown()):this.dropdown.currentItem.element.focus()}handleNavigate(t,e){this.button.setAttribute("aria-activedescendant",t)}handleBlur(t){(t.relatedTarget instanceof Element&&!this.trigger.contains(t.relatedTarget)||null===t.relatedTarget)&&this.hideDropdown()}handleKey(t){const e=this.trigger.classList.contains("is-open");switch(t.key){case" ":t.stopPropagation(),t.stopImmediatePropagation(),t.preventDefault(),e?t.target===this.button&&this.hideDropdown():this.showDropdown();break;case"Enter":t.stopPropagation(),t.preventDefault(),e?(this.hideDropdown(),this.button.focus()):this.showDropdown();break;case"ArrowLeft":case"ArrowUp":t.stopPropagation(),t.preventDefault(),e||this.showDropdown(),this.dropdown.nextItem(t,-1);break;case"ArrowRight":case"ArrowDown":t.stopPropagation(),t.preventDefault(),e?this.shadowRoot.querySelector("#listbox").contains(this.shadowRoot.activeElement)?this.dropdown.nextItem(t,1):this.dropdown.updateCurrent(0):(this.showDropdown(),this.dropdown.updateCurrent(0));break;case"Escape":e&&(t.stopPropagation(),t.preventDefault(),this.hideDropdown(),this.button.focus());break;default:e&&this.handleSearch(t)}}template=t=>at`
+  ></span>`;
+}
+const html$4 = String.raw;
+
+class DropdownListbox extends ListMixin(Array) {
+    element;
+    currentItem;
+    _options;
+    onChange;
+    onNavigate;
+    type;
+    constructor(options, onChange, onNavigate, type) {
+        super();
+        this.onChange = onChange;
+        this.onNavigate = onNavigate;
+        this.type = type;
+        this.element = document.createElement('ul');
+        this.element.setAttribute('role', 'presentation');
+        this.element.classList.add('listbox', 'listbox_vertical');
+        this.updateOptions(options);
+        this.updateCurrent();
+    }
+    get options() {
+        return this._options;
+    }
+    set options(options) {
+        this.updateOptions(options);
+    }
+    selectItem(e, listItem) {
+        e.preventDefault();
+        if (listItem && this.onChange) {
+            this.onChange(getReturnValue(this.type, this.items, listItem));
+        }
+    }
+    nextItem(e, dir) {
+        e.preventDefault();
+        var index = this.items.indexOf(this.currentItem);
+        var next = this.nextIndex(index, dir, true);
+        this.updateCurrent(next);
+    }
+    hoverItem(e, listItem) {
+        e.preventDefault();
+        this.currentItem = listItem;
+        var index = this.items.indexOf(this.currentItem);
+        this.updateCurrent(index);
+    }
+    render() {
+        return this.element;
+    }
+    updateCurrent(index) {
+        if (index === -1) {
+            return;
+        }
+        index = index || 0;
+        this.items.forEach((item, i) => {
+            if (i == index) {
+                // TODO: abstract this into a setter on the item class.
+                item.element.setAttribute('aria-selected', 'true');
+                item.element.scrollIntoView({
+                    block: 'nearest',
+                    inline: 'nearest',
+                });
+                item.element.setAttribute('tabindex', '0');
+                item.element.focus();
+                this.currentItem = item;
+                this.onNavigate?.(item.id, item.option);
+            }
+            else {
+                item.element.setAttribute('aria-selected', 'false');
+                item.element.setAttribute('tabindex', '-1');
+            }
+        });
+    }
+    updateOptions(options) {
+        this._options = options;
+        const items = this.options.map(this.addOrUpdateItem.bind(this));
+        const unused = this.items.splice(items.length);
+        unused.forEach((item) => item.element.remove());
+        this.items = items;
+    }
+    addOrUpdateItem(option, i) {
+        const item = this.items[i];
+        if (item) {
+            // Updates option in the item
+            item.option = option;
+            return item;
+        }
+        else {
+            const newItem = new ListItem(option, this.selectItem.bind(this), this.hoverItem.bind(this), this.type);
+            newItem.id = `${option.id}`;
+            this.element.append(newItem.element);
+            return newItem;
+        }
+    }
+}
+const getReturnValue = (type, items, currentItem) => {
+    switch (type) {
+        case DropdownListTypes.menuitemcheckbox:
+            return [
+                ...items.map((item) => {
+                    if (item === currentItem) {
+                        currentItem.option = {
+                            ...currentItem.option,
+                            value: !currentItem.option.value,
+                        };
+                    }
+                    return item.option;
+                }),
+            ];
+        case DropdownListTypes.menuitem:
+        case DropdownListTypes.menuitemradio:
+        case DropdownListTypes.option:
+        default:
+            return [currentItem.option];
+    }
+};
+
+const debounce = (fn, ms) => {
+    let timeout = null;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(...args), ms);
+    };
+};
+const debouncedSearch = (options, callback) => {
+    let query = '';
+    const debouncedQueryReset = debounce(() => {
+        query = '';
+    }, 500);
+    return (e) => {
+        if (ignoreKeys[e.key])
+            return;
+        query += e.key;
+        debouncedQueryReset();
+        callback(options.reduceRight((found, current, i) => {
+            if (current.toLowerCase().startsWith(`${query}`.toLowerCase())) {
+                found = i;
+            }
+            return found;
+        }, -1));
+    };
+};
+const ignoreKeys = {
+    Alt: true,
+    Shift: true,
+    Meta: true,
+    Control: true,
+    Tab: true,
+    Backspace: true,
+    Enter: true,
+    ArrowLeft: true,
+    ArrowRight: true,
+    ArrowUp: true,
+    ArrowDown: true,
+};
+
+//@ts-ignore
+class Menu extends HTMLElement {
+    button;
+    trigger;
+    dropdown;
+    label;
+    _options;
+    onChange;
+    type;
+    handleSearch;
+    constructor({ label, options, onChange, type = DropdownListTypes.menuitem, }) {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.label = label;
+        this._options = options;
+        this.onChange = onChange;
+        this.type = type;
+    }
+    connectedCallback() {
+        const { shadowRoot } = this;
+        shadowRoot.innerHTML = this.template(this.label);
+        const style = document.createElement('style');
+        style.innerHTML = css_248z$4;
+        shadowRoot.prepend(style);
+        this.button = shadowRoot.querySelector('#button');
+        this.trigger = shadowRoot.querySelector('.dropdown-trigger');
+        this.dropdown = new DropdownListbox(this.options, this.handleChange.bind(this), this.handleNavigate.bind(this), this.type);
+        shadowRoot.querySelector('[role=menu]').append(this.dropdown.render());
+        this.handleSearch = debouncedSearch(this.dropdown.options.map((option) => option.label), (index) => {
+            this.dropdown.updateCurrent(index);
+            this.showDropdown();
+        });
+        this.trigger.addEventListener('keydown', this.handleKey.bind(this), false);
+        this.trigger.addEventListener('input', this.handleSearch.bind(this), true);
+        this.trigger.addEventListener('focusout', this.handleBlur.bind(this), true);
+        this.button.addEventListener('click', this.toggleDropdown.bind(this), true);
+    }
+    disconnectedCallback() {
+        this.trigger.removeEventListener('keydown', this.handleKey.bind(this), true);
+        this.trigger.removeEventListener('input', this.handleSearch.bind(this));
+        this.trigger.removeEventListener('focusout', this.handleBlur.bind(this));
+        this.button.removeEventListener('click', this.toggleDropdown.bind(this));
+    }
+    get options() {
+        return this._options;
+    }
+    set options(options) {
+        this._options = options;
+        this.dropdown.updateOptions(options);
+    }
+    showDropdown() {
+        this.trigger.classList.add('is-open');
+        this.button.setAttribute('aria-expanded', 'true');
+        this.button.setAttribute('aria-activedescendant', this.dropdown.currentItem?.id);
+    }
+    hideDropdown() {
+        this.trigger.classList.remove('is-open');
+        this.button.setAttribute('aria-expanded', 'false');
+        this.button.removeAttribute('aria-activedescendant');
+        this.dropdown.updateCurrent(0);
+    }
+    toggleDropdown() {
+        if (this.trigger.classList.contains('is-open')) {
+            this.hideDropdown();
+        }
+        else {
+            this.showDropdown();
+        }
+    }
+    private;
+    handleChange(options) {
+        this.onChange(options);
+        if (this.type === DropdownListTypes.menuitem ||
+            this.type === DropdownListTypes.option) {
+            this.button.focus();
+            this.hideDropdown();
+        }
+        else {
+            this.dropdown.currentItem.element.focus();
+        }
+    }
+    handleNavigate(id, _option) {
+        this.button.setAttribute('aria-activedescendant', id);
+    }
+    handleBlur(e) {
+        if (e.relatedTarget instanceof Element &&
+            !this.trigger.contains(e.relatedTarget)) {
+            this.hideDropdown();
+        }
+        else if (e.relatedTarget === null) {
+            this.hideDropdown();
+        }
+    }
+    handleKey(e) {
+        const isOpen = this.trigger.classList.contains('is-open');
+        switch (e.key) {
+            case ' ':
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                if (isOpen) {
+                    if (e.target === this.button) {
+                        this.hideDropdown();
+                    }
+                }
+                else {
+                    this.showDropdown();
+                }
+                break;
+            case 'Enter':
+                e.stopPropagation();
+                e.preventDefault();
+                if (isOpen) {
+                    this.hideDropdown();
+                    this.button.focus();
+                }
+                else {
+                    this.showDropdown();
+                }
+                break;
+            case 'ArrowLeft':
+            case 'ArrowUp':
+                // Arrow through the list box
+                // Show the dropdown and move
+                e.stopPropagation();
+                e.preventDefault();
+                if (isOpen) {
+                    this.dropdown.nextItem(e, -1);
+                }
+                else {
+                    this.showDropdown();
+                    this.dropdown.nextItem(e, -1);
+                }
+                break;
+            case 'ArrowRight':
+            case 'ArrowDown':
+                // Arrow through the list box
+                // Show the dropdown and move
+                e.stopPropagation();
+                e.preventDefault();
+                if (isOpen) {
+                    if (this.shadowRoot
+                        .querySelector('#listbox')
+                        .contains(this.shadowRoot.activeElement)) {
+                        this.dropdown.nextItem(e, 1);
+                    }
+                    else {
+                        this.dropdown.updateCurrent(0);
+                    }
+                }
+                else {
+                    this.showDropdown();
+                    this.dropdown.updateCurrent(0);
+                }
+                break;
+            case 'Escape':
+                if (isOpen) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    this.hideDropdown();
+                    this.button.focus();
+                }
+                break;
+            default:
+                if (isOpen) {
+                    this.handleSearch(e);
+                }
+                break;
+        }
+    }
+    template = (label) => html$3 `
     <div class="dropdown-trigger dropdown-trigger_click">
       <button
         id="button"
@@ -124,9 +1485,9 @@ function t(t,e){void 0===e&&(e={});var i=e.insertAt;if(t&&"undefined"!=typeof do
         aria-haspopup="true"
         aria-expanded="false"
         aria-controls="listbox"
-        title="${t}"
+        title="${label}"
       >
-        <span>${t}</span>
+        <span>${label}</span>
       </button>
       <div
         id="listbox"
@@ -138,45 +1499,330 @@ function t(t,e){void 0===e&&(e={});var i=e.insertAt;if(t&&"undefined"!=typeof do
         <!-- ListBox -->
       </div>
     </div>
-  `}const at=String.raw;customElements.define("o-menu",rt);var lt=":host{--c:#000;--bg:#fff;--b:0;--b-radius:0;--gap:0.25rem;--lh:var(--xxl);--p:0 0.5rem;--shadow:0 0 0 3px inset #000}.button{background:var(--o-button-background,var(--bg));border:var(--o-button-border,var(--b));border-radius:var(--o-button-border-radius,var(--b-radius));color:var(--o-button-color,var(--c));display:flex;font-size:.825rem;font-size:var(--o-button-font-size,.825rem);gap:var(--o-button-gap,var(--gap));line-height:var(--o-button-height,var(--lh));padding:var(--o-button-padding,var(--p))}.button:hover{background:var(\n    --o-button-background-hover,var(--o-button-background,var(--bg))\n  );border:var(--o-button-border-hover,var(--o-button-border,var(--b)));box-shadow:var(\n    --o-button-shadow-hover,var(--o-button-shadow,var(--shadow))\n  );color:var(--o-button-color-hover,var(--o-button-color,var(--c)));outline:none}.button:focus{background:var(\n    --o-button-border-focus,var(--o-button-background,var(--bg))\n  );border:var(--o-button-background-focus,var(--o-button-border,var(--b)));box-shadow:var(\n    --o-button-shadow-focus,var(--o-button-shadow,var(--shadow))\n  );color:var(--o-button-color-focus,var(--o-button-color,var(--c)));outline:none}.button:active{background:var(\n    --o-button-background-active,var(--o-button-background,var(--bg))\n  );border:var(--o-button-border-active,var(--o-button-border,var(--b)));color:var(--o-button-color-active,var(--o-button-color,var(--c)))}";t(lt);class ct extends HTMLElement{button;label;onClick;constructor({label:t,onClick:e}){super(),this.attachShadow({mode:"open"}),this.label=t,this.onClick=e}connectedCallback(){const{shadowRoot:t}=this;t.innerHTML=this.template(this.label);const e=document.createElement("style");e.innerHTML=lt,t.prepend(e),this.button=t.querySelector("button"),this.button.addEventListener("click",this.onClick.bind(this))}disconnectedCallback(){this.button.removeEventListener("click",this.onClick.bind(this))}template=t=>dt`
+  `;
+}
+const html$3 = String.raw;
+customElements.define('o-menu', Menu);
+
+var css_248z$3 = ":host{--c:#000;--bg:#fff;--b:0;--b-radius:0;--gap:0.25rem;--lh:var(--xxl);--p:0 0.5rem;--shadow:0 0 0 3px inset #000}.button{background:var(--o-button-background,var(--bg));border:var(--o-button-border,var(--b));border-radius:var(--o-button-border-radius,var(--b-radius));color:var(--o-button-color,var(--c));display:flex;font-size:.825rem;font-size:var(--o-button-font-size,.825rem);gap:var(--o-button-gap,var(--gap));line-height:var(--o-button-height,var(--lh));padding:var(--o-button-padding,var(--p))}.button:hover{background:var(\n    --o-button-background-hover,var(--o-button-background,var(--bg))\n  );border:var(--o-button-border-hover,var(--o-button-border,var(--b)));box-shadow:var(\n    --o-button-shadow-hover,var(--o-button-shadow,var(--shadow))\n  );color:var(--o-button-color-hover,var(--o-button-color,var(--c)));outline:none}.button:focus{background:var(\n    --o-button-border-focus,var(--o-button-background,var(--bg))\n  );border:var(--o-button-background-focus,var(--o-button-border,var(--b)));box-shadow:var(\n    --o-button-shadow-focus,var(--o-button-shadow,var(--shadow))\n  );color:var(--o-button-color-focus,var(--o-button-color,var(--c)));outline:none}.button:active{background:var(\n    --o-button-background-active,var(--o-button-background,var(--bg))\n  );border:var(--o-button-border-active,var(--o-button-border,var(--b)));color:var(--o-button-color-active,var(--o-button-color,var(--c)))}";
+styleInject(css_248z$3);
+
+//@ts-ignore
+class Button extends HTMLElement {
+    button;
+    label;
+    onClick;
+    constructor({ label, onClick }) {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.label = label;
+        this.onClick = onClick;
+    }
+    connectedCallback() {
+        const { shadowRoot } = this;
+        shadowRoot.innerHTML = this.template(this.label);
+        const style = document.createElement('style');
+        style.innerHTML = css_248z$3;
+        shadowRoot.prepend(style);
+        this.button = shadowRoot.querySelector('button');
+        this.button.addEventListener('click', this.onClick.bind(this));
+    }
+    disconnectedCallback() {
+        this.button.removeEventListener('click', this.onClick.bind(this));
+    }
+    template = (label) => html$2 `
     <button part="button" class="button">
       <slot name="before"></slot>
-      ${t}
+      ${label}
       <slot name="after"></slot>
     </button>
-  `}const dt=String.raw;customElements.define("o-button",ct);class ht extends(v(HTMLElement)){newButton;menu;settings;constructor(){super(),this.attachShadow({mode:"open"})}connectedCallback(){this.init(),super.connectedCallback()}disconnectedCallback(){super.disconnectedCallback()}init(){const{shadowRoot:t}=this;t.innerHTML='<div id="wrapper" class="flex flex-row">\n  <div id="controls" class="flex flex-row"></div>\n</div>\n';const e=document.createElement("style");e.innerHTML=B,t.prepend(e),this.menu=new rt({label:"New",options:[{id:"hard",label:"Hard",value:F.HARD},{id:"med",label:"Medium",value:F.MED},{id:"easy",label:"Easy",value:F.EASY},{id:"blank",label:"Blank",value:"blank"}],onChange:([{value:t}])=>{this.dispatch({type:"new",data:{difficulty:t}})},type:Z.menuitem}),this.shadowRoot.querySelector("#controls").append(this.menu);const i=new ct({label:"Undo",onClick:()=>{this.dispatch({type:"undo",data:{}})}});i.classList.add("secondary"),this.shadowRoot.querySelector("#controls").append(i),this.settings=new rt({label:"Settings",options:[],onChange:t=>{this.dispatch({type:"settings",data:{settings:ut(bt(t))}})},type:Z.menuitemcheckbox}),this.settings.classList.add("bumpRight"),this.shadowRoot.querySelector("#controls").append(this.settings),this.settings.dropdown.element.classList.add("dropdown_left")}render(t){this.settings.options=pt(t.settings)}}const ut=t=>(t.highlight.disabled=!t.possibilities.value,t),pt=t=>Object.entries(t||{}).map((([t,e])=>({...e,id:t}))),bt=t=>t?.reduce(((t,{id:e,...i})=>(t[e]=i,t)),{});customElements.define("sudoku-controls",ht);var gt='.main-board{--public-board-size:var(--main-board)}.secondary-board{--public-board-size:154px;--board-cell-gap:1px;--board-group-gap:2px}#viz{-moz-column-gap:16px;column-gap:16px;display:flex;margin-left:auto;margin-right:auto;padding:16px}#viewer{grid-row-gap:var(--board-gap);grid-column-gap:var(--board-gap);-moz-column-gap:var(--board-gap);column-gap:var(--board-gap);display:grid;grid-template-areas:"c00 c01 c02" "c10 c11 c12" "c20 c21 c22";grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr;height:var(--main-board);line-height:0;row-gap:var(--board-gap);width:var(--main-board)}#loops-container{margin-left:var(--l)}#loops{grid-row-gap:var(--board-gap);display:grid;grid-template-areas:"c0" "c1" "c2";grid-template-columns:1fr;grid-template-rows:1fr 1fr 1fr;height:var(--main-board);line-height:0;row-gap:var(--board-gap);width:auto}h2{color:#fff;font-size:1rem}.hidden{display:none}';t(gt);var mt=":host{--font-size:var(--l);position:relative}h3{color:var(--g-a-13);font-size:var(--font-size);line-height:1;margin:0;padding:0}.rotate{position:absolute}.rotate-right{left:calc(var(--board-size) + var(--s));transform:rotate(90deg);transform-origin:bottom left}.rotate-left,.rotate-right{top:calc(0px - var(--font-size))}.rotate-left{display:flex;justify-content:flex-end;left:calc(0px - var(--s));transform:rotate(-90deg);transform-origin:bottom left;width:0}";t(mt);class vt extends(v(HTMLElement)){i;j;type;value=null;css;button;constructor({i:t,j:e,css:i,type:o}){super(),this.attachShadow({mode:"open"}),this.i=t,this.j=e,this.css=i,this.type=o}connectedCallback(){this.init(),super.connectedCallback()}disconnectedCallback(){super.disconnectedCallback(),this.shadowRoot.querySelector("button").removeEventListener("click",this.handleClick)}init(){const{shadowRoot:t}=this;t.innerHTML=this.template(),this.button=t.querySelector("button"),this.button.addEventListener("click",this.handleClick.bind(this))}render(t){const e=t.loops[this.type][this.i][this.j],{id:i,loop:o}=e||{id:null,loop:null};if(i&&o){const{i:t,j:e}=o[0],i=`hsl(${`${wt[e]} ${ft}% ${yt}%`})`;this.shadowRoot.host.setAttribute("style",`--cell-text-color: black; --cell-background-color: ${i};`),this.button.classList.add("selected")}else this.button.classList.remove("selected");this.button.textContent=String(i||"");const{i:s,j:n}=t.location;this.i===s&&this.j===n?this.button.classList.add("current"):this.button.classList.remove("current")}handleClick(t){this.dispatch({type:"move",data:{location:{i:this.i,j:this.j}}})}template=()=>kt`
+  `;
+}
+const html$2 = String.raw;
+customElements.define('o-button', Button);
+
+//@ts-ignore
+class Controls extends ReactiveMixin(HTMLElement) {
+    newButton;
+    menu;
+    settings;
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+    connectedCallback() {
+        this.init();
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+    }
+    init() {
+        const { shadowRoot } = this;
+        shadowRoot.innerHTML = html$5;
+        const style = document.createElement('style');
+        style.innerHTML = css_248z$5;
+        shadowRoot.prepend(style);
+        this.menu = new Menu({
+            label: 'New',
+            options: [
+                { id: 'hard', label: 'Hard', value: difficultyLevel.HARD },
+                { id: 'med', label: 'Medium', value: difficultyLevel.MED },
+                { id: 'easy', label: 'Easy', value: difficultyLevel.EASY },
+                { id: 'blank', label: 'Blank', value: 'blank' },
+            ],
+            onChange: ([{ value }]) => {
+                this.dispatch({ type: 'new', data: { difficulty: value } });
+            },
+            type: DropdownListTypes.menuitem,
+        });
+        this.shadowRoot.querySelector('#controls').append(this.menu);
+        const undo = new Button({
+            label: 'Undo',
+            onClick: () => {
+                this.dispatch({ type: 'undo', data: {} });
+            },
+        });
+        undo.classList.add('secondary');
+        this.shadowRoot.querySelector('#controls').append(undo);
+        this.settings = new Menu({
+            label: 'Settings',
+            options: [],
+            onChange: (values) => {
+                this.dispatch({
+                    type: 'settings',
+                    data: {
+                        settings: handleConditionalSettings(optionsToSettings(values)),
+                    },
+                });
+            },
+            type: DropdownListTypes.menuitemcheckbox,
+        });
+        this.settings.classList.add('bumpRight');
+        this.shadowRoot.querySelector('#controls').append(this.settings);
+        this.settings.dropdown.element.classList.add('dropdown_left');
+    }
+    render(state) {
+        this.settings.options = settingsToOptions(state.settings);
+    }
+}
+const handleConditionalSettings = (settings) => {
+    settings.highlight.disabled = !settings.possibilities.value;
+    return settings;
+};
+const settingsToOptions = (settings) => Object.entries(settings || {}).map(([id, option]) => ({ ...option, id }));
+const optionsToSettings = (options) => options?.reduce((settings, { id, ...rest }) => {
+    settings[id] = rest;
+    return settings;
+}, {});
+customElements.define('sudoku-controls', Controls);
+
+var css_248z$2 = ".main-board{--public-board-size:var(--main-board)}.secondary-board{--public-board-size:154px;--board-cell-gap:1px;--board-group-gap:2px}#viz{-moz-column-gap:16px;column-gap:16px;display:flex;margin-left:auto;margin-right:auto;padding:16px}#viewer{grid-row-gap:var(--board-gap);grid-column-gap:var(--board-gap);-moz-column-gap:var(--board-gap);column-gap:var(--board-gap);display:grid;grid-template-areas:\"c00 c01 c02\" \"c10 c11 c12\" \"c20 c21 c22\";grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr;height:var(--main-board);line-height:0;row-gap:var(--board-gap);width:var(--main-board)}#loops-container{margin-left:var(--l)}#loops{grid-row-gap:var(--board-gap);display:grid;grid-template-areas:\"c0\" \"c1\" \"c2\";grid-template-columns:1fr;grid-template-rows:1fr 1fr 1fr;height:var(--main-board);line-height:0;row-gap:var(--board-gap);width:auto}h2{color:#fff;font-size:1rem}.hidden{display:none}";
+styleInject(css_248z$2);
+
+var css_248z$1 = ":host{--font-size:var(--l);position:relative}h3{color:var(--g-a-13);font-size:var(--font-size);line-height:1;margin:0;padding:0}.rotate{position:absolute}.rotate-right{left:calc(var(--board-size) + var(--s));transform:rotate(90deg);transform-origin:bottom left}.rotate-left,.rotate-right{top:calc(0px - var(--font-size))}.rotate-left{display:flex;justify-content:flex-end;left:calc(0px - var(--s));transform:rotate(-90deg);transform-origin:bottom left;width:0}";
+styleInject(css_248z$1);
+
+var css_248z = ":host{display:block}button{background:hsla(0,0%,100%,.1);border:none;color:#000;color:var(--cell-text-color,#000);cursor:pointer;font-size:10px;font-size:var(--cell-text-size,10px);font-weight:700;font-weight:var(--cell-font-weight,bold);height:100%;height:var(--cell-height,100%);margin:0;padding:0;width:100%;width:var(--cell-width,100%)}button.selected{background:#f3f3f3;background:var(--cell-background-color,#f3f3f3)}button.only{background:#fff}button.current{box-shadow:0 0 0 1px #fff}";
+styleInject(css_248z);
+
+//@ts-ignore
+/**
+ * Cell element that implements the dispatch pattern.
+ * Each WC class is responsible for tracking the child elements it creates
+ * and updating their properties or calling their render methods during render.
+ *
+ * CSS Custom Properties
+ * @property --cell-text-color black
+ * @property --cell-background-color #f3f3f3
+ * @param i
+ * @param j
+ * @param value
+ */
+class BoardLoopsCell extends ReactiveMixin(HTMLElement) {
+    i;
+    j;
+    type;
+    value = null;
+    css;
+    button;
+    constructor({ i, j, css, type, }) {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.i = i;
+        this.j = j;
+        this.css = css;
+        this.type = type;
+    }
+    connectedCallback() {
+        this.init();
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.shadowRoot
+            .querySelector('button')
+            .removeEventListener('click', this.handleClick);
+    }
+    init() {
+        const { shadowRoot } = this;
+        shadowRoot.innerHTML = this.template();
+        this.button = shadowRoot.querySelector('button');
+        this.button.addEventListener('click', this.handleClick.bind(this));
+    }
+    render(state) {
+        const loopObj = state.loops[this.type][this.i][this.j];
+        const { id, loop } = loopObj || { id: null, loop: null };
+        if (id && loop) {
+            const { i: _m, j: n } = loop[0];
+            const color = `${hue[n]} ${saturation}% ${brightness}%`;
+            const background = `hsl(${color})`;
+            this.shadowRoot.host.setAttribute('style', `--cell-text-color: black; 
+        --cell-background-color: ${background};`);
+            this.button.classList.add('selected');
+        }
+        else {
+            this.button.classList.remove('selected');
+        }
+        this.button.textContent = String(id || '');
+        const { i, j } = state.location;
+        if (this.i === i && this.j === j) {
+            this.button.classList.add('current');
+        }
+        else {
+            this.button.classList.remove('current');
+        }
+    }
+    handleClick(_event) {
+        this.dispatch({
+            type: 'move',
+            data: { location: { i: this.i, j: this.j } },
+        });
+    }
+    template = () => html$1 `
     <!DOCTYPE html>
     <style>
-      button {
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
-        color: var(--cell-text-color, black);
-        cursor: pointer;
-        font-weight: var(--cell-font-weight, bold);
-        font-size: var(--cell-text-size, 10px);
-        height: var(--cell-height, 100%);
-        margin: 0;
-        padding: 0;
-        width: var(--cell-width, 100%);
-      }
-      button.selected {
-        background: var(--cell-background-color, #f3f3f3);
-      }
-      button.only {
-        background: white;
-      }
-      button.current {
-        box-shadow: 0 0 0 1px white;
-      }
-      :host{
-        display: block;
-      }
+      ${css_248z}
       ${this.css}
     </style>
-    <button part="button" tabindex="-1" title="Cell ${this.i} ${this.j}">
-      ${this.value??""}
+    <button part="button" tabindex="-1" title="${cellToLabel(this)}">
+      ${this.value ?? ``}
     </button>
-  `}const wt={0:40,1:80,2:120,3:160,4:200,5:240,6:280,7:320,8:360},ft=90,yt=75,kt=String.raw;customElements.define("board-loops-cell",vt);class xt extends(v(HTMLElement)){cells=[];board;type=null;constructor(t){super(),this.attachShadow({mode:"open"}),this.type=t}connectedCallback(){this.init(),super.connectedCallback()}disconnectedCallback(){super.disconnectedCallback()}init(){const{shadowRoot:t}=this;t.innerHTML=i;const o=document.createElement("style");o.innerHTML=e+mt,t.prepend(o),this.cells=this.state.loops[this.type].map(((t,e)=>t.map(((t,i)=>new vt({i:e,j:i,css:`:host { grid-area: c${e}${i}; }`,type:this.type}))))).flat(),this.board=t.querySelector("#board"),this.board.append(...this.cells);const s=document.createElement("h3");s.textContent=Ct[this.type],s.classList.add("rotate","rotate-left"),t.prepend(s)}}const Ct={row:"Rows",column:"Columns",group:"Groups"};customElements.define("sudoku-board-loops",xt);class Lt extends(v(HTMLElement)){secondary;tertiary;constructor(){super(),this.attachShadow({mode:"open"})}connectedCallback(){this.init(),super.connectedCallback()}disconnectedCallback(){super.disconnectedCallback()}init(){const{shadowRoot:t}=this;t.innerHTML=this.template;const e=document.createElement("style");e.innerHTML=gt,t.prepend(e),this.secondary=Array(9).fill(null).map(((t,e)=>new O(e+1))),this.secondary.forEach((t=>t.classList.add("secondary-board"))),this.shadowRoot.querySelector("#viewer").append(...this.secondary),this.tertiary=["row","column","group"].map((t=>new xt(t))),this.tertiary.forEach((t=>t.classList.add("secondary-board"))),this.shadowRoot.querySelector("#loops").append(...this.tertiary)}render(t){t.settings?.possibilities?.value?this.shadowRoot.querySelector("#viewer-container").classList.remove("hidden"):this.shadowRoot.querySelector("#viewer-container").classList.add("hidden"),t.settings?.connections?.value?this.shadowRoot.querySelector("#loops-container").classList.remove("hidden"):this.shadowRoot.querySelector("#loops-container").classList.add("hidden")}template=Et`
+  `;
+}
+const hue = {
+    0: 40,
+    1: 80,
+    2: 120,
+    3: 160,
+    4: 200,
+    5: 240,
+    6: 280,
+    7: 320,
+    8: 360,
+};
+const saturation = 90;
+const brightness = 75;
+const html$1 = String.raw;
+customElements.define('board-loops-cell', BoardLoopsCell);
+
+//@ts-ignore
+class BoardLoops extends ReactiveMixin(HTMLElement) {
+    cells = [];
+    board;
+    type = null;
+    constructor(type) {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.type = type;
+    }
+    connectedCallback() {
+        this.init();
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+    }
+    init() {
+        const { shadowRoot } = this;
+        shadowRoot.innerHTML = html$8;
+        const style = document.createElement('style');
+        style.innerHTML = css_248z$8 + css_248z$1;
+        shadowRoot.prepend(style);
+        this.cells = this.state.loops[this.type]
+            .map((row, i) => row.map((_value, j) => new BoardLoopsCell({
+            i,
+            j,
+            css: `:host { grid-area: c${i}${j}; }`,
+            type: this.type,
+        })))
+            .flat();
+        this.board = shadowRoot.querySelector('#board');
+        this.board.append(...this.cells);
+        const label = document.createElement('h3');
+        label.textContent = labels[this.type];
+        label.classList.add('rotate', 'rotate-left');
+        shadowRoot.prepend(label);
+    }
+}
+const labels = {
+    row: 'Rows',
+    column: 'Columns',
+    group: 'Groups',
+};
+customElements.define('sudoku-board-loops', BoardLoops);
+
+//@ts-ignore
+class Layout extends ReactiveMixin(HTMLElement) {
+    secondary;
+    tertiary;
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+    connectedCallback() {
+        this.init();
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+    }
+    init() {
+        const { shadowRoot } = this;
+        shadowRoot.innerHTML = this.template;
+        const style = document.createElement('style');
+        style.innerHTML = css_248z$2;
+        shadowRoot.prepend(style);
+        this.secondary = Array(9)
+            .fill(null)
+            .map((_, i) => new BoardLens((i + 1)));
+        this.secondary.forEach((board) => board.classList.add('secondary-board'));
+        this.shadowRoot.querySelector('#viewer').append(...this.secondary);
+        this.tertiary = ['row', 'column', 'group'].map((type) => new BoardLoops(type));
+        this.tertiary.forEach((board) => board.classList.add('secondary-board'));
+        this.shadowRoot.querySelector('#loops').append(...this.tertiary);
+    }
+    render(state) {
+        if (state.settings?.possibilities?.value) {
+            this.shadowRoot
+                .querySelector('#viewer-container')
+                .classList.remove('hidden');
+        }
+        else {
+            this.shadowRoot
+                .querySelector('#viewer-container')
+                .classList.add('hidden');
+        }
+        if (state.settings?.connections?.value) {
+            this.shadowRoot
+                .querySelector('#loops-container')
+                .classList.remove('hidden');
+        }
+        else {
+            this.shadowRoot.querySelector('#loops-container').classList.add('hidden');
+        }
+    }
+    template = html `
     <div id="viz">
       <div id="board">
         <h2>Board</h2>
@@ -191,5 +1837,148 @@ function t(t,e){void 0===e&&(e={});var i=e.insertAt;if(t&&"undefined"!=typeof do
         <div id="loops"></div>
       </div>
     </div>
-  `}const Et=String.raw;customElements.define("sudoku-layout",Lt);const St=t=>({...t,i:_t(t.i)}),jt=t=>({...t,i:Dt(t.i)}),At=t=>({...t,j:_t(t.j)}),Tt=t=>({...t,j:Dt(t.j)}),Dt=t=>Ht(t,1,9),_t=t=>Ht(t,-1,9),Ht=(t,e,i)=>(t+e+i)%i,Mt=t=>`${t.i}-${t.j}`,zt=(t,e,i,o={},s={})=>{const{possibilities:n,value:r,possibilityCount:a}=e[t.i][t.j],l=Object.keys(n).filter((t=>n[t]&&!s[n[t]])),c=l.slice(-1)[0];return c&&!r&&a>1?Rt(c,e,i,o,{...s,[c]:!0}):Object.values(o)},Rt=(t,e,i,o={},s={})=>{const n=i[t].filter((t=>!o[Mt(t)])).slice(-1)[0];return n?zt(n,e,i,{...o,[Mt(n)]:n},s):Object.values(o)},$t=(t,e,i)=>Array(9).fill(0).map(((o,s)=>t(i,s).reduce(((t,i,o)=>{const n=e(s,o);return Object.entries(i.possibilities).reduce(((t,[e,i])=>(i&&t[e].push(n),t)),t)}),l(qt)))),qt={1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]},Ot={row:{addressToSliceFn:({i:t,j:e})=>({slice:t,member:e}),cellsPerValueFn:t=>$t(L,D,t)},column:{addressToSliceFn:({i:t,j:e})=>({slice:e,member:t}),cellsPerValueFn:t=>$t(E,T,t)},group:{addressToSliceFn:({i:t,j:e})=>({slice:j[t][e],member:A[t][e]}),cellsPerValueFn:t=>$t(S,(()=>{const t=r(9,null);for(let e=0;e<9;e++)for(let i=0;i<9;i++){const o=j[e][i],s=A[e][i];t[o][s]={i:e,j:i}}return(e,i)=>t[e][i]})(),t)}},It=(t,e)=>{const i=Pt(),{addressToSliceFn:o,cellsPerValueFn:s}=Ot[e],n=d(s);return t.reduce(((e,s,r)=>(s.forEach(((s,a)=>{if(!e[r][a]){const{slice:s}=o({i:r,j:a}),l=n(t)[s],c=zt({i:r,j:a},t,l);if(c.length>1){const t=i();c.forEach((({i:i,j:o})=>{e[i][o]={loop:c,id:t}}))}}})),e)),r(9,null))},Pt=(t=0)=>{let e=t;return()=>Nt(e++)},Nt=(t,e="",i=1)=>{const o=String.fromCharCode(t%26+65)+e;return t<26*i?o:Nt(t-26*i,o,26*i)},Bt=(t,e,i,o)=>(t.board[e][i]=o,t.possibilities=w(t.board),t.loops={row:It(t.possibilities,"row"),column:It(t.possibilities,"column"),group:It(t.possibilities,"group")},t),Ft=(t,e)=>{let i;switch(e.type){case"update":const{i:o,j:s,value:n}=e.data;t.moves=t.moves||[],t.moves.push({i:o,j:s,priorValue:t.board[o][s]}),i=Bt(t,o,s,n);break;case"undo":const{i:r,j:a,priorValue:c}=t.moves.pop();i=Bt(t,r,a,c),i.location={i:r,j:a};break;case"new":const{difficulty:d}=e.data;t.board="blank"===d?l(Ut):V(d),i=Vt(t);break;case"move":t.location=e.data.location,i=t;break;case"arrow":const h={ArrowLeft:At,ArrowRight:Tt,ArrowUp:St,ArrowDown:jt};t.location=h[e.data.key]?.(t.location)||t.location,i=t;break;case"settings":t.settings=e.data.settings,i=t;break;default:i=t}return window.localStorage.setItem("state",JSON.stringify(i)),i.board.flat().every((t=>t>0))?document.querySelector("#solved").classList.remove("hidden"):document.querySelector("#solved").classList.add("hidden"),i},Ut=r(9,0),Vt=t=>{const e=t?.board||l(V(F.HARD)),i=w(e);return{board:e,original:l(e),possibilities:i,loops:{row:It(i,"row"),column:It(i,"column"),group:It(i,"group")},location:{i:0,j:0},moves:[],settings:t?.settings||{possibilities:{label:"Show Possibilities",value:!0},connections:{label:"Show Connections",value:!0},highlight:{label:"Highlight Only Possibility",value:!1}}}};(()=>{const t=JSON.parse(window.localStorage.getItem("state")),e=Vt(t);((t,e)=>{g(t),e&&(m=e)})(e,Ft),window.localStorage.setItem("state",JSON.stringify(e)),document.body.innerHTML='\n    <div id="app" class="dark">\n      <sudoku-controls></sudoku-controls>\n      <sudoku-layout></sudoku-layout>\n      <div id="solved" class="overflow-container hidden">\n        <div class="shimmer"></div>\n        <div class="flex center"><div class="shimmer-text">SOLVED!</div></div>\n      </div>\n    </div>\n  '})();
+  `;
+}
+const html = String.raw;
+customElements.define('sudoku-layout', Layout);
+
+const up = (addr) => ({
+    ...addr,
+    i: decrement(addr.i),
+});
+const down = (addr) => ({
+    ...addr,
+    i: increment(addr.i),
+});
+const left = (addr) => ({
+    ...addr,
+    j: decrement(addr.j),
+});
+const right = (addr) => ({
+    ...addr,
+    j: increment(addr.j),
+});
+const increment = (start) => move(start, +1, 9);
+const decrement = (start) => move(start, -1, 9);
+const move = (start, delta, modulo) => (start + delta + modulo) % modulo;
+
+/**
+ *  mutates state
+ */
+const updateBoardState = (state, i, j, value) => {
+    state.board[i][j] = value;
+    state.possibilities = possibilitiesForBoard(state.board);
+    state.loops = {
+        row: getLoopsForBoardByType(state.possibilities, 'row'),
+        column: getLoopsForBoardByType(state.possibilities, 'column'),
+        group: getLoopsForBoardByType(state.possibilities, 'group'),
+    };
+    return state;
+};
+/**
+ * Reducer function to manage sudoku calculations
+ * @param state
+ * @param action
+ * @returns
+ */
+const reducer = (state, action) => {
+    let updatedState;
+    switch (action.type) {
+        case 'update':
+            const { i, j, value } = action.data;
+            state.moves = state.moves || [];
+            state.moves.push({
+                i,
+                j,
+                priorValue: state.board[i][j],
+            });
+            updatedState = updateBoardState(state, i, j, value);
+            break;
+        case 'undo':
+            const { i: pI, j: pJ, priorValue: pV } = state.moves.pop();
+            updatedState = updateBoardState(state, pI, pJ, pV);
+            updatedState.location = { i: pI, j: pJ };
+            break;
+        case 'new':
+            const { difficulty } = action.data;
+            state.board =
+                difficulty === 'blank'
+                    ? cloneDeep(blankBoard)
+                    : generateBoard(difficulty);
+            updatedState = initialState(state, true);
+            break;
+        case 'move':
+            state.location = action.data.location;
+            updatedState = state;
+            break;
+        case 'arrow':
+            const direction = {
+                ArrowLeft: left,
+                ArrowRight: right,
+                ArrowUp: up,
+                ArrowDown: down,
+            };
+            state.location =
+                direction[action.data.key]?.(state.location) || state.location;
+            updatedState = state;
+            break;
+        case 'settings':
+            state.settings = action.data.settings;
+            updatedState = state;
+            break;
+        default:
+            updatedState = state;
+    }
+    window.localStorage.setItem('state', JSON.stringify(updatedState));
+    // TODO: move to app logic in new viz component
+    if (updatedState.board.flat().every((value) => value > 0)) {
+        document.querySelector('#solved').classList.remove('hidden');
+    }
+    else {
+        document.querySelector('#solved').classList.add('hidden');
+    }
+    return updatedState;
+};
+const blankBoard = NNArray(9, 0);
+const initialState = (priorState, updateOriginal = false) => {
+    const board = priorState?.board || cloneDeep(generateBoard(difficultyLevel.HARD));
+    const possibilities = possibilitiesForBoard(board);
+    const original = updateOriginal || !priorState?.original
+        ? cloneDeep(board)
+        : priorState.original;
+    return {
+        board: board,
+        original,
+        possibilities,
+        loops: {
+            row: getLoopsForBoardByType(possibilities, 'row'),
+            column: getLoopsForBoardByType(possibilities, 'column'),
+            group: getLoopsForBoardByType(possibilities, 'group'),
+        },
+        location: { i: 0, j: 0 },
+        moves: [],
+        // TODO: store settings in separate local storage object?
+        settings: priorState?.settings || {
+            possibilities: { label: 'Show Possibilities', value: true },
+            connections: { label: 'Show Connections', value: true },
+            highlight: { label: 'Highlight Only Possibility', value: false },
+        },
+    };
+};
+(() => {
+    const storedState = JSON.parse(window.localStorage.getItem('state'));
+    const state = initialState(storedState);
+    initializeSubscriptions(state, reducer);
+    window.localStorage.setItem('state', JSON.stringify(state));
+    document.body.innerHTML = `
+    <div id="app" class="dark">
+      <sudoku-controls></sudoku-controls>
+      <sudoku-layout></sudoku-layout>
+      <div id="solved" class="overflow-container hidden">
+        <div class="shimmer"></div>
+        <div class="flex center"><div class="shimmer-text">SOLVED!</div></div>
+      </div>
+    </div>
+  `;
+})();
 //# sourceMappingURL=bundle.js.map

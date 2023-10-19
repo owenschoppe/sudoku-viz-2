@@ -1,14 +1,7 @@
 import { State } from '../types';
 import { cloneDeep } from '../utils';
 import { Dispatch, Unsubscribe, subscribe } from '../utils/subscribe';
-
-type Constructor = new (...args: any[]) => {};
-
-// // Generic Contructor with constraints
-// type GConstructor<T = {}> = new (...args: any[]) => T;
-
-// // Define properties that the extended class must have.
-// type Renderable = GConstructor<{ render: (state: State) => void }>
+import { Constructor } from './types';
 
 export const ReactiveMixin = <T extends Constructor>(Base: T) =>
   class Reactive extends Base {

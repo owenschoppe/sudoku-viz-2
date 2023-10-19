@@ -1,6 +1,10 @@
+//@ts-ignore
+import css from './board-lens-cell.css';
 import { CellValue, State } from '../../types.js';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 import { isValidInput } from '../../utils/sudoku.js';
+import { cellToLabel } from '../../utils/labels';
+// import { HandleInputMixin } from '../../mixins/handle-input-mixin';
 
 /**
  * Cell element that implements the dispatch pattern.
@@ -15,6 +19,7 @@ import { isValidInput } from '../../utils/sudoku.js';
  * @param value
  */
 export class BoardLensCell extends ReactiveMixin(HTMLElement) {
+  button: HTMLButtonElement;
   i: number;
   j: number;
   lens: CellValue | 0;
@@ -111,7 +116,6 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
           i: this.i,
           j: this.j,
           value: this.lens,
-          // color: this.getColor(),
         },
       }).board[this.i][this.j];
     }
@@ -122,58 +126,15 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
     });
   }
 
-  // getColor() {
-  //   const step = 255 / 9;
-  //   return `rgb(${step * this.i},${step * this.j},${step * this.value})`;
   // }
 
-  // Todo
   template = () => html`
     <!DOCTYPE html>
     <style>
-      button {
-        color: var(--cell-text-color, black);
-        cursor: pointer;
-        border: none;
-        /* background: var(--cell-background-color, #f3f3f3); */
-        background: rgba(255, 255, 255, 0.1);
-        font-weight: var(--cell-font-weight, bold);
-        font-size: var(--cell-text-size, 10px);
-        height: var(--cell-height, 100%);
-        margin: 0;
-        /* opacity: 0.1; */
-        padding: 0;
-        width: var(--cell-width, 100%);
-      }
-      button.selected {
-        background: var(--cell-background-color, #f3f3f3);
-        /* opacity: 1; */
-      }
-      button.only {
-        background: white;
-        border-radius: 25%;
-        /* opacity: 1; */
-      }
-      button.possibility {
-        background: var(--cell-background-possibility-color, #f3f3f3);
-        color: white;
-        font-weight: 100;
-        border-radius: 50%;
-        /* opacity: 0.5; */
-      }
-      button.current {
-        box-shadow: 0 0 0 1px white;
-      }
-      button.current.only {
-        border-radius: 0;
-        box-shadow: 0 0 0 2px var(--cell-focus-color, white)
-      }
-      :host{
-        display: block;
-      }
+      ${css}
       ${this.css}
     </style>
-    <button part="button" tabindex="-1" title="Cell ${this.i} ${this.j}">
+    <button part="button" tabindex="-1" title="${cellToLabel(this)}">
       ${this.value ?? ``}
     </button>
   `;

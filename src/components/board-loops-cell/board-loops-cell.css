@@ -1,0 +1,24 @@
+:host {
+  display: block;
+}
+button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--cell-text-color, black);
+  cursor: pointer;
+  font-weight: var(--cell-font-weight, bold);
+  font-size: var(--cell-text-size, 10px);
+  height: var(--cell-height, 100%);
+  margin: 0;
+  padding: 0;
+  width: var(--cell-width, 100%);
+}
+button.selected {
+  background: var(--cell-background-color, #f3f3f3);
+}
+button.only {
+  background: white;
+}
+button.current {
+  box-shadow: 0 0 0 1px white;
+}

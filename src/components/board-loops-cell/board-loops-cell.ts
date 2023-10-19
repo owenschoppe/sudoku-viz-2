@@ -1,6 +1,9 @@
+//@ts-ignore
+import css from './board-loops-cell.css';
 import { CellValue, State } from '../../types.js';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 import { LoopType } from '../../utils/sudoku-loops.js';
+import { cellToLabel } from '../../utils/labels';
 
 /**
  * Cell element that implements the dispatch pattern.
@@ -74,7 +77,8 @@ export class BoardLoopsCell extends ReactiveMixin(HTMLElement) {
 
       this.shadowRoot.host.setAttribute(
         'style',
-        `--cell-text-color: black; --cell-background-color: ${background};`,
+        `--cell-text-color: black; 
+        --cell-background-color: ${background};`,
       );
       this.button.classList.add('selected');
     } else {
@@ -101,33 +105,10 @@ export class BoardLoopsCell extends ReactiveMixin(HTMLElement) {
   template = () => html`
     <!DOCTYPE html>
     <style>
-      button {
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
-        color: var(--cell-text-color, black);
-        cursor: pointer;
-        font-weight: var(--cell-font-weight, bold);
-        font-size: var(--cell-text-size, 10px);
-        height: var(--cell-height, 100%);
-        margin: 0;
-        padding: 0;
-        width: var(--cell-width, 100%);
-      }
-      button.selected {
-        background: var(--cell-background-color, #f3f3f3);
-      }
-      button.only {
-        background: white;
-      }
-      button.current {
-        box-shadow: 0 0 0 1px white;
-      }
-      :host{
-        display: block;
-      }
+      ${css}
       ${this.css}
     </style>
-    <button part="button" tabindex="-1" title="Cell ${this.i} ${this.j}">
+    <button part="button" tabindex="-1" title="${cellToLabel(this)}">
       ${this.value ?? ``}
     </button>
   `;

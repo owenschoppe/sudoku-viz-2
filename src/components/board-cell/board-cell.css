@@ -1,0 +1,62 @@
+.cell-container {
+  position: relative;
+}
+
+.cell {
+  caret-color: transparent;
+  color: var(--cell-text-color, black);
+  cursor: pointer;
+  border: none;
+  background: var(--cell-background-color, white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: var(--cell-font-weight, bold);
+  font-size: var(--cell-text-size, 10px);
+  height: var(--cell-height, 100%);
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: var(--cell-width, 100%);
+  user-select: none;
+  box-shadow: 0 0 0 1px var(--g-13);
+  appearance: none;
+  border-radius: 0;
+}
+/* Hide numeric input buttons */
+/* Chrome, Safari, Edge, Opera */
+.cell::-webkit-outer-spin-button,
+.cell::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+.cell[type='number'] {
+  -moz-appearance: textfield;
+}
+.cell.current {
+  outline: none;
+  box-shadow: 0 0 0 2px inset
+    var(--public-board-cell-focus, var(--highlight-color));
+}
+.cell:focus,
+label:focus-within .cell {
+  outline: none;
+  box-shadow: 0 0 0 4px inset
+    var(--public-board-cell-focus, var(--highlight-color));
+}
+.cell.locked {
+  color: #666;
+  background-color: #f3f3f3;
+}
+.visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}

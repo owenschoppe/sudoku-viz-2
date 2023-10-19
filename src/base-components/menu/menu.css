@@ -1,5 +1,6 @@
 :host {
-  --button-background: white;
+  --button-color: var(--g-13);
+  --button-background: var(--g-1);
   --button-border: none;
   --button-border-radius: 0;
   --button-font-size: 0.825rem;
@@ -18,7 +19,7 @@
 /* Trigger */
 
 .button {
-  /* width: 100%; */
+  color: var(--o-button-color, var(--button-color));
   cursor: pointer;
   height: var(--o-button-height, var(--button-height));
   line-height: var(--o-button-height, var(--button-height));

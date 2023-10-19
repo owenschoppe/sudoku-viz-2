@@ -59,7 +59,9 @@ export class BoardLens extends ReactiveMixin(HTMLElement) {
 
     this.board.setAttribute(
       'style',
-      `--cell-text-color: black; --cell-background-color: ${background}; --cell-background-possibility-color: ${possibility};`,
+      `--cell-text-color: black; 
+      --cell-background-color: ${background}; 
+      --cell-background-possibility-color: ${possibility};`,
     );
   }
 }

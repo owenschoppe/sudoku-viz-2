@@ -54,7 +54,7 @@ const reducer = (state: State, action: Action) => {
         difficulty === 'blank'
           ? cloneDeep(blankBoard)
           : generateBoard(difficulty);
-      updatedState = initialState(state);
+      updatedState = initialState(state, true);
       break;
     case 'move':
       state.location = action.data.location;
@@ -92,13 +92,17 @@ const reducer = (state: State, action: Action) => {
 
 const blankBoard = NNArray(9, 0);
 
-const initialState = (priorState?: State): State => {
+const initialState = (priorState?: State, updateOriginal = false): State => {
   const board =
     priorState?.board || cloneDeep(generateBoard(difficultyLevel.HARD));
   const possibilities = possibilitiesForBoard(board);
+  const original =
+    updateOriginal || !priorState?.original
+      ? cloneDeep(board)
+      : priorState.original;
   return {
     board: board,
-    original: cloneDeep(board),
+    original,
     possibilities,
     loops: {
       row: getLoopsForBoardByType(possibilities, 'row'),
