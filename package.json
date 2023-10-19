@@ -15,7 +15,7 @@
     "r:start": "serve dist",
     "r:watch": "rollup -c -w",
     "r:reload": "livereload dist/ -p 5001",
-    "r:deploy": "gcloud config set project sudoku-visualization && gcloud app deploy",
+    "r:deploy": "gcloud --project sudoku-viz app deploy",
     "lint": "eslint . --ext .ts --ext .mts",
     "test": "jest --coverage",
     "test:watch": "jest --watch",

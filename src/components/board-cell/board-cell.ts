@@ -50,7 +50,6 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
   init() {
     const { shadowRoot } = this;
 
-    console.log(isCellValue(this.value), String(this.value));
     shadowRoot.innerHTML = this.template();
 
     this.cell = shadowRoot.querySelector('#cell');
