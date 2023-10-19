@@ -25,7 +25,6 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
   lens: CellValue | 0;
   value: CellValue | 0 = 0;
   css: string;
-  button: HTMLButtonElement;
 
   constructor({
     i,
