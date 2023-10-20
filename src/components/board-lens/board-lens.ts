@@ -43,6 +43,7 @@ export class BoardLens extends ReactiveMixin(HTMLElement) {
             new BoardLensCell({
               i,
               j,
+              id: `${this.lens}`,
               css: `:host { grid-area: c${i}${j}; }`,
               lens: this.lens,
             }),

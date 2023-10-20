@@ -40,6 +40,7 @@ export class Board extends ReactiveMixin(HTMLElement) {
             new BoardCell({
               i,
               j,
+              id: 'main',
               css: `:host { grid-area: c${i}${j}; }`,
             }),
         ),
@@ -60,7 +61,7 @@ export class Board extends ReactiveMixin(HTMLElement) {
       case 'ArrowRight':
         this.dispatch({
           type: 'arrow',
-          data: event,
+          data: Object.assign(event, { id: 'main' }),
         });
         break;
       default:

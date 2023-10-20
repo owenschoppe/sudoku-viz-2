@@ -1,24 +1,39 @@
 import { CellValue, State } from '../types';
-import { Dispatch } from '../utils/subscribe';
 import { isValidInput } from '../utils/sudoku';
-import { Renderable } from './types';
+import { ReactiveProps } from './reactive-component-mixin';
+import { GConstructor } from './types';
 
-export const HandleInputMixin = <T extends Renderable>(Base: T) =>
+interface HandleInputProps {
+  button: HTMLButtonElement;
+  i: number;
+  j: number;
+  value: CellValue | 0;
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+  handleChange(event: KeyboardEvent): void;
+}
+
+/**
+ * Add keyboard handling to ReactiveMixin.
+ * Extending class must implement button, i, j, value, id
+ * @param Base extends ReactiveMixin
+ * @returns
+ */
+export const HandleInputMixin = <T extends GConstructor<ReactiveProps>>(
+  Base: T,
+): GConstructor<HandleInputProps> & T =>
   class HandleInput extends Base {
-    button: HTMLButtonElement;
-    dispatch: Dispatch;
-    i: number;
-    j: number;
-    isEditable: boolean;
-    state: State;
-    value: CellValue | 0;
+    declare button: HTMLButtonElement;
+    declare i: number;
+    declare j: number;
+    declare id: string;
+    declare value: CellValue | 0;
 
     constructor(...args: any[]) {
-      debugger;
       super(...args);
     }
 
-    connectedCallback() {
+    connectedCallback(): void {
       this.button?.addEventListener(
         'keydown',
         this.handleChange.bind(this),
@@ -28,7 +43,7 @@ export const HandleInputMixin = <T extends Renderable>(Base: T) =>
       super.connectedCallback();
     }
 
-    disconnectedCallback() {
+    disconnectedCallback(): void {
       this.button?.removeEventListener(
         'keydown',
         this.handleChange.bind(this),
@@ -38,11 +53,25 @@ export const HandleInputMixin = <T extends Renderable>(Base: T) =>
       super.disconnectedCallback();
     }
 
-    handleChange(event: KeyboardEvent) {
+    handleChange(event: KeyboardEvent): void {
+      const isEditable = this.state.original[this.i][this.j] === 0;
+
       switch (event.key) {
+        case 'Tab':
+          break;
+        case 'ArrowUp':
+        case 'ArrowDown':
+        case 'ArrowLeft':
+        case 'ArrowRight':
+          event.preventDefault();
+          this.dispatch({
+            type: 'arrow',
+            data: Object.assign(event, { id: this.id }),
+          });
+          break;
         case 'Backspace':
           event.preventDefault();
-          if (this.isEditable) {
+          if (isEditable) {
             this.value = this.dispatch({
               type: 'update',
               data: {
@@ -61,7 +90,7 @@ export const HandleInputMixin = <T extends Renderable>(Base: T) =>
               this.state.possibilities[this.i][this.j].possibilities,
             ) &&
             Number(event.key) !== this.value &&
-            this.isEditable
+            isEditable
           ) {
             this.value = this.dispatch({
               type: 'update',
@@ -73,5 +102,24 @@ export const HandleInputMixin = <T extends Renderable>(Base: T) =>
             }).board[this.i][this.j];
           }
       }
+    }
+
+    render(state: State) {
+      const { i, j } = state.location;
+      if (this.i === i && this.j === j) {
+        this.button.classList.add('current');
+        this.button.setAttribute('tabindex', '0');
+
+        const { i: previousI, j: previousJ } = this.state.location;
+        const locationMoved = i !== previousI || j !== previousJ;
+        const isUndo = state.moves.length < this.state.moves.length;
+        if (locationMoved && !isUndo && this.id === state.focusBoardId) {
+          this.button.focus();
+        }
+      } else {
+        this.button.classList.remove('current');
+        this.button.setAttribute('tabindex', '-1');
+      }
+      super.render(state);
     }
   };

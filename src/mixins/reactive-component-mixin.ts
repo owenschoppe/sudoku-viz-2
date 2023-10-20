@@ -1,9 +1,20 @@
 import { State } from '../types';
 import { cloneDeep } from '../utils';
 import { Dispatch, Unsubscribe, subscribe } from '../utils/subscribe';
-import { Constructor } from './types';
+import { GConstructor } from './types';
 
-export const ReactiveMixin = <T extends Constructor>(Base: T) =>
+export interface ReactiveProps {
+  state: State;
+  dispatch: Dispatch;
+  unsubscribe: Unsubscribe;
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+  render(state: State): void;
+}
+
+export const ReactiveMixin = <T extends GConstructor>(
+  Base: T,
+): GConstructor<ReactiveProps> & T =>
   class Reactive extends Base {
     state: State;
     dispatch: Dispatch;
@@ -19,13 +30,13 @@ export const ReactiveMixin = <T extends Constructor>(Base: T) =>
       this.unsubscribe = unsubscribe;
     }
 
-    connectedCallback() {
+    connectedCallback(): void {
       this.render(this.state);
     }
 
-    disconnectedCallback() {
+    disconnectedCallback(): void {
       this.unsubscribe();
     }
 
-    render(_state: State) {}
+    render(_state: State): void {}
   };

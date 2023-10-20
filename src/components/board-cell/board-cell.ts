@@ -21,17 +21,29 @@ import { cellToLabel } from '../../utils/labels';
 export class BoardCell extends ReactiveMixin(HTMLElement) {
   i: number;
   j: number;
+  id: string;
   value: CellValue | 0;
   css: string;
   input: HTMLInputElement;
   cell: HTMLDivElement;
   isEditable: boolean;
 
-  constructor({ i, j, css }: { css?: string; i: number; j: number }) {
+  constructor({
+    i,
+    j,
+    id,
+    css,
+  }: {
+    css?: string;
+    i: number;
+    j: number;
+    id: string;
+  }) {
     super();
     this.attachShadow({ mode: 'open' });
     this.i = i;
     this.j = j;
+    this.id = id;
     this.css = css;
     // this.value = this.state.board[i][j];
   }
@@ -69,7 +81,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
       const { i: previousI, j: previousJ } = this.state.location;
       const locationMoved = i !== previousI || j !== previousJ;
       const isUndo = state.moves.length < this.state.moves.length;
-      if (locationMoved && !isUndo) {
+      if (locationMoved && !isUndo && this.id === state.focusBoardId) {
         this.input.focus();
       }
     } else {

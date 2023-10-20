@@ -69,6 +69,7 @@ const reducer = (state: State, action: Action) => {
       };
       state.location =
         direction[action.data.key]?.(state.location) || state.location;
+      state.focusBoardId = action.data.id;
       updatedState = state;
       break;
     case 'settings':

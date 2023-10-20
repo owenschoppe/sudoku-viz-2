@@ -4,7 +4,8 @@ import { CellValue, State } from '../../types.js';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
 import { isValidInput } from '../../utils/sudoku.js';
 import { cellToLabel } from '../../utils/labels';
-// import { HandleInputMixin } from '../../mixins/handle-input-mixin';
+import { HandleInputMixin } from '../../mixins/handle-input-mixin';
+import { cloneDeep } from '../../utils';
 
 /**
  * Cell element that implements the dispatch pattern.
@@ -18,7 +19,9 @@ import { cellToLabel } from '../../utils/labels';
  * @param j
  * @param value
  */
-export class BoardLensCell extends ReactiveMixin(HTMLElement) {
+export class BoardLensCell extends HandleInputMixin(
+  ReactiveMixin(HTMLElement),
+) {
   button: HTMLButtonElement;
   i: number;
   j: number;
@@ -29,18 +32,21 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
   constructor({
     i,
     j,
+    id,
     css,
     lens,
   }: {
     css?: string;
     i: number;
     j: number;
+    id: string;
     lens?: CellValue;
   }) {
     super();
     this.attachShadow({ mode: 'open' });
     this.i = i;
     this.j = j;
+    this.id = id;
     this.css = css;
     this.lens = lens;
   }
@@ -67,32 +73,34 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
   }
 
   render(state: State) {
-    this.state = state;
     this.value = state.board[this.i][this.j];
     const possibility =
       state.possibilities[this.i][this.j].possibilities[this.lens];
     const selected = this.value === this.lens;
     const displayValue = selected || possibility ? this.lens : null;
     this.button.textContent = String(displayValue || '');
-    this.updateClass();
+    this.updateClass(state);
+
     const { i, j } = state.location;
     if (this.i === i && this.j === j) {
       this.button.classList.add('current');
     } else {
       this.button.classList.remove('current');
     }
+    super.render(state);
+    this.state = cloneDeep(state);
   }
 
-  updateClass() {
+  updateClass(state: State) {
     const { possibilities, possibilityCount } =
-      this.state.possibilities[this.i][this.j];
+      state.possibilities[this.i][this.j];
     this.button.classList.remove('selected', 'only', 'possibility');
     if (this.value === this.lens) {
       this.button.classList.add('selected');
     } else if (
       possibilityCount === 1 &&
       possibilities[this.lens] &&
-      this.state.settings?.highlight?.value
+      state.settings?.highlight?.value
     ) {
       this.button.classList.add('only');
     } else if (possibilities[this.lens]) {
@@ -124,8 +132,6 @@ export class BoardLensCell extends ReactiveMixin(HTMLElement) {
       data: { location: { i: this.i, j: this.j } },
     });
   }
-
-  // }
 
   template = () => html`
     <!DOCTYPE html>

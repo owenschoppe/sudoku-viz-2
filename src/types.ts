@@ -29,6 +29,7 @@ export type State = {
   };
   color?: string;
   location: CellAddress;
+  focusBoardId?: string;
   moves: Move[];
   settings: Settings;
 };

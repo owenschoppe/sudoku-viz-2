@@ -27,15 +27,18 @@ button.possibility {
   border-radius: 50%;
 }
 
-button:focus,
-button:focus-visible {
-  outline: none;
-}
-
 button.current {
   box-shadow: 0 0 0 1px white;
 }
+
 button.current.only {
   border-radius: 0;
+  box-shadow: 0 0 0 2px var(--cell-focus-color, white);
+}
+
+button:focus,
+button:focus-visible,
+button.current:focus {
+  outline: none;
   box-shadow: 0 0 0 2px var(--cell-focus-color, white);
 }
