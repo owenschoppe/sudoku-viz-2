@@ -15,7 +15,7 @@
     "r:start": "serve dist",
     "r:watch": "rollup -c -w",
     "r:reload": "livereload dist/ -p 5001",
-    "r:deploy": "gcloud --project sudoku-viz app deploy",
+    "r:deploy": "yarn r:deploy:list && gcloud --project sudoku-viz app deploy",
     "r:deploy:list": "gcloud meta list-files-for-upload",
     "lint": "eslint . --ext .ts --ext .mts",
     "test": "jest --coverage",
