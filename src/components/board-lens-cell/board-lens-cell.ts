@@ -22,7 +22,7 @@ import { cloneDeep } from '../../utils';
 export class BoardLensCell extends HandleInputMixin(
   ReactiveMixin(HTMLElement),
 ) {
-  button: HTMLButtonElement;
+  input: HTMLButtonElement;
   i: number;
   j: number;
   lens: CellValue | 0;
@@ -68,8 +68,8 @@ export class BoardLensCell extends HandleInputMixin(
 
     shadowRoot.innerHTML = this.template();
 
-    this.button = shadowRoot.querySelector('button');
-    this.button.addEventListener('click', this.handleClick.bind(this));
+    this.input = shadowRoot.querySelector('button');
+    this.input.addEventListener('click', this.handleClick.bind(this));
   }
 
   render(state: State) {
@@ -78,14 +78,14 @@ export class BoardLensCell extends HandleInputMixin(
       state.possibilities[this.i][this.j].possibilities[this.lens];
     const selected = this.value === this.lens;
     const displayValue = selected || possibility ? this.lens : null;
-    this.button.textContent = String(displayValue || '');
+    this.input.textContent = String(displayValue || '');
     this.updateClass(state);
 
     const { i, j } = state.location;
     if (this.i === i && this.j === j) {
-      this.button.classList.add('current');
+      this.input.classList.add('current');
     } else {
-      this.button.classList.remove('current');
+      this.input.classList.remove('current');
     }
     super.render(state);
     this.state = cloneDeep(state);
@@ -94,17 +94,17 @@ export class BoardLensCell extends HandleInputMixin(
   updateClass(state: State) {
     const { possibilities, possibilityCount } =
       state.possibilities[this.i][this.j];
-    this.button.classList.remove('selected', 'only', 'possibility');
+    this.input.classList.remove('selected', 'only', 'possibility');
     if (this.value === this.lens) {
-      this.button.classList.add('selected');
+      this.input.classList.add('selected');
     } else if (
       possibilityCount === 1 &&
       possibilities[this.lens] &&
       state.settings?.highlight?.value
     ) {
-      this.button.classList.add('only');
+      this.input.classList.add('only');
     } else if (possibilities[this.lens]) {
-      this.button.classList.add('possibility');
+      this.input.classList.add('possibility');
     }
   }
 

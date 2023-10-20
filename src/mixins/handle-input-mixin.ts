@@ -4,7 +4,7 @@ import { ReactiveProps } from './reactive-component-mixin';
 import { GConstructor } from './types';
 
 interface HandleInputProps {
-  button: HTMLButtonElement;
+  input: HTMLButtonElement | HTMLInputElement;
   i: number;
   j: number;
   value: CellValue | 0;
@@ -23,7 +23,7 @@ export const HandleInputMixin = <T extends GConstructor<ReactiveProps>>(
   Base: T,
 ): GConstructor<HandleInputProps> & T =>
   class HandleInput extends Base {
-    declare button: HTMLButtonElement;
+    declare input: HTMLButtonElement | HTMLInputElement;
     declare i: number;
     declare j: number;
     declare id: string;
@@ -34,7 +34,7 @@ export const HandleInputMixin = <T extends GConstructor<ReactiveProps>>(
     }
 
     connectedCallback(): void {
-      this.button?.addEventListener(
+      this.input?.addEventListener(
         'keydown',
         this.handleChange.bind(this),
         true,
@@ -44,7 +44,7 @@ export const HandleInputMixin = <T extends GConstructor<ReactiveProps>>(
     }
 
     disconnectedCallback(): void {
-      this.button?.removeEventListener(
+      this.input?.removeEventListener(
         'keydown',
         this.handleChange.bind(this),
         true,
@@ -107,18 +107,18 @@ export const HandleInputMixin = <T extends GConstructor<ReactiveProps>>(
     render(state: State) {
       const { i, j } = state.location;
       if (this.i === i && this.j === j) {
-        this.button.classList.add('current');
-        this.button.setAttribute('tabindex', '0');
+        this.input.classList.add('current');
+        this.input.setAttribute('tabindex', '0');
 
         const { i: previousI, j: previousJ } = this.state.location;
         const locationMoved = i !== previousI || j !== previousJ;
         const isUndo = state.moves.length < this.state.moves.length;
         if (locationMoved && !isUndo && this.id === state.focusBoardId) {
-          this.button.focus();
+          this.input.focus();
         }
       } else {
-        this.button.classList.remove('current');
-        this.button.setAttribute('tabindex', '-1');
+        this.input.classList.remove('current');
+        this.input.setAttribute('tabindex', '-1');
       }
       super.render(state);
     }

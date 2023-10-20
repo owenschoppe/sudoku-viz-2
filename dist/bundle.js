@@ -494,6 +494,88 @@ const cellToLabel = ({ i, j }) => {
     return `Cell ${intToLetters(i)}${j + 1}`;
 };
 
+/**
+ * Add keyboard handling to ReactiveMixin.
+ * Extending class must implement button, i, j, value, id
+ * @param Base extends ReactiveMixin
+ * @returns
+ */
+const HandleInputMixin = (Base) => class HandleInput extends Base {
+    constructor(...args) {
+        super(...args);
+    }
+    connectedCallback() {
+        this.input?.addEventListener('keydown', this.handleChange.bind(this), true);
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        this.input?.removeEventListener('keydown', this.handleChange.bind(this), true);
+        super.disconnectedCallback();
+    }
+    handleChange(event) {
+        const isEditable = this.state.original[this.i][this.j] === 0;
+        switch (event.key) {
+            case 'Tab':
+                break;
+            case 'ArrowUp':
+            case 'ArrowDown':
+            case 'ArrowLeft':
+            case 'ArrowRight':
+                event.preventDefault();
+                this.dispatch({
+                    type: 'arrow',
+                    data: Object.assign(event, { id: this.id }),
+                });
+                break;
+            case 'Backspace':
+                event.preventDefault();
+                if (isEditable) {
+                    this.value = this.dispatch({
+                        type: 'update',
+                        data: {
+                            i: this.i,
+                            j: this.j,
+                            value: 0,
+                        },
+                    }).board[this.i][this.j];
+                }
+                break;
+            default:
+                event.preventDefault();
+                if (isValidInput(event.key, this.state.possibilities[this.i][this.j].possibilities) &&
+                    Number(event.key) !== this.value &&
+                    isEditable) {
+                    this.value = this.dispatch({
+                        type: 'update',
+                        data: {
+                            i: this.i,
+                            j: this.j,
+                            value: Number(event.key),
+                        },
+                    }).board[this.i][this.j];
+                }
+        }
+    }
+    render(state) {
+        const { i, j } = state.location;
+        if (this.i === i && this.j === j) {
+            this.input.classList.add('current');
+            this.input.setAttribute('tabindex', '0');
+            const { i: previousI, j: previousJ } = this.state.location;
+            const locationMoved = i !== previousI || j !== previousJ;
+            const isUndo = state.moves.length < this.state.moves.length;
+            if (locationMoved && !isUndo && this.id === state.focusBoardId) {
+                this.input.focus();
+            }
+        }
+        else {
+            this.input.classList.remove('current');
+            this.input.setAttribute('tabindex', '-1');
+        }
+        super.render(state);
+    }
+};
+
 // @ts-ignore
 /**
  * Cell element that implements the dispatch pattern.
@@ -507,7 +589,7 @@ const cellToLabel = ({ i, j }) => {
  * @param j
  * @param value
  */
-class BoardCell extends ReactiveMixin(HTMLElement) {
+class BoardCell extends HandleInputMixin(ReactiveMixin(HTMLElement)) {
     i;
     j;
     id;
@@ -523,7 +605,6 @@ class BoardCell extends ReactiveMixin(HTMLElement) {
         this.j = j;
         this.id = id;
         this.css = css;
-        // this.value = this.state.board[i][j];
     }
     connectedCallback() {
         this.init();
@@ -531,14 +612,12 @@ class BoardCell extends ReactiveMixin(HTMLElement) {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        this.input.removeEventListener('keydown', this.handleChange);
     }
     init() {
         const { shadowRoot } = this;
         shadowRoot.innerHTML = this.template();
         this.cell = shadowRoot.querySelector('#cell');
         this.input = shadowRoot.querySelector('input');
-        this.input.addEventListener('keydown', this.handleChange.bind(this), true);
         this.input.addEventListener('click', this.handleClick.bind(this));
     }
     render(state) {
@@ -548,12 +627,6 @@ class BoardCell extends ReactiveMixin(HTMLElement) {
         if (this.i === i && this.j === j) {
             this.cell.classList.add('current');
             this.input.setAttribute('tabindex', '0');
-            const { i: previousI, j: previousJ } = this.state.location;
-            const locationMoved = i !== previousI || j !== previousJ;
-            const isUndo = state.moves.length < this.state.moves.length;
-            if (locationMoved && !isUndo && this.id === state.focusBoardId) {
-                this.input.focus();
-            }
         }
         else {
             this.cell.classList.remove('current');
@@ -571,6 +644,7 @@ class BoardCell extends ReactiveMixin(HTMLElement) {
             this.input.value = displayValue;
             this.cell.textContent = displayValue;
         }
+        super.render(state);
         this.state = cloneDeep(state);
     }
     handleClick() {
@@ -578,45 +652,6 @@ class BoardCell extends ReactiveMixin(HTMLElement) {
             type: 'move',
             data: { location: { i: this.i, j: this.j } },
         });
-    }
-    handleChange(event) {
-        switch (event.key) {
-            case 'Tab':
-                break;
-            case 'ArrowUp':
-            case 'ArrowUp':
-            case 'ArrowUp':
-            case 'ArrowUp':
-                event.preventDefault();
-                break;
-            case 'Backspace':
-                event.preventDefault();
-                if (this.isEditable) {
-                    this.value = this.dispatch({
-                        type: 'update',
-                        data: {
-                            i: this.i,
-                            j: this.j,
-                            value: 0,
-                        },
-                    }).board[this.i][this.j];
-                }
-                break;
-            default:
-                event.preventDefault();
-                if (isValidInput(event.key, this.state.possibilities[this.i][this.j].possibilities) &&
-                    Number(event.key) !== this.value &&
-                    this.isEditable) {
-                    this.value = this.dispatch({
-                        type: 'update',
-                        data: {
-                            i: this.i,
-                            j: this.j,
-                            value: Number(event.key),
-                        },
-                    }).board[this.i][this.j];
-                }
-        }
     }
     template = () => html$7 `
     <!DOCTYPE html>
@@ -676,20 +711,6 @@ class Board extends ReactiveMixin(HTMLElement) {
         this.board = shadowRoot.querySelector('#board');
         this.board.append(...this.cells);
         this.board.setAttribute('style', `--cell-text-size: 24px;`);
-        this.board.addEventListener('keydown', this.handleKey.bind(this));
-    }
-    handleKey(event) {
-        switch (event.key) {
-            case 'ArrowUp':
-            case 'ArrowDown':
-            case 'ArrowLeft':
-            case 'ArrowRight':
-                this.dispatch({
-                    type: 'arrow',
-                    data: Object.assign(event, { id: 'main' }),
-                });
-                break;
-        }
     }
     render(_state) { }
 }
@@ -697,88 +718,6 @@ customElements.define('sudoku-board', Board);
 
 var css_248z$6 = ":host{display:block}button{background:hsla(0,0%,100%,.1);border:none;color:#000;color:var(--cell-text-color,#000);cursor:pointer;font-size:10px;font-size:var(--cell-text-size,10px);font-weight:700;font-weight:var(--cell-font-weight,bold);height:100%;height:var(--cell-height,100%);margin:0;padding:0;width:100%;width:var(--cell-width,100%)}button.selected{background:#f3f3f3;background:var(--cell-background-color,#f3f3f3)}button.only{background:#fff;border-radius:25%}button.possibility{background:#f3f3f3;background:var(--cell-background-possibility-color,#f3f3f3);border-radius:50%;color:#fff;font-weight:100}button.current{box-shadow:0 0 0 1px #fff}button.current.only{border-radius:0;box-shadow:0 0 0 2px #fff;box-shadow:0 0 0 2px var(--cell-focus-color,#fff)}button.current:focus,button:focus,button:focus-visible{box-shadow:0 0 0 2px #fff;box-shadow:0 0 0 2px var(--cell-focus-color,#fff);outline:none}";
 styleInject(css_248z$6);
-
-/**
- * Add keyboard handling to ReactiveMixin.
- * Extending class must implement button, i, j, value, id
- * @param Base extends ReactiveMixin
- * @returns
- */
-const HandleInputMixin = (Base) => class HandleInput extends Base {
-    constructor(...args) {
-        super(...args);
-    }
-    connectedCallback() {
-        this.button?.addEventListener('keydown', this.handleChange.bind(this), true);
-        super.connectedCallback();
-    }
-    disconnectedCallback() {
-        this.button?.removeEventListener('keydown', this.handleChange.bind(this), true);
-        super.disconnectedCallback();
-    }
-    handleChange(event) {
-        const isEditable = this.state.original[this.i][this.j] === 0;
-        switch (event.key) {
-            case 'Tab':
-                break;
-            case 'ArrowUp':
-            case 'ArrowDown':
-            case 'ArrowLeft':
-            case 'ArrowRight':
-                event.preventDefault();
-                this.dispatch({
-                    type: 'arrow',
-                    data: Object.assign(event, { id: this.id }),
-                });
-                break;
-            case 'Backspace':
-                event.preventDefault();
-                if (isEditable) {
-                    this.value = this.dispatch({
-                        type: 'update',
-                        data: {
-                            i: this.i,
-                            j: this.j,
-                            value: 0,
-                        },
-                    }).board[this.i][this.j];
-                }
-                break;
-            default:
-                event.preventDefault();
-                if (isValidInput(event.key, this.state.possibilities[this.i][this.j].possibilities) &&
-                    Number(event.key) !== this.value &&
-                    isEditable) {
-                    this.value = this.dispatch({
-                        type: 'update',
-                        data: {
-                            i: this.i,
-                            j: this.j,
-                            value: Number(event.key),
-                        },
-                    }).board[this.i][this.j];
-                }
-        }
-    }
-    render(state) {
-        const { i, j } = state.location;
-        if (this.i === i && this.j === j) {
-            this.button.classList.add('current');
-            this.button.setAttribute('tabindex', '0');
-            const { i: previousI, j: previousJ } = this.state.location;
-            const locationMoved = i !== previousI || j !== previousJ;
-            const isUndo = state.moves.length < this.state.moves.length;
-            if (locationMoved && !isUndo && this.id === state.focusBoardId) {
-                this.button.focus();
-            }
-        }
-        else {
-            this.button.classList.remove('current');
-            this.button.setAttribute('tabindex', '-1');
-        }
-        super.render(state);
-    }
-};
 
 //@ts-ignore
 /**
@@ -794,7 +733,7 @@ const HandleInputMixin = (Base) => class HandleInput extends Base {
  * @param value
  */
 class BoardLensCell extends HandleInputMixin(ReactiveMixin(HTMLElement)) {
-    button;
+    input;
     i;
     j;
     lens;
@@ -822,39 +761,39 @@ class BoardLensCell extends HandleInputMixin(ReactiveMixin(HTMLElement)) {
     init() {
         const { shadowRoot } = this;
         shadowRoot.innerHTML = this.template();
-        this.button = shadowRoot.querySelector('button');
-        this.button.addEventListener('click', this.handleClick.bind(this));
+        this.input = shadowRoot.querySelector('button');
+        this.input.addEventListener('click', this.handleClick.bind(this));
     }
     render(state) {
         this.value = state.board[this.i][this.j];
         const possibility = state.possibilities[this.i][this.j].possibilities[this.lens];
         const selected = this.value === this.lens;
         const displayValue = selected || possibility ? this.lens : null;
-        this.button.textContent = String(displayValue || '');
+        this.input.textContent = String(displayValue || '');
         this.updateClass(state);
         const { i, j } = state.location;
         if (this.i === i && this.j === j) {
-            this.button.classList.add('current');
+            this.input.classList.add('current');
         }
         else {
-            this.button.classList.remove('current');
+            this.input.classList.remove('current');
         }
         super.render(state);
         this.state = cloneDeep(state);
     }
     updateClass(state) {
         const { possibilities, possibilityCount } = state.possibilities[this.i][this.j];
-        this.button.classList.remove('selected', 'only', 'possibility');
+        this.input.classList.remove('selected', 'only', 'possibility');
         if (this.value === this.lens) {
-            this.button.classList.add('selected');
+            this.input.classList.add('selected');
         }
         else if (possibilityCount === 1 &&
             possibilities[this.lens] &&
             state.settings?.highlight?.value) {
-            this.button.classList.add('only');
+            this.input.classList.add('only');
         }
         else if (possibilities[this.lens]) {
-            this.button.classList.add('possibility');
+            this.input.classList.add('possibility');
         }
     }
     handleClick(_event) {

@@ -2,9 +2,10 @@
 import css from './board-cell.css';
 import { CellValue, State } from '../../types.js';
 import { ReactiveMixin } from '../../mixins/reactive-component-mixin.js';
-import { isValidInput } from '../../utils/sudoku.js';
+// import { isValidInput } from '../../utils/sudoku.js';
 import { cloneDeep, isCellValue } from '../../utils/index.js';
 import { cellToLabel } from '../../utils/labels';
+import { HandleInputMixin } from '../../mixins/handle-input-mixin';
 
 /**
  * Cell element that implements the dispatch pattern.
@@ -18,7 +19,7 @@ import { cellToLabel } from '../../utils/labels';
  * @param j
  * @param value
  */
-export class BoardCell extends ReactiveMixin(HTMLElement) {
+export class BoardCell extends HandleInputMixin(ReactiveMixin(HTMLElement)) {
   i: number;
   j: number;
   id: string;
@@ -45,7 +46,6 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     this.j = j;
     this.id = id;
     this.css = css;
-    // this.value = this.state.board[i][j];
   }
 
   connectedCallback() {
@@ -55,8 +55,6 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-
-    this.input.removeEventListener('keydown', this.handleChange);
   }
 
   init() {
@@ -66,7 +64,6 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
 
     this.cell = shadowRoot.querySelector('#cell');
     this.input = shadowRoot.querySelector('input');
-    this.input.addEventListener('keydown', this.handleChange.bind(this), true);
     this.input.addEventListener('click', this.handleClick.bind(this));
   }
 
@@ -77,13 +74,6 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
     if (this.i === i && this.j === j) {
       this.cell.classList.add('current');
       this.input.setAttribute('tabindex', '0');
-
-      const { i: previousI, j: previousJ } = this.state.location;
-      const locationMoved = i !== previousI || j !== previousJ;
-      const isUndo = state.moves.length < this.state.moves.length;
-      if (locationMoved && !isUndo && this.id === state.focusBoardId) {
-        this.input.focus();
-      }
     } else {
       this.cell.classList.remove('current');
       this.input.setAttribute('tabindex', '-1');
@@ -99,6 +89,7 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
       this.input.value = displayValue;
       this.cell.textContent = displayValue;
     }
+    super.render(state);
     this.state = cloneDeep(state);
   }
 
@@ -107,51 +98,6 @@ export class BoardCell extends ReactiveMixin(HTMLElement) {
       type: 'move',
       data: { location: { i: this.i, j: this.j } },
     });
-  }
-
-  handleChange(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'Tab':
-        break;
-      case 'ArrowUp':
-      case 'ArrowUp':
-      case 'ArrowUp':
-      case 'ArrowUp':
-        event.preventDefault();
-        break;
-      case 'Backspace':
-        event.preventDefault();
-        if (this.isEditable) {
-          this.value = this.dispatch({
-            type: 'update',
-            data: {
-              i: this.i,
-              j: this.j,
-              value: 0,
-            },
-          }).board[this.i][this.j];
-        }
-        break;
-      default:
-        event.preventDefault();
-        if (
-          isValidInput(
-            event.key,
-            this.state.possibilities[this.i][this.j].possibilities,
-          ) &&
-          Number(event.key) !== this.value &&
-          this.isEditable
-        ) {
-          this.value = this.dispatch({
-            type: 'update',
-            data: {
-              i: this.i,
-              j: this.j,
-              value: Number(event.key),
-            },
-          }).board[this.i][this.j];
-        }
-    }
   }
 
   template = () => html`
