@@ -7,7 +7,7 @@ body,
 }
 
 body {
-  --main-board: 478px;
+  --main-board: min(calc(100vw - 32px), 478px);
   --board-gap: 8px;
   --highlight-color: hsl(196deg 76% 45% / 80%);
   --o-highlight-color: var(--highlight-color);
